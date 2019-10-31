@@ -21,8 +21,10 @@
 </template>
 
 <script>
-/* eslint-disable no-alert, no-console */
+/* eslint-disable */
 
+
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   name: "Login",
   props: {},
@@ -48,23 +50,27 @@ export default {
         this.makeToast("primary", "Oups!", `Please, insert a valid password.`);
       } else {
         this.$store
-          .dispatch("API_LOGIN", { username: this.usr, password: this.psswd })
+          .dispatch("auth/login", { username: this.usr, password: this.psswd })
           .then(r => {
             if (r.status == 200) {
-              // save the token in local storage
-              localStorage.auth = "Basic " + r.data
+              // save the token
+              this.$store.commit("auth/updateAccessToken", r.data.access_token);
+              this.$store.commit("auth/updateRefreshToken",r.data.refresh_token);
+              // push to home view
               this.$router.push("/");
+            } else if (r.status != 404) {
+              this.$parent.makeToast("danger",`[${r.status}] Oups!`,`[${r.status}] ${r.description}`);
             } else {
-              this.makeToast(
-                "danger",
-                "Oups!",
-                `[${r.status}] ${r.description}`
-              );
+              this.$parent.makeToast("danger", `[${r.status}]`, `Server is down`);
             }
           });
       }
     }
-  }
+  },
+  computed: {
+    ...mapActions(["auth/login"]),
+    ...mapMutations(["auth/updateAccessToken", "auth/updateRefreshToken"])
+  },
 };
 </script>
 
