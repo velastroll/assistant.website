@@ -1,40 +1,34 @@
 <template>
   <div id="app">
-    <div class="header-title">
-      <b-col v-if="isLoged()">
-        <b-row>
-          <b-col cols="1" style="text-align: right;"></b-col>
-          <b-col cols="8">
-            <div>
-              <span :class="header_title_style()" style="cursor:pointer" @click="redirect('/')">
-                Assistant
-                <a style="color: white">Pregonero</a>
-              </span>
-            </div>
-          </b-col>
-          <!--b-col cols="2" style="text-align: right;">
-            <span
-              to="/somewhere"
-              :class="header_title_style()"
-              class="edit"
-              title="Add new"
-              @click="redirect('/somewhere')"
-            >+</span>
-          </b-col-->
-        </b-row>
+    <b-row style="height: 100vh; width: 100vw; margin: 0 0 0 0; padding: 0 0 0 0;">
+      <b-col
+        v-if="isAuth()"
+        :cols="getCols('nav')"
+        style="padding: 0px;"
+        :style="`height: ${this.getHeight('nav')};`"
+      >
+        <Nav style="`padding: 0 0 0 0; margin; 0 0 0 0;`"/>
       </b-col>
-    </div>
-    <router-view />
+      <b-col 
+        :cols="getCols('content')" 
+        style="padding: 0px;"
+        :style="`height: ${this.getHeight('content')};`">
+        <router-view/>
+      </b-col>
+    </b-row>
   </div>
 </template>
+
+
 <script>
+
+import { mapGetters } from "vuex";
+
+import Nav from "@/views/Nav";
 export default {
-  created() {
-    window.addEventListener("resize", this.handleResize);
-    this.handleResize();
-  },
-  destroyed() {
-    window.removeEventListener("resize", this.handleResize);
+  name: "App",
+  components: {
+    Nav
   },
   data: function() {
     return {
@@ -44,30 +38,71 @@ export default {
       }
     };
   },
+  created() {
+    window.addEventListener("resize", this.handleResize);
+    this.handleResize();
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.handleResize);
+  },
   methods: {
     handleResize() {
       this.window.width = window.innerWidth;
       this.window.height = window.innerHeight;
     },
+    /* eslint-disable */
     redirect(url) {
-      this.$router.push(url);
+      try{
+        this.$router.push(url).catch(err => {});
+      }catch(e){}
     },
-    isLoged() {
-      var uri = window.location.pathname;
-        // check local storage for the token
-      if (!uri.includes("login")) {
-        // if local storage has the token, return true
-        if (localStorage.auth) return true;
-        // if locar storage hasnt got the token, redirect
-        this.redirect("/login");
+    /* eslint-enable */
+    isAuth(){
+      if  (this.$store.getters["auth/access_token"] != null && 
+          (this.$store.getters["auth/access_token"] != undefined)) return true;
+      else return false
+    },
+    isLogged() {
+      if(this.$store.getters["auth/access_token"] != null && 
+        (this.$store.getters["auth/access_token"] != undefined)) return true;
+      else this.redirect("/login");
+    },
+    getCols(component) {
+      var w = window.innerWidth;
+      if (w > 650) {
+        if (component == 'nav') return "1";
+        if (component == 'content') return "";
+      } else {
+        if (component == 'nav') return "12";
+        if (component == 'content') return "12";
+      }
+    },
+    getHeight(c) {
+      var w = window.innerWidth;
+      if (w > 650) {
+        if (c == "nav") return "100vh";
+        if (c == "content") return "100vh";
+      } else {
+        if (c == "nav") return "50vh";
+        if (c == "content") return "50vh";
       }
     },
     header_title_style() {
       if (this.window.width < 587) {
         return "header-title-little";
       } else return "header-title";
+    },    
+    makeToast(variant = null, title, content) {
+      this.$bvToast.toast(content, {
+        title: title,
+        variant: variant,
+        solid: true
+      });
     }
-  }
+  },
+  computed: {
+    ...mapGetters(["auth/access_token"])
+  },
 };
 </script>
 
@@ -103,7 +138,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   background-color: #2c3e50;
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
 }
 #nav {
   padding: 30px;

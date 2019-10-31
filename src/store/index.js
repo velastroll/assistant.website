@@ -1,12 +1,10 @@
-import Vuex from 'vuex'
+  
 import Vue from 'vue'
-
-import controller from './modules/controller'
+import Vuex from 'vuex'
 
 Vue.use(Vuex)
+import modules from './modules'
 
 export default new Vuex.Store({
-    modules : {
-        controller
-    }
-  })
+    modules
+})
