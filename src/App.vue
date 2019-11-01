@@ -5,14 +5,12 @@
         v-if="isAuth()"
         :cols="getCols('nav')"
         style="padding: 0px;"
-        :style="`height: ${this.getHeight('nav')};`"
       >
-        <Nav style="`padding: 0 0 0 0; margin; 0 0 0 0;`"/>
+        <Nav style="padding: 0 0 0 0; margin: 0 0 0 0;"/>
       </b-col>
       <b-col 
         :cols="getCols('content')" 
-        style="padding: 0px;"
-        :style="`height: ${this.getHeight('content')};`">
+        style="padding: 0px; min-height: 90vh;">
         <router-view/>
       </b-col>
     </b-row>
@@ -80,11 +78,11 @@ export default {
     getHeight(c) {
       var w = window.innerWidth;
       if (w > 650) {
-        if (c == "nav") return "100vh";
-        if (c == "content") return "100vh";
+        if (c == 'nav') return "100vh";
+        if (c == 'content') return "";
       } else {
-        if (c == "nav") return "50vh";
-        if (c == "content") return "50vh";
+        if (c == 'nav') return "10vh";
+        if (c == 'content') return "";
       }
     },
     header_title_style() {

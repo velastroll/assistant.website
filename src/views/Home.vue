@@ -2,7 +2,15 @@
     <div 
     class="body-home"
     style=" width: 100%; height: 100%; margin: 0 0 0 0; padding: 0 0 0 0;">
-        <a> {{devices}} </a>
+      <b-row class="justify-content-center">
+        <b-col 
+          cols="6"
+          style="min-width: 270px; max-width: 140px; margin-top: 10px; "
+          md="auto"
+         :key="k" v-for="(p, k) in this.devices" class="justify-content-center">
+          <Slot :msg="p"/>
+        </b-col>
+      </b-row>
     </div>
 </template>
 <script>
@@ -10,11 +18,12 @@
 // import Struct from '@/components/Struct.vue'
 import {mapGetters, mapActions, mapMutations} from "vuex";
 
+import Slot from "@/components/home/Slot"
 
 export default {
   name: 'home',
   components: {
-    // Struct
+    Slot
   },
   data: function(){
     return {
