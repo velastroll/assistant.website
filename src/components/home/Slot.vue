@@ -26,38 +26,7 @@
         <div class="row-description">Valladolid</div>
       </b-row>
     </b-card>
-    <!-- modal >
-    <b-modal :id="`modal-show-${this.msg.id}`" :title="`${this.msg.id}: ${this.msg.street}`">
-      <div v-if="this.parking_selected != null">
-        <div :key="o" v-for="(v, o) in this.parking_selected.vehicles">
-          <a>
-            <i class="material-icons">local_parking lock</i> Vehicle
-            <a v-b-tooltip title="Go to vehicle!" class="link">{{v.id}}</a>
-            is parked since {{parseDate("2019-10-23T09:00:00")}}
-          </a>
-        </div>
-        <div
-          :key="k"
-          v-for="(c, avoidEsLint, k) in (this.parking_selected.capacity - this.parking_selected.vehicles.length)"
-        >
-          <a>
-            <i class="material-icons">local_parking lock_open</i> Available
-            <a
-              v-if="edit"
-              style="color: brown; cursor: pointer"
-              @click="changeCapacity(-1)"
-            >DELETE</a>
-          </a>
-        </div>
-        <a v-if="edit">
-          <i class="material-icons">add</i>
-          <a
-            v-if="edit"
-            style="color: green;cursor: pointer"
-            @click="changeCapacity(1)"
-          >Add new point</a>
-        </a>
-      </div>
+    <b-modal :id="`modal-show-${this.msg.device}`" :title="`${this.msg.device}: ${this.msg.state}`">
       <template v-slot:modal-footer>
         <div class="w-100">
           <b-button
@@ -83,7 +52,7 @@
           >save</b-button>
         </div>
       </template>
-    </b-modal-->
+    </b-modal>
   </div>
 </template>
 
@@ -130,7 +99,7 @@ export default {
     },
     showParking: function(select) {
       this.parking_selected = select;
-      this.$bvModal.show(`modal-show-${this.msg.id}`);
+      this.$bvModal.show(`modal-show-${this.msg.device}`);
     },
     getColor(time) {
       var date = new Date(time);
