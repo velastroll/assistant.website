@@ -2,10 +2,10 @@
   <div v-if="this.msg != null">
     <b-card
       style=" cursor: pointer;"
-      :class="this.borderColor(this.msg.timestamp)"
-      @click="showParking(msg)"
+      :class="this.borderColor(this.msg.status[0].timestamp)"
+      @click="showData(msg)"
     >
-      <div :style="`color: ${getColor(this.msg.timestamp)}`">
+      <div :style="`color: ${getColor(this.msg.status[0].timestamp)}`">
         <b-row>
           <b-col style="text-align: left; max-height: 20px;" >
             <i class="material-icons"> record_voice_over </i>
@@ -13,45 +13,30 @@
           <b-col>
             <div
               style="text-align: right; font-weight: bold;"
-            >{{this.msg.device.toUpperCase()}}</div>
+            >{{this.msg.mac.toUpperCase()}}</div>
           </b-col>
         </b-row>
       </div>
       <b-row>
-        <div class="row-description" :id="`${this.msg.id}-street`">
-          {{this.getStreet("XXXXXXXXXXXXXXXXX")}}
-          <b-tooltip  v-if="true" :target="`${this.msg.id}-street`" triggers="hover"> CALLE DE LA MELANCOLIA, MANOLITO </b-tooltip>
-        </div>
-        <div class="last-action">[{{this.msg.state}}] {{this.getMinutes(this.msg.timestamp)}}</div>
-        <div class="row-description">Valladolid</div>
+        <div class="last-action">[{{this.msg.status[0].state}}] {{this.getMinutes(this.msg.status[0].timestamp)}}</div>
+        <div class="row-description">{{this.msg.relation.user.name}} - {{this.msg.relation.user.nif}} </div>
       </b-row>
     </b-card>
-    <b-modal :id="`modal-show-${this.msg.device}`" :title="`${this.msg.device}: ${this.msg.state}`">
-      <template v-slot:modal-footer>
-        <div class="w-100">
-          <b-button
-            v-if="edit && !edited"
-            variant="danger"
-            size="sm"
-            class="float-right"
-            @click="edit = false"
-          >cancel</b-button>
-          <b-button
-            v-if="!edit"
-            variant="danger"
-            size="sm"
-            class="float-right"
-            @click="edit = true"
-          >EDIT</b-button>
-          <b-button
-            v-if="edit"
-            variant="success"
-            size="sm"
-            class="float-right"
-            @click="saveChanges()"
-          >save</b-button>
-        </div>
-      </template>
+
+
+    <b-modal :id="`modal-show-${this.msg.mac}`" :title="`Device ${this.msg.mac.toUpperCase()}`">
+      <b-row>
+        <b-col cols="2" style="text-align: right; max-height: 20px;" ><i class="material-icons"> face </i></b-col>
+        <b-col><div style="text-align: left; font-weight: bold;">{{this.msg.relation.user.name}}</div></b-col>
+      </b-row>
+      <b-row>
+        <b-col cols="2" style="text-align: right; max-height: 20px;" ><i class="material-icons"> fingerprint </i></b-col>
+        <b-col><div style="text-align: left; font-weight: bold;">{{this.msg.relation.user.nif}}</div></b-col>
+      </b-row>
+      <b-row>
+        <b-col cols="2" style="text-align: right; max-height: 20px;" ><i class="material-icons"> date_range </i></b-col>
+        <b-col><div style="text-align: left; font-weight: bold;">{{this.parseDate(this.msg.relation.from)}}</div></b-col>
+      </b-row>
     </b-modal>
   </div>
 </template>
@@ -59,7 +44,7 @@
 <script>
 import { mapActions } from "vuex";
 export default {
-  name: "Parking",
+  name: "Slot",
   props: {
     msg: {
       type: Object
@@ -97,9 +82,9 @@ export default {
       if (street.length > 16) return `${street.substring(0, 20)}...`;
       else return street;
     },
-    showParking: function(select) {
+    showData: function(select) {
       this.parking_selected = select;
-      this.$bvModal.show(`modal-show-${this.msg.device}`);
+      this.$bvModal.show(`modal-show-${this.msg.mac}`);
     },
     getColor(time) {
       var date = new Date(time);
