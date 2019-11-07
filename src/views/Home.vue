@@ -35,7 +35,6 @@ export default {
     if (this.$store.getters["auth/access_token"] != null) {
       this.updateDevices();
       this.timer = setInterval(() => {
-        console.log("updating!")
         this.updateDevices();
       }, 15000);
     } else this.$parent.redirect("/login")

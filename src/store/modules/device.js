@@ -33,7 +33,6 @@ export default {
                     }
                 })
                     .then(response => {
-                        console.log(response.data)
                         context.commit("updateDevice", response.data);
                         resolve(response);
                     })
