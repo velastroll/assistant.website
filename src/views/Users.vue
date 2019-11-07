@@ -1,5 +1,5 @@
 <template>
-    <div 
+  <div 
     class="body-home"
     style=" width: 100%; height: 100%; margin: 0 0 0 0; padding: 0 0 0 0;">
       <b-row class="justify-content-center">
@@ -9,9 +9,19 @@
           md="auto" 
           class="justify-content-center">
           <b-row>
-            <b-input 
-              class="input-search"
-              placeholder="Search by name, nif, town, or device..."/>
+            <b-col>
+              <b-input 
+                class="input-search"
+                placeholder="Search by name, nif, town, or device..."/>
+            </b-col>
+            <b-col md="auto">
+              <b-button 
+                class="add-user-button"
+                v-b-modal.modal-add-user
+                >
+                Add user
+              </b-button>
+            </b-col>
           </b-row>
           <b-row class="header-table">
             <b-col> NOMBRE </b-col>
@@ -27,8 +37,36 @@
           </b-row>
         </b-col>
       </b-row>
+
+      <!-- modal: Add User -->
+      <b-modal :id="`modal-add-user`" :title="`Add new user`">
+          <b-row>
+            <b-col cols="2" class="row-icon" ><i class="material-icons"> face </i></b-col>
+            <b-col><b-input class="input-modal" placeholder="Nombre" /></b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="2" class="row-icon" ><i class="material-icons" > fingerprint </i></b-col>
+            <b-col><b-input class="input-modal" placeholder="Documento acreditativo" /></b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="2" class="row-icon" ><i class="material-icons"> home_work </i></b-col>
+            <b-col><b-form-select class="input-modal" v-model="selected" :options="options" size="sm" ></b-form-select></b-col>
+          </b-row>
+          <template v-slot:modal-footer>
+            <div class="w-100">
+              <p class="float-left">Modal Footer Content</p>
+              <b-button
+                variant="primary"
+                size="sm"
+                class="float-right"
+                type="submit"
+              > ADD USER </b-button>
+            </div>
+          </template>
+      </b-modal>
     </div>
 </template>
+
 <script>
 // @ is an alias to /src
 // import Struct from '@/components/Struct.vue'
@@ -39,9 +77,17 @@ export default {
   name: 'Users',
   components: {
   },
+
   data: function(){
     return {
-      users: this.$store.getters["users/get"]
+      users: this.$store.getters["users/get"],
+      selected: null,
+        options: [
+          { value: null, text: 'Please select an option', disabled: true },
+          { value: 'a', text: 'This is First option' },
+          { value: 'b', text: 'Selected Option' },
+          { value: 'c', text: 'This is an option with object value' }
+        ]
     }
   },
   mounted() {
@@ -101,6 +147,32 @@ export default {
 </script>
 
 <style scoped>
+.row-icon{
+  text-align: right; 
+  max-height: 20px;
+}
+.input-modal{
+  margin-bottom: 10px;
+  height: 30px;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.add-user-button{
+  padding: 0px 15px 0px 15px;
+  height: 30px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: #2c3e5000;
+  color:#2c3e50;
+}
+
+.add-user-button:hover{
+  background-color: #2c3e50;
+  color: #f2f2f2;
+}
+
 .input-search{
   margin-top: 5px;
   margin-bottom: 10px;
