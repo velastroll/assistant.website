@@ -2,20 +2,20 @@ import Axios from "axios";
 
 export default {
     state: {
-        devices: []
+        users: []
     },
     getters: {
         // this.$store.getters["getData"]
         get: state => {
-            return state.devices;
+            return state.users;
         }
     },
     mutations: {
-        updateDevice: (state, value) => {
-            state.devices = value;
+        updateUsers: (state, value) => {
+            state.users = value;
         },
         clear: (state) => {
-            state.devices = []
+            state.users = []
         }
     },
     actions: {
@@ -26,14 +26,14 @@ export default {
             return new Promise(resolve => {
                 Axios({
                     method: "get",
-                    url: api + "/worker/devices",
+                    url: api + "/worker/people",
                     headers: {
                         Authorization: access_token,
                         "Content-Type": "application/json"
                     }
                 })
                     .then(response => {
-                        context.commit("updateDevice", response.data);
+                        context.commit("updateUsers", response.data);
                         resolve(response);
                     })
                     .catch(e => {

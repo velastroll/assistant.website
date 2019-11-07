@@ -69,7 +69,7 @@ export default {
       var date = new Date(from);
       var a = date.getTime();
       var now = new Date();
-      var n = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
+      var n = now.getTime();
       date = parseInt((n - a) / 1000.0);
       if (date < 60) return " " + date + "sec. ago";
       else {
@@ -90,7 +90,7 @@ export default {
       var date = new Date(time);
       var a = date.getTime();
       var now = new Date();
-      var n = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
+      var n = now.getTime();
       date = parseInt((n - a) / 60000.0);
       var color = "darkgreen";
       if (date > 30 ) color = "#cccc00";
@@ -102,7 +102,7 @@ export default {
       var date = new Date(time);
       var a = date.getTime();
       var now = new Date();
-      var n = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
+      var n = now.getTime();
       date = parseInt((n - a) / 60000.0);
       var toReturn = " border-green ";
       if (date > 30) toReturn = " border-yellow "
