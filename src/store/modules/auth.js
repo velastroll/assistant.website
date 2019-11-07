@@ -46,9 +46,7 @@ export default {
             resolve(response);
           })
           .catch(e => {
-            if(!e.response){
-              resolve({status: 404})
-            } else if (e.toString().includes("400")) {
+            if (e.toString().includes("401")) {
               resolve({
                 status: 401,
                 description: e.response.data

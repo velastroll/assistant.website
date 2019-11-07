@@ -9,10 +9,12 @@
             <span class="login-title">🧠</span>
             <hr />
             <div class="login-input-title">USER</div>
-            <b-input v-model="usr"></b-input>
+            <form>
+            <b-input v-model="usr" required></b-input>
             <div class="login-input-title">PASSWORD</div>
-            <b-input v-model="psswd" :type="'password'"></b-input>
-            <b-button variant="success" class="login-button" @click="login()">log in</b-button>
+            <b-input v-model="psswd" :type="'password'" required></b-input>
+            <b-button type="submit" variant="success" class="login-button" @click="login()">log in</b-button>
+            </form>
           </b-card>
         </b-row>
       </b-col>
@@ -58,8 +60,8 @@ export default {
               this.$store.commit("auth/updateRefreshToken",r.data.refresh_token);
               // push to home view
               this.$router.push("/");
-            } else if (r.status != 404) {
-              this.$parent.makeToast("danger",`[${r.status}] Oups!`,`[${r.status}] ${r.description}`);
+            } else if (r.status == 401) {
+              this.$parent.makeToast("danger",`Oups!`,`Invalid credentials`);
             } else {
               this.$parent.makeToast("danger", `[${r.status}]`, `Server is down`);
             }
