@@ -55,8 +55,14 @@ export default {
                 console.log("Updating tokens...");
                 this.$store.commit("auth/updateAccessToken", r.data.access_token);
                 this.$store.commit("auth/updateRefreshToken", r.data.refresh_token);
-              } else if (r.status == 401) {
+              } else if (r.status == 404) {
                 this.$parent.makeToast("danger",`Error ${r.status}`, "You should login again");
+                // delete tokens
+                this.$store.commit("auth/clearTokens");
+                this.$store.commit("device/clear");
+                this.$parent.redirect("/login");
+              } else if (r.status == 401) {
+                this.$parent.makeToast("danger",`Error ${r.status}`, `${r.description}`);
                 // delete tokens
                 this.$store.commit("auth/clearTokens");
                 this.$store.commit("device/clear");
