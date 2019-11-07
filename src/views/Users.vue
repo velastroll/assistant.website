@@ -8,8 +8,22 @@
           style="min-width: 90%; max-width: 90%; margin-top: 10px; "
           md="auto" 
           class="justify-content-center">
-          <b-row :key="i" v-for="(u, i) in this.users">
-              {{u}}
+          <b-row>
+            <b-input 
+              class="input-search"
+              placeholder="Search by name, nif, town, or device..."/>
+          </b-row>
+          <b-row class="header-table">
+            <b-col> NOMBRE </b-col>
+            <b-col v-if="bigScreen()"> NIF </b-col>
+            <b-col> CIUDAD </b-col>
+            <b-col> DISPOSITIVO </b-col>
+          </b-row>
+          <b-row class="row-table" :key="i" v-for="(u, i) in this.users">
+            <b-col> {{u.name}} </b-col>
+            <b-col v-if="bigScreen()"> {{u.nif}} </b-col>
+            <b-col> {{u.town}} </b-col>
+            <b-col> {{u.device}} </b-col>
           </b-row>
         </b-col>
       </b-row>
@@ -72,6 +86,10 @@ export default {
           }
         });
       }
+    },
+    bigScreen: function() {
+      if(window.innerWidth < 500) return false
+      else return true
     }
   },
   computed: {
@@ -83,6 +101,24 @@ export default {
 </script>
 
 <style scoped>
+.input-search{
+  margin-top: 5px;
+  margin-bottom: 10px;
+  height: 30px;
+  border-radius: 10px;
+}
+
+.row-table{
+  border-bottom: 1px solid #303c4727;
+}
+
+.header-table{
+  font-weight: bolder;
+  background-color: #2c3e50;
+  color: #f2f2f2;
+  border-radius: 10px;
+}
+
  .body-home{
   background-color: #f2f2f2;
 }
