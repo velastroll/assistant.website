@@ -16,6 +16,9 @@ export default {
         },
         clear: (state) => {
             state.users = []
+        },
+        addUser: (state, value) => {
+            state.users.unshift(value)
         }
     },
     actions: {
@@ -27,6 +30,41 @@ export default {
                 Axios({
                     method: "get",
                     url: api + "/worker/people",
+                    headers: {
+                        Authorization: access_token,
+                        "Content-Type": "application/json"
+                    }
+                })
+                    .then(response => {
+                        context.commit("updateUsers", response.data);
+                        resolve(response);
+                    })
+                    .catch(e => {
+                        if (e.toString().includes("Network")) {
+                            resolve({ status: 404 })
+                        } else if (e.toString().includes("400")) {
+                            resolve({
+                                status: 401,
+                                description: e.response.data
+                            });
+                        } else if (e.toString().includes("500")) {
+                            resolve({
+                                status: 500,
+                                description: e.response.data
+                            });
+                        }
+                    });
+            });
+        },
+
+        add(context, payload){
+            var api = context.rootGetters["common/api"]
+            var access_token = context.rootGetters["auth/access_token"];
+            return new Promise(resolve => {
+                Axios({
+                    method: "post",
+                    url: api + "/worker/person",
+                    data: payload,
                     headers: {
                         Authorization: access_token,
                         "Content-Type": "application/json"
