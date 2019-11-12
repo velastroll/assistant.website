@@ -17,17 +17,17 @@
         ></b-form-input>
       </b-col>
     </b-row>
-    <!-- dni -->
+    <!-- nif -->
     <b-row>
       <b-col cols="2" class="row-icon">
         <i class="material-icons">fingerprint</i>
       </b-col>
       <b-col>
         <b-form-input
-          id="input-live-dni"
+          id="input-live-nif"
           class="input-modal"
-          v-model="dni"
-          :state="dniState"
+          v-model="nif"
+          :state="nifState"
           aria-describedby="input-live-help input-live-feedback"
           placeholder="Documento acreditativo"
           trim
@@ -78,7 +78,7 @@ export default {
     return {
       users: this.$store.getters["users/get"],
       name: "",
-      dni: "",
+      nif: "",
       town: null,
       town_options: [
         { value: null, text: "Please select an option", disabled: true },
@@ -95,7 +95,7 @@ export default {
   },
   methods: {
     submit() {
-      console.log(`${this.name} - ${this.dni} - ${this.selected}`);
+      console.log(`${this.name} - ${this.nif} - ${this.selected}`);
       var payload = { name: this.name, nif: this.nif, town: this.town };
       this.$store.dispatch("users/add", payload).then(res => {
           if (status == 200){
@@ -108,7 +108,7 @@ export default {
               if (r.status == 200) {
                 this.$store.commit("auth/updateAccessToken", r.data.access_token);
                 this.$store.commit("auth/updateRefreshToken", r.data.refresh_token);
-              } else if (r.status == 401) {
+              } else {
                 this.$parent.makeToast("danger",`Error ${r.status}`, "You should login again");
                 // delete tokens
                 this.$store.commit("auth/clearTokens");
@@ -133,13 +133,13 @@ export default {
   },
   computed: {
     submitState() {
-      return this.nameState && this.dniState && this.town != null;
+      return this.nameState && this.nifState && this.town != null;
     },
     nameState() {
       return this.name.length > 5 && this.name.includes(" ") ? true : false;
     },
-    dniState() {
-      return this.dni.length >= 9 ? true : false;
+    nifState() {
+      return this.nif.length >= 9 ? true : false;
     },
     ...mapGetters(["users/get"]),
     ...mapActions(["users/retrieve"]),
