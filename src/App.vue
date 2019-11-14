@@ -56,13 +56,11 @@ export default {
     },
     /* eslint-enable */
     isAuth(){
-      if  (this.$store.getters["auth/access_token"] != null && 
-          (this.$store.getters["auth/access_token"] != undefined)) return true;
+      if  (localStorage["access_token"] != null) return true;
       else return false
     },
     isLogged() {
-      if(this.$store.getters["auth/access_token"] != null && 
-        (this.$store.getters["auth/access_token"] != undefined)) return true;
+      if(localStorage["access_token"] != null) return true;
       else this.redirect("/login");
     },
     getCols(component) {

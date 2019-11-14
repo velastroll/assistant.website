@@ -1,3 +1,4 @@
+
 import camelCase from 'lodash/camelCase'
 // Storing in variable a context with all files in this folder
 // ending with `.js`.

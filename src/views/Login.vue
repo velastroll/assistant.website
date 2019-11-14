@@ -55,9 +55,6 @@ export default {
           .dispatch("auth/login", { username: this.usr, password: this.psswd })
           .then(r => {
             if (r.status == 200) {
-              // save the token
-              this.$store.commit("auth/updateAccessToken", r.data.access_token);
-              this.$store.commit("auth/updateRefreshToken",r.data.refresh_token);
               // push to home view
               this.$router.push("/");
             } else if (r.status == 401) {

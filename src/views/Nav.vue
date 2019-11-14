@@ -20,7 +20,10 @@
                     <i class="material-icons icon-nav"> wc </i>
                 </b-col>
                     
-                <b-col cols="12" style="max-width: 65px; min-width: 65px;"> 
+                <b-col 
+                    cols="12" style="max-width: 65px; min-width: 65px;"
+                    @click='redirect("/provinces")'
+                > 
                     <i class="material-icons icon-nav"> home_work </i>
                 </b-col>
             </b-row>

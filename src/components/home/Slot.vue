@@ -8,7 +8,7 @@
       <div :style="`color: ${getColor(this.msg.status[0].timestamp)}`">
         <b-row>
           <b-col style="text-align: left; max-height: 20px;" >
-            <i class="material-icons"> record_voice_over </i>
+            <i class="material-icons"> settings_remote </i>
           </b-col>
           <b-col>
             <div
