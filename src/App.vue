@@ -56,11 +56,11 @@ export default {
     },
     /* eslint-enable */
     isAuth(){
-      if  (localStorage["access_token"] != null) return true;
+      if  (sessionStorage.getItem("access_token") != null) return true;
       else return false
     },
     isLogged() {
-      if(localStorage["access_token"] != null) return true;
+      if(sessionStorage.getItem("access_token") != null) return true;
       else this.redirect("/login");
     },
     getCols(component) {

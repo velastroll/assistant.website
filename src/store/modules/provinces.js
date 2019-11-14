@@ -24,8 +24,6 @@ export default {
     actions: {
         // this.$store.dispatch["doXYZ"]
         retrieve(context) {
-            var api = context.rootGetters["common/api"]
-            var access_token = context.rootGetters["auth/access_token"];
             return new Promise(resolve => {
                 Axios({
                     method: "get",
@@ -40,6 +38,24 @@ export default {
                     })
                     .catch(e => {
                         Promise.reject(e)
+                    });
+            });
+        },
+        add(context, payload){
+            return new Promise(resolve => {
+                Axios({
+                    method: "post",
+                    url: "worker/towns",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    data : payload
+                })
+                    .then(response => {
+                        resolve({status:200, data: response.data});
+                    })
+                    .catch(e => {
+                        resolve({status:409, data: 'This postcode is already in use.'});
                     });
             });
         }

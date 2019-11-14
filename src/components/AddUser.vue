@@ -102,21 +102,6 @@ export default {
               //ok, add the response, which is the person updated profile
               this.$parent.makeToast("success",`Success`, "New person added to the system.");
           }
-          else if (status == 401) {
-            // trying to refresh token
-            this.$store.dispatch("auth/refreshTokens").then(r => {
-              if (r.status == 200) {
-                this.$store.commit("auth/updateAccessToken", r.data.access_token);
-                this.$store.commit("auth/updateRefreshToken", r.data.refresh_token);
-              } else {
-                this.$parent.makeToast("danger",`Error ${r.status}`, "You should login again");
-                // delete tokens
-                this.$store.commit("auth/clearTokens");
-                this.$store.commit("users/clear");
-                this.$parent.redirect("/login");
-              }
-            });
-          }
           else if (status == 400){
             this.$parent.makeToast("danger",`Error ${res.status}`,res.description);
           }

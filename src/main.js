@@ -18,7 +18,7 @@ Axios.defaults.baseURL = base;
 
 Axios.interceptors.request.use(
   config => {
-      const token = localStorage["access_token"];
+      const token = sessionStorage["access_token"];
       if (token) {
           config.headers['Authorization'] = token;
       }
@@ -39,8 +39,8 @@ Axios.interceptors.response.use((response) => {
   const originalRequest = error.config;
 
   if (error.response.status === 401 && originalRequest.url == (base + "auth/refreshtoken")) {
-    localStorage.removeItem("access_token")
-    localStorage.removeItem("refresh_token")
+    sessionStorage.removeItem("access_token")
+    sessionStorage.removeItem("refresh_token")
     router.push('/login');
     return Promise.reject(error);
   }
@@ -48,16 +48,16 @@ Axios.interceptors.response.use((response) => {
   if (error.response.status === 401 && !originalRequest._retry) {
 
       originalRequest._retry = true;
-      const refreshToken = localStorage.refresh_token;
+      const refreshToken = sessionStorage.getItem("refresh_token");
       return Axios.post('/auth/refreshtoken',
           {
               "refresh_token": refreshToken
           })
           .then(res => {
               if (res.status === 201) {
-                  localStorage.access_token = res.data.access_token;
-                  localStorage.refresh_token = res.data.refresh_token;
-                  Axios.defaults.headers.common['Authorization'] = localStorage.access_token;
+                  sessionStorage.setItem("access_token", res.data.access_token);
+                  sessionStorage.setItem("refresh_token", res.data.refresh_token);
+                  Axios.defaults.headers.common['Authorization'] = sessionStorage.getItem("access_token");
                   return Axios(originalRequest);
               }
           })
