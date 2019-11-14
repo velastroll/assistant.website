@@ -17,7 +17,6 @@
   </div>
 </template>
 
-
 <script>
 
 import { mapGetters } from "vuex";
@@ -33,7 +32,8 @@ export default {
       window: {
         width: 0,
         height: 0
-      }
+      },
+      provinces: []
     };
   },
   created() {
@@ -44,6 +44,48 @@ export default {
     window.removeEventListener("resize", this.handleResize);
   },
   methods: {
+    updateUsers: function() {
+      this.$store.dispatch("users/retrieve").then(r => {
+        if (r.status == 200) {
+          this.users = this.$store.getters["users/get"];
+        } else if (r.status == 500) {
+          this.$parent.makeToast("danger", `Error ${r.status}`, r.description);
+          // delete tokens
+          this.$store.commit("auth/clearTokens");
+          this.$store.commit("users/clear");
+          this.$parent.redirect("/login");
+        } else if (r.status == 404) {
+          console.log("Server is down");
+        } else {
+          this.$parent.makeToast(
+            "danger",
+            `Oups ${r.status}`,
+            "Server is down."
+          );
+          // delete tokens
+          this.$store.commit("auth/clearTokens");
+          this.$store.commit("users/clear");
+          this.$parent.redirect("/login");
+        }
+      });
+    },
+    updateProvinces(){
+      this.$store.dispatch("provinces/retrieve").then(r => {
+        if (r.status == 200) {
+          this.provinces = this.$store.getters["provinces/get"];
+        } else {
+          this.$parent.makeToast(
+            "danger",
+            `Oups ${r.status}`,
+            r.description
+          );
+          // delete tokens
+          this.$store.commit("auth/clearTokens");
+          this.$store.commit("provinces/clear");
+          this.$parent.redirect("/login");
+        }
+      });
+    },
     handleResize() {
       this.window.width = window.innerWidth;
       this.window.height = window.innerHeight;
@@ -73,21 +115,6 @@ export default {
         if (component == 'content') return "12";
       }
     },
-    getHeight(c) {
-      var w = window.innerWidth;
-      if (w > 650) {
-        if (c == 'nav') return "100vh";
-        if (c == 'content') return "";
-      } else {
-        if (c == 'nav') return "10vh";
-        if (c == 'content') return "";
-      }
-    },
-    header_title_style() {
-      if (this.window.width < 587) {
-        return "header-title-little";
-      } else return "header-title";
-    },    
     makeToast(variant = null, title, content) {
       this.$bvToast.toast(content, {
         title: title,

@@ -101,7 +101,7 @@ export default {
     };
   },
   mounted() {
-    if (sessionStorage["access_token"] != null) {
+    if (sessionStorage.getItem("access_token") != null) {
       this.updateProvinces();
     } else {
       this.$parent.redirect("/login");
@@ -112,24 +112,12 @@ export default {
       this.$store.dispatch("provinces/retrieve").then(r => {
         if (r.status == 200) {
           this.provinces = this.$store.getters["provinces/get"];
-        } else if (r.status == 500) {
-          this.$parent.makeToast("danger", `Error ${r.status}`, r.description);
-          // delete tokens
-          this.$store.commit("auth/clearTokens");
-          this.$store.commit("provinces/clear");
-          this.$parent.redirect("/login");
-        } else if (r.status == 404) {
-          console.log("Server is down");
         } else {
           this.$parent.makeToast(
             "danger",
             `Oups ${r.status}`,
-            "Server is down."
+            r.description
           );
-          // delete tokens
-          this.$store.commit("auth/clearTokens");
-          this.$store.commit("provinces/clear");
-          this.$parent.redirect("/login");
         }
       });
     },

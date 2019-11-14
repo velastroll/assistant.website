@@ -34,10 +34,10 @@ export default {
                 })
                     .then(response => {
                         context.commit("updateProvinces", response.data);
-                        resolve(response);
+                        resolve({status: 200, data: "Actualizado"});
                     })
                     .catch(e => {
-                        Promise.reject(e)
+                        resolve({status: 500, data: "Algo fue mal"});
                     });
             });
         },

@@ -15,17 +15,17 @@
             <b-button class="add-user-button" v-b-modal.modal-add-user>Add user</b-button>
           </b-col>
         </b-row>
-        <b-row class="header-table">
+        <b-row class="header-table" >
           <b-col>NOMBRE</b-col>
           <b-col v-if="bigScreen()">NIF</b-col>
           <b-col>CIUDAD</b-col>
           <b-col>DISPOSITIVO</b-col>
         </b-row>
-        <b-row class="row-table" :key="i" v-for="(u, i) in this.users">
+        <b-row class="row-table" :key="i" v-for="(u, i) in this.users" align-v="center">
           <b-col>{{u.name}}</b-col>
           <b-col v-if="bigScreen()">{{u.nif}}</b-col>
-          <b-col>{{u.town}}</b-col>
-          <b-col>{{u.device}}</b-col>
+          <b-col>{{existLocation(u.postcode).name}}</b-col>
+          <b-col>{{getDevice(u.nif)}}</b-col>
         </b-row>
       </b-col>
     </b-row>
@@ -49,17 +49,12 @@ export default {
   data: function() {
     return {
       users: this.$store.getters["users/get"],
-      selected: null,
-      options: [
-        { value: null, text: "Please select an option", disabled: true },
-        { value: "a", text: "This is First option" },
-        { value: "b", text: "Selected Option" },
-        { value: "c", text: "This is an option with object value" }
-      ]
+      provinces: this.$store.getters["provinces/get"]
     };
   },
   mounted() {
     if (sessionStorage.getItem("access_token") != null) {
+      this.updateProvinces();
       this.updateUsers();
     } else {
       this.$parent.redirect("/login");
@@ -70,24 +65,21 @@ export default {
       this.$store.dispatch("users/retrieve").then(r => {
         if (r.status == 200) {
           this.users = this.$store.getters["users/get"];
-        } else if (r.status == 500) {
+        } else {
           this.$parent.makeToast("danger", `Error ${r.status}`, r.description);
-          // delete tokens
-          this.$store.commit("auth/clearTokens");
-          this.$store.commit("users/clear");
-          this.$parent.redirect("/login");
-        } else if (r.status == 404) {
-          console.log("Server is down");
+        }
+      });
+    },
+    updateProvinces() {
+      this.$store.dispatch("provinces/retrieve").then(r => {
+        if (r.status == 200) {
+          this.provinces = this.$store.getters["provinces/get"];
         } else {
           this.$parent.makeToast(
             "danger",
             `Oups ${r.status}`,
-            "Server is down."
+            r.description
           );
-          // delete tokens
-          this.$store.commit("auth/clearTokens");
-          this.$store.commit("users/clear");
-          this.$parent.redirect("/login");
         }
       });
     },
@@ -97,6 +89,30 @@ export default {
     bigScreen: function() {
       if (window.innerWidth < 500) return false;
       else return true;
+    },
+    existLocation(postcode) {
+      for (var p in this.provinces) {
+        for (var l in this.provinces[p].locations) {
+          if (this.provinces[p].locations[l].postcode == postcode) {
+            return this.provinces[p].locations[l];
+          }
+        }
+      }
+      return null;
+    },
+    getDevice(dni) {
+      for (var p in this.provinces) {
+        for (var l in this.provinces[p].locations) {
+          for (var s in this.provinces[p].locations[l].people) {
+            if (this.provinces[p].locations[l].people[s].nif == dni) {
+              if (this.provinces[p].locations[l].people[s].relation != null){
+                return this.provinces[p].locations[l].people[s].relation.device
+              }
+            }
+          }
+        }
+      }
+      return null;
     }
   },
   computed: {
@@ -137,6 +153,9 @@ export default {
 
 .row-table {
   border-bottom: 1px solid #303c4727;
+}
+.row-table:hover{
+  background-color: #2c3e5011;
 }
 
 .header-table {

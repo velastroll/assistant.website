@@ -40,15 +40,21 @@
         <i class="material-icons">home_work</i>
       </b-col>
       <b-col>
-        <b-form-select
+        <b-form-input
           id="select-location"
           class="input-modal"
-          v-model="town"
-          :options="town_options"
+          v-model="postcode"
+          :state="pcState"
+          type="number"
           size="sm"
-        ></b-form-select>
+        ></b-form-input>
       </b-col>
     </b-row>
+    <div
+      v-if="goodPostcode() && existLocation() == null"
+      style="color: red"
+    >This postal code does not exist. Add first the town.</div>
+    <div v-else-if="pcState" style="color: green; text-align: right;">Add user to {{existLocation().name}}</div>
 
     <template v-slot:modal-footer>
       <div class="w-100">
@@ -77,54 +83,55 @@ export default {
   data: function() {
     return {
       users: this.$store.getters["users/get"],
+      provinces: this.$store.getters["provinces/get"],
       name: "",
       nif: "",
-      town: null,
-      town_options: [
-        { value: null, text: "Please select an option", disabled: true },
-        { value: "a", text: "This is First option" },
-        { value: "b", text: "Selected Option" },
-        { value: "c", text: "This is an option with object value" }
-      ]
+      postcode: null
     };
   },
-  mounted() {
-    if (this.$store.getters["auth/access_token"] == null) {
-      //this.$parent.redirect("/login");
-    }
-  },
+  mounted() {},
   methods: {
     submit() {
       console.log(`${this.name} - ${this.nif} - ${this.selected}`);
-      var payload = { name: this.name, nif: this.nif, town: this.town };
+      var payload = { name: this.name, nif: this.nif, postcode: this.postcode };
       this.$store.dispatch("users/add", payload).then(res => {
-          if (status == 200){
-              //ok, add the response, which is the person updated profile
-              this.$parent.makeToast("success",`Success`, "New person added to the system.");
-          }
-          else if (status == 400){
-            this.$parent.makeToast("danger",`Error ${res.status}`,res.description);
-          }
-          else {
-            this.$parent.makeToast("danger",`Error ${res.status}`,res.description);
-            // delete tokens
-            this.$store.commit("auth/clearTokens");
-            this.$store.commit("users/clear");
-            this.$parent.redirect("/login");
-          }
-
+        if (status == 200) {
+          //ok, add the response, which is the person updated profile
+          this.$parent.makeToast(
+            "success",
+            `Success`,
+            "New person added to the system."
+          );
+        } else {
+          this.$parent.makeToast(
+            "danger",
+            `Error ${res.status}`,
+            res.description
+          );
+          // delete tokens
+          this.$parent.redirect("/login");
+        }
       });
+    },
+    existLocation() {
+      return this.$parent.existLocation(this.postcode);
+    },
+    goodPostcode() {
+      return this.postcode > 1000 && this.postcode < 52008;
     }
   },
   computed: {
     submitState() {
-      return this.nameState && this.nifState && this.town != null;
+      return this.nameState && this.nifState && this.postcode != null;
     },
     nameState() {
       return this.name.length > 5 && this.name.includes(" ") ? true : false;
     },
     nifState() {
       return this.nif.length >= 9 ? true : false;
+    },
+    pcState() {
+      return this.goodPostcode() && this.existLocation() != null;
     },
     ...mapGetters(["users/get"]),
     ...mapActions(["users/retrieve"]),

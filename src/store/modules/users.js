@@ -53,11 +53,10 @@ export default {
                     }
                 })
                     .then(response => {
-                        context.commit("updateUsers", response.data);
-                        resolve(response);
+                        resolve({status:200});
                     })
                     .catch(e => {
-                        Promise.reject(e)
+                        resolve({status:500});
                     });
             });
         }
