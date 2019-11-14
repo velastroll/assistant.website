@@ -12,7 +12,7 @@
             <b-input class="input-search" placeholder="Search by name, nif, town, or device..." />
           </b-col>
           <b-col md="auto">
-            <b-button class="add-user-button" v-b-modal.modal-add-user>Add user</b-button>
+            <b-button class="add-town-button" v-b-modal.modal-add-town>Add town</b-button>
           </b-col>
         </b-row>
         <!--  Header -->
@@ -35,49 +35,29 @@
             </b-row>
             <!-- Town -->
             <b-collapse :id="'collapse-' + p.code" :accordion="'acc'">
+              <hr />
               <div class="card-town" :key="'t'+j" v-for="(l, j) in p.locations">
-                <b-row v-b-toggle="'collapse-' + l.postcode">
+                <b-row>
                   <b-col>{{l.postcode}}</b-col>
                   <b-col>{{l.name}}</b-col>
                   <b-col></b-col>
-                  <b-col>{{l.people.length}}</b-col>
-                  <b-col>{{getDevicesOfTown(l.people).length}}</b-col>
+                  <b-col>
+                    <a style="font-size: 1rem;">{{l.people.length}}</a>
+                    <i class="material-icons reduced-icon">wc</i>
+                  </b-col>
+                  <b-col>
+                    {{getDevicesOfTown(l.people).length}}
+                    <i class="material-icons reduced-icon">settings_remote</i>
+                  </b-col>
                 </b-row>
-                <!-- people -->
-                <b-collapse :id="'collapse-' + l.postcode" :accordion="'acc-' + l.postcode">
-                  <b-row style="font-weight: bolder;">
-                    <b-col>DNI</b-col>
-                    <b-col>Name</b-col>
-                    <b-col>Device</b-col>
-                    <b-col>From</b-col>
-                  </b-row>
-                  <div :key="'t'+k" v-for="(m, k) in l.people">
-                    <div v-if="k.relation != null">
-                      <b-row>
-                        <b-col>{{m.nif}}</b-col>
-                        <b-col>{{m.surname}}, {{m.name}}</b-col>
-                        <b-col></b-col>
-                        <b-col></b-col>
-                      </b-row>
-                    </div>
-                    <div v-else>
-                      <b-row>
-                        <b-col>{{m.nif}}</b-col>
-                        <b-col>{{m.surname}}, {{m.name}}</b-col>
-                        <b-col>{{m.relation.device}}</b-col>
-                        <b-col>{{m.relation.from}}</b-col>
-                      </b-row>
-                    </div>
-                  </div>
-                </b-collapse>
               </div>
             </b-collapse>
           </div>
         </div>
         <!-- Empty provinces -->
         <div :key="i" v-for="(p, i) in this.provinces">
-          <div v-if="p.locations.length == 0">
-            <b-row class="row-table">
+          <div v-if="p.locations.length == 0" >
+            <b-row class="row-table" >
               <b-col cols="1" style="text-align:right;">[{{p.code}}]</b-col>
               <b-col cols="2" style="text-align:left;">{{p.name}}</b-col>
               <b-col style="text-align: right;">
@@ -89,8 +69,12 @@
       </b-col>
     </b-row>
 
-    <!-- modal: Add User >
-    <AddUser /-->
+    <!-- The modal-->
+    <b-modal id="modal-add-town" ref="modal-add-town" :title="Test" hide-footer>
+      <div>
+        {{town}}
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -116,72 +100,42 @@ export default {
         { value: "c", text: "This is an option with object value" }
       ],
       users: [],
-      devices: []
+      devices: [],
+      town: null
     };
   },
   mounted() {
-    if (this.$store.getters["auth/access_token"] != null) {
+    if (localStorage["access_token"] != null) {
       this.updateProvinces();
     } else {
-      console.log("TODO: show this on production.");
-      // this.$parent.redirect("/login")
+      this.$parent.redirect("/login");
     }
   },
   methods: {
     updateProvinces: function() {
-      if (this.$store.getters["auth/access_token"] != null) {
-        this.$store.dispatch("provinces/retrieve").then(r => {
-          if (r.status == 200) {
-            this.provinces = this.$store.getters["provinces/get"];
-          } else if (r.status == 401) {
-            // trying to refresh token
-            this.$store.dispatch("auth/refreshTokens").then(r => {
-              if (r.status == 200) {
-                this.$store.commit(
-                  "auth/updateAccessToken",
-                  r.data.access_token
-                );
-                this.$store.commit(
-                  "auth/updateRefreshToken",
-                  r.data.refresh_token
-                );
-              } else if (r.status == 401) {
-                this.$parent.makeToast(
-                  "danger",
-                  `Error ${r.status}`,
-                  "You should login again"
-                );
-                // delete tokens
-                this.$store.commit("auth/clearTokens");
-                this.$store.commit("provinces/clear");
-                this.$parent.redirect("/login");
-              }
-            });
-          } else if (r.status == 500) {
-            this.$parent.makeToast(
-              "danger",
-              `Error ${r.status}`,
-              r.description
-            );
-            // delete tokens
-            this.$store.commit("auth/clearTokens");
-            this.$store.commit("provinces/clear");
-            this.$parent.redirect("/login");
-          } else if (r.status == 404) {
-            console.log("Server is down");
-          } else {
-            this.$parent.makeToast(
-              "danger",
-              `Oups ${r.status}`,
-              "Server is down."
-            );
-            // delete tokens
-            this.$store.commit("auth/clearTokens");
-            this.$store.commit("provinces/clear");
-            this.$parent.redirect("/login");
-          }
-        });
-      }
+      this.$store.dispatch("provinces/retrieve").then(r => {
+        if (r.status == 200) {
+          this.provinces = this.$store.getters["provinces/get"];
+        } else if (r.status == 500) {
+          this.$parent.makeToast("danger", `Error ${r.status}`, r.description);
+          // delete tokens
+          this.$store.commit("auth/clearTokens");
+          this.$store.commit("provinces/clear");
+          this.$parent.redirect("/login");
+        } else if (r.status == 404) {
+          console.log("Server is down");
+        } else {
+          this.$parent.makeToast(
+            "danger",
+            `Oups ${r.status}`,
+            "Server is down."
+          );
+          // delete tokens
+          this.$store.commit("auth/clearTokens");
+          this.$store.commit("provinces/clear");
+          this.$parent.redirect("/login");
+        }
+      });
     },
     makeToast(a, b, c) {
       this.$parent.makeToast(a, b, c);
@@ -232,6 +186,17 @@ export default {
 </script>
 
 <style scoped>
+.reduced-icon {
+  padding-top: 0.2rem;
+  padding-bottom: 0rem;
+  font-size: 0.75rem;
+}
+
+hr {
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+}
+
 .center {
   padding: auto;
 }
@@ -252,10 +217,7 @@ export default {
 .card-town {
   margin: 0 0 0 0;
   padding: 0 0 0 0;
-  border-top: 1px solid rgba(44, 62, 80, 0.5);
   border-bottom: 1px solid rgba(44, 62, 80, 0.5);
-  border-left: 1px solid rgba(44, 62, 80, 0.5);
-  border-right: 1px solid rgba(44, 62, 80, 0.5);
   font-weight: normal;
   color: #2c3e50;
   background-color: #ffffff80;
@@ -263,7 +225,11 @@ export default {
   cursor: pointer;
 }
 
-.add-user-button {
+.card-town:hover {
+  background-color: #2c3e5023;
+}
+
+.add-town-button {
   padding: 0px 15px 0px 15px;
   height: 30px;
   margin-top: 5px;
@@ -273,7 +239,7 @@ export default {
   color: #2c3e50;
 }
 
-.add-user-button:hover {
+.add-town-button:hover {
   background-color: #2c3e50;
   color: #f2f2f2;
 }

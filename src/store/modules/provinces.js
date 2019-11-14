@@ -29,9 +29,8 @@ export default {
             return new Promise(resolve => {
                 Axios({
                     method: "get",
-                    url: api + "/worker/towns",
+                    url: "worker/towns",
                     headers: {
-                        Authorization: access_token,
                         "Content-Type": "application/json"
                     }
                 })
@@ -40,19 +39,7 @@ export default {
                         resolve(response);
                     })
                     .catch(e => {
-                        if (e.toString().includes("Network")) {
-                            resolve({ status: 404 })
-                        } else if (e.toString().includes("400")) {
-                            resolve({
-                                status: 401,
-                                description: e.response.data
-                            });
-                        } else if (e.toString().includes("500")) {
-                            resolve({
-                                status: 500,
-                                description: e.response.data
-                            });
-                        }
+                        Promise.reject(e)
                     });
             });
         }
