@@ -59,7 +59,7 @@ export default {
     };
   },
   mounted() {
-    if (localStorage["access_token"] != null) {
+    if (sessionStorage.getItem("access_token") != null) {
       this.updateUsers();
     } else {
       this.$parent.redirect("/login");
@@ -70,27 +70,6 @@ export default {
       this.$store.dispatch("users/retrieve").then(r => {
         if (r.status == 200) {
           this.users = this.$store.getters["users/get"];
-        } else if (r.status == 401) {
-          // trying to refresh token
-          this.$store.dispatch("auth/refreshTokens").then(r => {
-            if (r.status == 200) {
-              this.$store.commit("auth/updateAccessToken", r.data.access_token);
-              this.$store.commit(
-                "auth/updateRefreshToken",
-                r.data.refresh_token
-              );
-            } else if (r.status == 401) {
-              this.$parent.makeToast(
-                "danger",
-                `Error ${r.status}`,
-                "You should login again"
-              );
-              // delete tokens
-              this.$store.commit("auth/clearTokens");
-              this.$store.commit("users/clear");
-              this.$parent.redirect("/login");
-            }
-          });
         } else if (r.status == 500) {
           this.$parent.makeToast("danger", `Error ${r.status}`, r.description);
           // delete tokens

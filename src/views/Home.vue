@@ -33,7 +33,7 @@ export default {
     };
   },
   mounted() {
-    if (localStorage["access_token"] != null) {
+    if (sessionStorage.getItem("access_token") != null) {
       this.updateDevices();
       this.timer = setInterval(() => {
         this.updateDevices();

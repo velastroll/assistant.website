@@ -69,12 +69,8 @@
       </b-col>
     </b-row>
 
-    <!-- The modal-->
-    <b-modal id="modal-add-town" ref="modal-add-town" :title="Test" hide-footer>
-      <div>
-        {{town}}
-      </div>
-    </b-modal>
+    <!-- modal -->
+    <AddTown />
   </div>
 </template>
 
@@ -82,16 +78,16 @@
 // @ is an alias to /src
 // import AddUser from "@/components/AddUser.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
-
+import AddTown from '@/components/AddTown'
 export default {
   name: "Provinces",
   components: {
-    //AddUser
+    AddTown
   },
 
   data: function() {
     return {
-      provinces: this.$store.getters["provinces/get"],
+      provinces: [],
       selected: null,
       options: [
         { value: null, text: "Please select an option", disabled: true },
@@ -105,7 +101,7 @@ export default {
     };
   },
   mounted() {
-    if (localStorage["access_token"] != null) {
+    if (sessionStorage["access_token"] != null) {
       this.updateProvinces();
     } else {
       this.$parent.redirect("/login");
@@ -170,6 +166,20 @@ export default {
         if (people[p].relation != null) devices.push(people[p].relation);
       }
       return devices;
+    },
+    getProvinceOf(postcode){
+      for (var p in this.provinces){
+        if (this.provinces[p].code == parseInt(postcode/1000)) return this.provinces[p].name;
+      }
+      return 'undefined'
+    },
+    pcInUse(postcode){
+      for (var p in this.provinces){
+        for (var l in this.provinces[p].locations){
+          if (this.provinces[p].locations[l].postcode == postcode) return true;
+        }
+      }
+      return false;
     }
   },
   computed: {
