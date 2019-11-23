@@ -1,6 +1,6 @@
 # 🧠 ASSISTANT FRONTEND
 
-1. Clon this repo.
+1. Clone this repo.
 
 2. Install dependencies
 
