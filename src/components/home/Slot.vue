@@ -2,7 +2,7 @@
   <div v-if="this.msg != null">
     <b-card
       style=" cursor: pointer;"
-      :class="this.borderColor(this.msg.status[0].timestamp)"
+      :class=" 'border-slot' + this.borderColor(this.msg.status[0].timestamp)"
       @click="showData(msg)"
     >
       <div :style="`color: ${getColor(this.msg.status[0].timestamp)}`">
@@ -18,7 +18,7 @@
         </b-row>
       </div>
       <b-row>
-        <div class="last-action">[{{this.msg.status[0].state}}] {{this.getMinutes(this.msg.status[0].timestamp)}}</div>
+        <div :class="this.getTaskClass(this.msg.status[0])">[{{this.getTask(this.msg.status[0])}}] {{this.getMinutes(this.msg.status[0].timestamp)}}</div>
         <div class="row-description">{{this.msg.relation.user.name}} - {{this.msg.relation.user.nif}} </div>
       </b-row>
     </b-card>
@@ -108,6 +108,7 @@ export default {
       if (date > 30) toReturn = " border-yellow "
       if (date > 1440) toReturn = " border-orange ";
       if (date > 5760) toReturn = " border-red ";
+      if (this.msg.status[0].state != 'ALIVE') toReturn = toReturn + ' doing-action '
       return toReturn;
     },
     parseDate(date) {
@@ -124,6 +125,15 @@ export default {
         variant: variant,
         solid: true
       });
+    },
+    getTask(task){
+      console.log(task)
+      if (task.state == "ALIVE") return task.state;
+      else return task.content;
+    },
+    getTaskClass(task){
+      if (task.state == "ALIVE") return ' last-action ';
+      else return ' task-action last-action ';
     }
   },
   computed: {
@@ -133,29 +143,32 @@ export default {
 </script>
 
 <style scoped>
-.border-red {
-  border-color: darkred;
+
+.task-action{
+  font-weight: bolder;
+}
+
+.doing-action {
+  background: #bcff96;
+}
+
+.border-slot{
   border-radius: 3px;
   border-width: 2px;
   border-style: solid;
+}
+
+.border-red {
+  border-color: darkred;
 }
 .border-orange {
   border-color: darkorange;
-  border-radius: 3px;
-  border-width: 2px;
-  border-style: solid;
 }
 .border-green {
   border-color: darkgreen;
-  border-radius: 3px;
-  border-width: 2px;
-  border-style: solid;
 }
 .border-yellow {
   border-color: #cccc00;
-  border-radius: 3px;
-  border-width: 2px;
-  border-style: solid;
 }
 .row-description {
   width: 100%;
