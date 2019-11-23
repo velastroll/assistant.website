@@ -34,6 +34,7 @@ export default {
   },
   mounted() {
     if (sessionStorage.getItem("access_token") != null) {
+      this.updateEvents()
       this.updateDevices();
       this.timer = setInterval(() => {
         this.updateDevices();
@@ -44,6 +45,10 @@ export default {
     clearInterval(this.timer);
   },
   methods: {
+    updateEvents: function(){
+      this.$store.dispatch("tasks/getEvents")
+      console.log("updating events..")
+    },
     updateDevices: function() {
       this.$store.dispatch("device/retrieve").then(r => {
         if (r.status == 200) {
