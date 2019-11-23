@@ -95,7 +95,6 @@
           <b-col style="text-align:center; ">
             <span style="font-style: italic;">
               No pending actions
-              {{this.msg}}
             </span>
           </b-col>
         </div>
