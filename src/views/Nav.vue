@@ -78,7 +78,8 @@ export default {
       this.$parent.redirect(url)
     },
     isActive(fragment){
-      if (this.$route.path == fragment) {
+      if (this.$route.path == fragment || 
+      (this.$route.path == '/stats' && fragment == '/users')) {
         return ' color: #ff1a8c; '
       }
     }

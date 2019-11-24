@@ -5,6 +5,7 @@ import Home from './views/Home.vue'
 import Login from './views/Login.vue'
 import Users from './views/Users.vue'
 import Provinces from './views/Provinces.vue'
+import Stats from './views/Stats.vue'
 
 Vue.use(Router)
 
@@ -31,6 +32,11 @@ export default new Router({
       path: '/provinces',
       name: "provinces",
       component: Provinces
+    },
+    {
+      path: '/stats',
+      name: "stats",
+      component: Stats
     }
   ]
 })
