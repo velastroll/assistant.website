@@ -38,11 +38,10 @@
     <template v-slot:modal-footer>
       <div class="w-100">
         <p class="float-left" v-if="pcState">
-          Add to <strong> {{getProvince()}}</strong>
+          Add to
+          <strong>{{getProvince()}}</strong>
         </p>
-        <p class="float-left" style="color: red;" v-else-if="pcInUse()">
-          Post code is already in use
-        </p>
+        <p class="float-left" style="color: red;" v-else-if="pcInUse()">Post code is already in use</p>
         <b-button
           :disabled="!submitState"
           variant="primary"
@@ -66,32 +65,40 @@ export default {
 
   data: function() {
     return {
-      name: '',
+      name: "",
       postcode: null
     };
   },
-  mounted() {
-  },
+  mounted() {},
 
   methods: {
     submit() {
-      
       var payload = { name: this.name, postcode: this.postcode };
       this.$store.dispatch("provinces/add", payload).then(res => {
-          if (res.status == 200){
-              //ok, add the response, which is the person updated profile
-              this.$parent.makeToast("success",`Success`, "New town added to the system.");
-          }
-          else {
-            this.$parent.makeToast("danger",`Error ${res.status}`, res.data);
-            // delete tokens
-          }
+        if (res.status == 200) {
+          // hide modal
+          this.$bvModal.hide("modal-add-town")
+          // reset fields
+          this.name = ""
+          this.postcode = null
+          // retrieve new list
+          this.$parent.updateProvinces()
+          //ok, add the response, which is the person updated profile
+          this.$parent.makeToast(
+            "success",
+            `Success`,
+            "New town added to the system."
+          );
+        } else {
+          this.$parent.makeToast("danger", `Error ${res.status}`, res.data);
+          // delete tokens
+        }
       });
     },
-    getProvince(){
+    getProvince() {
       return this.$parent.getProvinceOf(this.postcode);
     },
-    pcInUse(){
+    pcInUse() {
       return this.$parent.pcInUse(this.postcode);
     }
   },
@@ -103,7 +110,9 @@ export default {
       return this.name.length > 3 ? true : false;
     },
     pcState() {
-      return this.postcode >= 1000 && this.postcode < 52008 && !this.pcInUse() ? true : false;
+      return this.postcode >= 1000 && this.postcode < 52008 && !this.pcInUse()
+        ? true
+        : false;
     }
   }
 };

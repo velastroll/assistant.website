@@ -29,7 +29,7 @@
           <div class="card-province" v-if="p.locations.length > 0">
             <b-row v-b-toggle="'collapse-' + p.code">
               <b-col class="smart-screen">{{p.code}}</b-col>
-              <b-col>{{p.name}}</b-col>
+              <b-col >{{p.name}}</b-col>
               <b-col class="smart-screen">{{p.locations.length}}</b-col>
               <b-col>{{getUsers(p.locations).length}}</b-col>
               <b-col>{{getDevices(p.locations).length}}</b-col>
@@ -40,8 +40,8 @@
               <div class="card-town" :key="'t'+j" v-for="(l, j) in p.locations">
                 <b-row>
                   <b-col>{{l.postcode}}</b-col>
-                  <b-col>{{l.name}}</b-col>
-                  <b-col></b-col>
+                  <b-col class="smart-screen">{{l.name}}</b-col>
+                  <b-col class="smart-screen"></b-col>
                   <b-col>
                     <a style="font-size: 1rem;">{{l.people.length}}</a>
                     <i class="material-icons reduced-icon">wc</i>
