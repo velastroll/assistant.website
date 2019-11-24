@@ -9,11 +9,11 @@
             <span class="login-title">🧠</span>
             <hr />
             <div class="login-input-title">USER</div>
-            <form>
-            <b-input v-model="usr" required></b-input>
-            <div class="login-input-title">PASSWORD</div>
-            <b-input v-model="psswd" :type="'password'" required></b-input>
-            <b-button type="submit" variant="success" class="login-button" @click="login()">log in</b-button>
+            <form @submit.prevent="login()">
+              <b-input v-model="usr" required></b-input>
+              <div class="login-input-title">PASSWORD</div>
+              <b-input v-model="psswd" :type="'password'" required></b-input>
+              <b-button type="submit" variant="success" class="login-button">log in</b-button>
             </form>
           </b-card>
         </b-row>
@@ -24,7 +24,6 @@
 
 <script>
 /* eslint-disable */
-
 
 import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
@@ -58,9 +57,13 @@ export default {
               // push to home view
               this.$router.push("/");
             } else if (r.status == 401) {
-              this.$parent.makeToast("danger",`Oups!`,`Invalid credentials`);
+              this.$parent.makeToast("danger", `Oups!`, `Invalid credentials`);
             } else {
-              this.$parent.makeToast("danger", `[${r.status}]`, `Server is down`);
+              this.$parent.makeToast(
+                "danger",
+                `[${r.status}]`,
+                `Server is down`
+              );
             }
           });
       }
@@ -69,7 +72,7 @@ export default {
   computed: {
     ...mapActions(["auth/login"]),
     ...mapMutations(["auth/updateAccessToken", "auth/updateRefreshToken"])
-  },
+  }
 };
 </script>
 
