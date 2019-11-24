@@ -1,5 +1,5 @@
 <template>
-  <div class="body-home" style=" width: 100%; height: 100%; margin: 0 0 0 0; padding: 0 0 0 0;">
+  <div class="body-home" style=" width: 100%; min-height: 100%; margin: 0 0 0 0; padding: 0 0 0 0;">
     <b-row class="justify-content-center">
       <b-col
         cols="12"
@@ -57,32 +57,96 @@
         <!-- content -->
         <b-row>
           <!-- charts -->
-          <div class="stats-grid">
-
+          <div class="chart-grid">
             <!-- Intents -->
             <b-row style="width: 100%">
-              <b-col cols="2" style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;">
+              <b-col
+                cols="2"
+                style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
+              >
                 <i class="material-icons">pie_chart</i>
               </b-col>
               <b-col>
-                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;"> Intenciones </div>
+                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Intenciones</div>
               </b-col>
             </b-row>
             <Intents device="XX:XX:XX:XX:XX:XX" />
 
-            <!-- Accuracy -->
+            <!-- hotword -->
             <b-row style="width: 100%">
-              <b-col cols="2" style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;">
+              <b-col
+                cols="2"
+                style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
+              >
                 <i class="material-icons">show_chart</i>
               </b-col>
               <b-col>
-                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;"> Accuracy</div>
+                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Accuracy</div>
               </b-col>
             </b-row>
             <Intents device="XX:XX:XX:XX:XX:XX" />
           </div>
-          <!-- tasks -->
-          <div class="stats-grid"></div>
+          <!-- task -->
+          <div class="task-grid">
+            <!-- Intents -->
+            <b-row style="width: 100%">
+              <b-col
+                cols="2"
+                style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
+              >
+                <i class="material-icons">pie_chart</i>
+              </b-col>
+              <b-col>
+                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Intenciones</div>
+              </b-col>
+            </b-row>
+            <Intents device="XX:XX:XX:XX:XX:XX" />
+
+            <!-- hotword -->
+            <b-row style="width: 100%">
+              <b-col
+                cols="2"
+                style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
+              >
+                <i class="material-icons">show_chart</i>
+              </b-col>
+              <b-col>
+                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Accuracy</div>
+              </b-col>
+            </b-row>
+            <Intents device="XX:XX:XX:XX:XX:XX" />
+          </div>
+          
+          <!-- task -->
+          <div class="task-grid">
+            <!-- Intents -->
+            <b-row style="width: 100%">
+              <b-col
+                cols="2"
+                style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
+              >
+                <i class="material-icons">pie_chart</i>
+              </b-col>
+              <b-col>
+                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Intenciones</div>
+              </b-col>
+            </b-row>
+            <Intents device="XX:XX:XX:XX:XX:XX" />
+
+            <!-- hotword -->
+            <b-row style="width: 100%">
+              <b-col
+                cols="2"
+                style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
+              >
+                <i class="material-icons">show_chart</i>
+              </b-col>
+              <b-col>
+                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Accuracy</div>
+              </b-col>
+            </b-row>
+            <Intents device="XX:XX:XX:XX:XX:XX" />
+          </div>
         </b-row>
       </b-col>
     </b-row>
@@ -134,12 +198,16 @@ export default {
 </script>
 
 <style scoped>
-.stats-grid {
-  width: 50%;
+.chart-grid {
+  width: 300px;
   height: 100%;
   border: solid;
 }
-
+.task-grid {
+  min-width: 300px;
+  width: 300px;
+  background: orange;
+}
 .input-date {
   float: right;
   padding-right: 1rem;
@@ -160,6 +228,13 @@ div.container-input-date {
 }
 
 @media only screen and (max-width: 650px) {
+  .chart-grid {
+    width: 100%;
+  }
+
+  .task-grid {
+    width: 100%;
+  }
   .smart-screen {
     display: none;
   }

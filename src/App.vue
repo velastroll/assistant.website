@@ -1,6 +1,6 @@
 <template>
   <div id="app" style="height: 100vh; width: 100vw;">
-    <b-row style="margin: 0 0 0 0; padding: 0 0 0 0;">
+    <b-row style="margin: 0 0 0 0; padding: 0 0 0 0; background:pink;">
       <!-- nav bar -->
       <div v-if="isAuth()" style="padding: 0 0 0 0;" class="nav-bar">
         <Nav style="padding: 0 0 0 0; margin: 0 0 0 0;" />
@@ -129,17 +129,6 @@ export default {
 .content-view{
   width: 100vw;
   height: calc(100vh - 3rem);
-}
-
-@media only screen and (min-width: 650px){
-  .nav-bar{
-    width: 3rem;
-    height: 100vh;
-  }
-  .content-view{
-    width: calc(100vw - 3rem);
-    height: 100vh;
-  }
 }
 
 .edit {

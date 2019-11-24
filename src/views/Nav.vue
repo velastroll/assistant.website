@@ -1,9 +1,8 @@
 <template>
     <div 
     class="body-nav"
-    style=" width: 100%; height: 100%; padding: 0 0 0 0; margin: 0 0 0 0;">
-        <b-col align-v="center" style=" width: 100%">
-            <br class="margin-big-screen">
+    style=" width: 100%; min-height: 100%; padding: 0 0 0 0; margin: 0 0 0 0;">
+        <b-col align-v="center" style="width: 100%">
             <b-row style=" width: 100%; text-align: center; margin: 0 0 0 0;" class="justify-content-center" > 
                 <div 
                     class="icontainer"
