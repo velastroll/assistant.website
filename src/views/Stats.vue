@@ -7,7 +7,7 @@
         md="auto"
         class="justify-content-center"
       >
-        <!-- filter by date -->
+        <!-- filters -->
         <b-row style="padding-right: 0px;">
           <!-- type -->
           <div class="container-type-date">
@@ -45,22 +45,44 @@
               <b-form-input v-model="year_filter" type="number" placeholder="Año"></b-form-input>
             </div>
             <!-- monthly filter -->
-            <div v-if="date_filter == 'M'" class="input-date" style="width: 100px"> 
+            <div v-if="date_filter == 'M'" class="input-date" style="width: 100px">
               <b-form-input v-model="month_filter" type="number" placeholder="Mes"></b-form-input>
             </div>
             <!-- daily filter -->
             <div v-if="date_filter == 'D' " class="input-date">
               <b-form-input v-model="daily_filter" type="date"></b-form-input>
             </div>
-            
           </div>
         </b-row>
-        <!-- table -->
-        <b-row class="header-table">
-          <b-col>NOMBRE</b-col>
-          <b-col class="smart-screen">NIF</b-col>
-          <b-col>CIUDAD</b-col>
-          <b-col>DISPOSITIVO</b-col>
+        <!-- content -->
+        <b-row>
+          <!-- charts -->
+          <div class="stats-grid">
+
+            <!-- Intents -->
+            <b-row style="width: 100%">
+              <b-col cols="2" style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;">
+                <i class="material-icons">pie_chart</i>
+              </b-col>
+              <b-col>
+                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;"> Intenciones </div>
+              </b-col>
+            </b-row>
+            <Intents device="XX:XX:XX:XX:XX:XX" />
+
+            <!-- Accuracy -->
+            <b-row style="width: 100%">
+              <b-col cols="2" style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;">
+                <i class="material-icons">show_chart</i>
+              </b-col>
+              <b-col>
+                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;"> Accuracy</div>
+              </b-col>
+            </b-row>
+            <Intents device="XX:XX:XX:XX:XX:XX" />
+          </div>
+          <!-- tasks -->
+          <div class="stats-grid"></div>
         </b-row>
       </b-col>
     </b-row>
@@ -70,10 +92,13 @@
 <script>
 // @ is an alias to /src
 import { mapGetters, mapActions, mapMutations } from "vuex";
+import Intents from "@/components/stats/Intents";
 
 export default {
   name: "Stats",
-  components: {},
+  components: {
+    Intents
+  },
 
   data: function() {
     return {
@@ -109,6 +134,12 @@ export default {
 </script>
 
 <style scoped>
+.stats-grid {
+  width: 50%;
+  height: 100%;
+  border: solid;
+}
+
 .input-date {
   float: right;
   padding-right: 1rem;
