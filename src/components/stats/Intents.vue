@@ -24,9 +24,6 @@ export default {
       device: String
   },
   methods: {
-      retrieveStats(){
-          console.log("Retrieve stats of device " + this.device)
-      }
   }
 };
 </script>
