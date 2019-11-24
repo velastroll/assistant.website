@@ -1,24 +1,19 @@
 <template>
-  <div id="app">
-    <b-row style="height: 100vh; width: 100vw; margin: 0 0 0 0; padding: 0 0 0 0;">
-      <b-col
-        v-if="isAuth()"
-        :cols="getCols('nav')"
-        style="padding: 0px;"
-      >
-        <Nav style="padding: 0 0 0 0; margin: 0 0 0 0;"/>
-      </b-col>
-      <b-col 
-        :cols="getCols('content')" 
-        style="padding: 0px; min-height: 90vh;">
-        <router-view/>
-      </b-col>
+  <div id="app" style="height: 100vh; width: 100vw;">
+    <b-row style="margin: 0 0 0 0; padding: 0 0 0 0;">
+      <!-- nav bar -->
+      <div v-if="isAuth()" style="padding: 0 0 0 0;" class="nav-bar">
+        <Nav style="padding: 0 0 0 0; margin: 0 0 0 0;" />
+      </div>
+      <!-- Reouter view -->
+      <div class="content-view">
+        <router-view />
+      </div>
     </b-row>
   </div>
 </template>
 
 <script>
-
 import { mapGetters } from "vuex";
 
 import Nav from "@/views/Nav";
@@ -69,16 +64,12 @@ export default {
         }
       });
     },
-    updateProvinces(){
+    updateProvinces() {
       this.$store.dispatch("provinces/retrieve").then(r => {
         if (r.status == 200) {
           this.provinces = this.$store.getters["provinces/get"];
         } else {
-          this.$parent.makeToast(
-            "danger",
-            `Oups ${r.status}`,
-            r.description
-          );
+          this.$parent.makeToast("danger", `Oups ${r.status}`, r.description);
           // delete tokens
           this.$store.commit("auth/clearTokens");
           this.$store.commit("provinces/clear");
@@ -92,27 +83,27 @@ export default {
     },
     /* eslint-disable */
     redirect(url) {
-      try{
+      try {
         this.$router.push(url).catch(err => {});
-      }catch(e){}
+      } catch (e) {}
     },
     /* eslint-enable */
-    isAuth(){
-      if  (sessionStorage.getItem("access_token") != null) return true;
-      else return false
+    isAuth() {
+      if (sessionStorage.getItem("access_token") != null) return true;
+      else return false;
     },
     isLogged() {
-      if(sessionStorage.getItem("access_token") != null) return true;
+      if (sessionStorage.getItem("access_token") != null) return true;
       else this.redirect("/login");
     },
     getCols(component) {
       var w = window.innerWidth;
       if (w > 650) {
-        if (component == 'nav') return "1";
-        if (component == 'content') return "";
+        if (component == "nav") return "1";
+        if (component == "content") return "";
       } else {
-        if (component == 'nav') return "12";
-        if (component == 'content') return "12";
+        if (component == "nav") return "12";
+        if (component == "content") return "12";
       }
     },
     makeToast(variant = null, title, content) {
@@ -125,11 +116,32 @@ export default {
   },
   computed: {
     ...mapGetters(["auth/access_token"])
-  },
+  }
 };
 </script>
 
 <style lang="scss">
+.nav-bar {
+  width: 100vw;
+  height: 3rem;
+  font-size: 1rem;
+}
+.content-view{
+  width: 100vw;
+  height: calc(100vh - 3rem);
+}
+
+@media only screen and (min-width: 650px){
+  .nav-bar{
+    width: 3rem;
+    height: 100vh;
+  }
+  .content-view{
+    width: calc(100vw - 3rem);
+    height: 100vh;
+  }
+}
+
 .edit {
   color: lightblue;
   cursor: pointer;

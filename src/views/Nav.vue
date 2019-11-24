@@ -3,52 +3,67 @@
     class="body-nav"
     style=" width: 100%; height: 100%; padding: 0 0 0 0; margin: 0 0 0 0;">
         <b-col align-v="center" style=" width: 100%">
-            <br>
+            <br class="margin-big-screen">
             <b-row style=" width: 100%; text-align: center; margin: 0 0 0 0;" class="justify-content-center" > 
-                
-                <b-col 
-                    cols="12" style="max-width: 65px;min-width: 65px;"
+                <div 
+                    class="icontainer"
                     @click='redirect("/")'
                 >
-                    <i class="material-icons icon-nav"> record_voice_over </i>
-                </b-col>
+                    <i class="material-icons icon-nav" :style="isActive('/')"> record_voice_over </i>
+                </div>
             
-                <b-col 
-                    cols="12" style="max-width: 65px;min-width: 65px;"
+                <div 
+                    class="icontainer"
                     @click='redirect("/users")'
                 >
-                    <i class="material-icons icon-nav"> wc </i>
-                </b-col>
+                    <i class="material-icons icon-nav" :style="isActive('/users')"> wc </i>
+                </div>
                     
-                <b-col 
-                    cols="12" style="max-width: 65px; min-width: 65px;"
+                <div 
+                    class="icontainer"
                     @click='redirect("/provinces")'
                 > 
-                    <i class="material-icons icon-nav"> home_work </i>
-                </b-col>
+                    <i class="material-icons icon-nav" :style="isActive('/provinces')"> home_work </i>
+                </div>
             </b-row>
         </b-col>
     </div>
 </template>
 
 <style>
+
+br.margin-big-screen{
+    display: none;
+}
+@media only screen and (min-width: 650px){
+    br.margin-big-screen{
+        display: inline;
+    }
+}
+
+div.icontainer{
+    font-size: 2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
 .body-nav{
     background-color: #2c3e50;
 }
 .icon-nav{
-    color: #ff1a8c;
-    font-size: 2em;
+    color: #ff1a8d80;
+    font-size: 1.5rem;
     width: 100%
 }
 
 hr.nav{
-    border-top: 1px solid #ff1a8c;
+    border-top: 1px solid #ff1a8d80;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
 .icon-nav:hover{
-    color: #ffb3ff;
+    color: #ff1a8c;
     cursor: pointer;
 }
 
@@ -61,6 +76,11 @@ export default {
     /* eslint-disable */
     redirect(url) {
       this.$parent.redirect(url)
+    },
+    isActive(fragment){
+      if (this.$route.path == fragment) {
+        return ' color: #ff1a8c; '
+      }
     }
   }
 };
