@@ -7,19 +7,20 @@
         md="auto"
         class="justify-content-center"
       >
+        <!-- options -->
         <b-row>
-          <b-col>
+          <div class="container-input-search">
             <b-input class="input-search" placeholder="Search by name, nif, town, or device..." />
-          </b-col>
-          <b-col md="auto">
+          </div>
+          <div class="container-add-town-button">
             <b-button class="add-town-button" v-b-modal.modal-add-town>Add town</b-button>
-          </b-col>
+          </div>
         </b-row>
         <!--  Header -->
         <b-row class="header-table">
-          <b-col>ID</b-col>
+          <b-col class="smart-screen">ID</b-col>
           <b-col>Province</b-col>
-          <b-col>Towns</b-col>
+          <b-col class="smart-screen">Towns</b-col>
           <b-col>People</b-col>
           <b-col>Devices</b-col>
         </b-row>
@@ -27,9 +28,9 @@
         <div :key="'p' + i" v-for="(p, i) in this.provinces">
           <div class="card-province" v-if="p.locations.length > 0">
             <b-row v-b-toggle="'collapse-' + p.code">
-              <b-col>{{p.code}}</b-col>
-              <b-col>{{p.name}}</b-col>
-              <b-col>{{p.locations.length}}</b-col>
+              <b-col class="smart-screen">{{p.code}}</b-col>
+              <b-col >{{p.name}}</b-col>
+              <b-col class="smart-screen">{{p.locations.length}}</b-col>
               <b-col>{{getUsers(p.locations).length}}</b-col>
               <b-col>{{getDevices(p.locations).length}}</b-col>
             </b-row>
@@ -39,8 +40,8 @@
               <div class="card-town" :key="'t'+j" v-for="(l, j) in p.locations">
                 <b-row>
                   <b-col>{{l.postcode}}</b-col>
-                  <b-col>{{l.name}}</b-col>
-                  <b-col></b-col>
+                  <b-col class="smart-screen">{{l.name}}</b-col>
+                  <b-col class="smart-screen"></b-col>
                   <b-col>
                     <a style="font-size: 1rem;">{{l.people.length}}</a>
                     <i class="material-icons reduced-icon">wc</i>
@@ -184,6 +185,54 @@ export default {
 </script>
 
 <style scoped>
+
+.smart-screen {
+  display: inline;
+}
+
+div.container-add-town-button {
+  width: 150px;
+}
+
+.add-town-button {
+  padding: 0px 15px 0px 15px;
+  height: 30px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: #2c3e5000;
+  color: #2c3e50;
+}
+
+.add-town-button:hover {
+  background-color: #2c3e50;
+  color: #f2f2f2;
+}
+
+div.container-input-search {
+  width: calc(100% - 150px);
+}
+
+.input-search {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  height: 30px;
+  border-radius: 10px;
+}
+@media only screen and (max-width: 650px) {
+  .smart-screen {
+    display: none;
+  }
+
+  div.container-add-town-button {
+    width: 100%;
+  }
+
+  div.container-input-search {
+    width: 100%;
+  }
+}
+
 .reduced-icon {
   padding-top: 0.2rem;
   padding-bottom: 0rem;
@@ -225,28 +274,6 @@ hr {
 
 .card-town:hover {
   background-color: #2c3e5023;
-}
-
-.add-town-button {
-  padding: 0px 15px 0px 15px;
-  height: 30px;
-  margin-top: 5px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  background-color: #2c3e5000;
-  color: #2c3e50;
-}
-
-.add-town-button:hover {
-  background-color: #2c3e50;
-  color: #f2f2f2;
-}
-
-.input-search {
-  margin-top: 5px;
-  margin-bottom: 10px;
-  height: 30px;
-  border-radius: 10px;
 }
 
 .row-table {
