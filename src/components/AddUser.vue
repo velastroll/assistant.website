@@ -47,6 +47,7 @@
           :state="pcState"
           type="number"
           size="sm"
+          placeholder="Código postal"
         ></b-form-input>
       </b-col>
     </b-row>
@@ -58,7 +59,6 @@
 
     <template v-slot:modal-footer>
       <div class="w-100">
-        <p class="float-left">Modal Footer Content</p>
         <b-button
           :disabled="!submitState"
           variant="primary"
@@ -92,10 +92,18 @@ export default {
   mounted() {},
   methods: {
     submit() {
-      console.log(`${this.name} - ${this.nif} - ${this.selected}`);
       var payload = { name: this.name, nif: this.nif, postcode: this.postcode };
       this.$store.dispatch("users/add", payload).then(res => {
-        if (status == 200) {
+        if (res.status == 200) {
+          //hide modal
+          this.$bvModal.hide("modal-add-user")
+          // reset fields
+          this.name = ''
+          this.nif = ''
+          this.postcode = ''
+          // retrieve user list
+          this.$parent.updateUsers()
+          this.users = this.$store.getters["users/get"]
           //ok, add the response, which is the person updated profile
           this.$parent.makeToast(
             "success",

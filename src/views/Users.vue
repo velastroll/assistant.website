@@ -7,26 +7,30 @@
         md="auto"
         class="justify-content-center"
       >
+        <!-- options -->
         <b-row>
-          <b-col>
+          <div class="container-input-search">
             <b-input class="input-search" placeholder="Search by name, nif, town, or device..." />
-          </b-col>
-          <b-col md="auto">
+          </div>
+          <div class="container-add-user-button">
             <b-button class="add-user-button" v-b-modal.modal-add-user>Add user</b-button>
-          </b-col>
+          </div>
         </b-row>
-        <b-row class="header-table" >
+        <!-- table -->
+        <b-row class="header-table">
           <b-col>NOMBRE</b-col>
-          <b-col v-if="bigScreen()">NIF</b-col>
+          <b-col class="smart-screen">NIF</b-col>
           <b-col>CIUDAD</b-col>
           <b-col>DISPOSITIVO</b-col>
         </b-row>
-        <b-row class="row-table" :key="i" v-for="(u, i) in this.users" align-v="center">
-          <b-col>{{u.name}}</b-col>
-          <b-col v-if="bigScreen()">{{u.nif}}</b-col>
-          <b-col>{{existLocation(u.postcode).name}}</b-col>
-          <b-col>{{getDevice(u.nif)}}</b-col>
-        </b-row>
+        <div :key="i" v-for="(u, i) in this.users">
+          <b-row v-if="u != null" class="row-table" align-v="center">
+            <b-col>{{u.name}}</b-col>
+            <b-col class="smart-screen">{{u.nif}}</b-col>
+            <b-col v-if="existLocation(u.postcode) != null">{{existLocation(u.postcode).name}}</b-col>
+            <b-col>{{getDevice(u.nif)}}</b-col>
+          </b-row>
+        </div>
       </b-col>
     </b-row>
 
@@ -75,20 +79,12 @@ export default {
         if (r.status == 200) {
           this.provinces = this.$store.getters["provinces/get"];
         } else {
-          this.$parent.makeToast(
-            "danger",
-            `Oups ${r.status}`,
-            r.description
-          );
+          this.$parent.makeToast("danger", `Oups ${r.status}`, r.description);
         }
       });
     },
     makeToast(a, b, c) {
       this.$parent.makeToast(a, b, c);
-    },
-    bigScreen: function() {
-      if (window.innerWidth < 500) return false;
-      else return true;
     },
     existLocation(postcode) {
       for (var p in this.provinces) {
@@ -105,8 +101,8 @@ export default {
         for (var l in this.provinces[p].locations) {
           for (var s in this.provinces[p].locations[l].people) {
             if (this.provinces[p].locations[l].people[s].nif == dni) {
-              if (this.provinces[p].locations[l].people[s].relation != null){
-                return this.provinces[p].locations[l].people[s].relation.device
+              if (this.provinces[p].locations[l].people[s].relation != null) {
+                return this.provinces[p].locations[l].people[s].relation.device;
               }
             }
           }
@@ -129,6 +125,32 @@ export default {
 </script>
 
 <style scoped>
+div.container-add-user-button {
+  width: 150px;
+}
+
+div.container-input-search {
+  width: calc(100% - 150px);
+}
+
+.smart-screen {
+  display: inline;
+}
+
+@media only screen and (max-width: 650px) {
+  .smart-screen {
+    display: none;
+  }
+
+  div.container-add-user-button {
+    width: 100%;
+  }
+
+  div.container-input-search {
+    width: 100%;
+  }
+}
+
 .add-user-button {
   padding: 0px 15px 0px 15px;
   height: 30px;
@@ -154,7 +176,7 @@ export default {
 .row-table {
   border-bottom: 1px solid #303c4727;
 }
-.row-table:hover{
+.row-table:hover {
   background-color: #2c3e5011;
 }
 
