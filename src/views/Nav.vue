@@ -24,6 +24,18 @@
                 > 
                     <i class="material-icons icon-nav" :style="isActive('/provinces')"> home_work </i>
                 </div>
+                <div 
+                    class="icontainer"
+                    @click='redirect("/maps")'
+                > 
+                    <i class="material-icons icon-nav" :style="isActive('/maps')"> map </i>
+                </div>
+                <div 
+                    class="icontainer"
+                    @click='redirect("/settings")'
+                > 
+                    <i class="material-icons icon-nav" :style="isActive('/settings')"> settings </i>
+                </div>
             </b-row>
         </b-col>
     </div>

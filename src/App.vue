@@ -1,6 +1,6 @@
 <template>
   <div id="app" style="height: 100vh; width: 100vw;">
-    <b-row style="margin: 0 0 0 0; padding: 0 0 0 0; background:pink;">
+    <b-row style="margin: 0 0 0 0; padding: 0 0 0 0;">
       <!-- nav bar -->
       <div v-if="isAuth()" style="padding: 0 0 0 0;" class="nav-bar">
         <Nav style="padding: 0 0 0 0; margin: 0 0 0 0;" />

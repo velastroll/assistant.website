@@ -166,6 +166,7 @@ export default {
 
   data: function() {
     return {
+      device: '',
       date_filter: "D",
       daily_filter: "",
       month_filter: "null",
@@ -182,6 +183,13 @@ export default {
   methods: {
     makeToast(a, b, c) {
       this.$parent.makeToast(a, b, c);
+    },
+    retrieveStats(){
+      this.$store.dispatch("tasks/get", {
+        device: this.device,
+        type: this.date_filter,
+        
+      })
     }
   },
   computed: {

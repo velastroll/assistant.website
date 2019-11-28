@@ -6,6 +6,7 @@ import Login from './views/Login.vue'
 import Users from './views/Users.vue'
 import Provinces from './views/Provinces.vue'
 import Stats from './views/Stats.vue'
+import Maps from './views/Maps.vue'
 
 Vue.use(Router)
 
@@ -37,6 +38,11 @@ export default new Router({
       path: '/stats',
       name: "stats",
       component: Stats
+    },
+    {
+      path: '/maps',
+      name: "maps",
+      component: Maps
     }
   ]
 })
