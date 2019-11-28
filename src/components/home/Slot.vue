@@ -2,40 +2,43 @@
   <div v-if="this.msg != null">
     <b-card
       style=" cursor: pointer;"
-      :class=" 'border-slot' + this.borderColor(this.msg.status[0].timestamp)"
+      :class=" 'border-slot' + this.borderColor(this.msg.last_status[0].timestamp)"
       @click="showData(msg)"
     >
-      <div :style="`color: ${getColor(this.msg.status[0].timestamp)}`">
+      <div :style="`color: ${getColor(this.msg.last_status[0].timestamp)}`">
         <b-row>
           <b-col style="text-align: left; max-height: 20px;">
             <i class="material-icons">settings_remote</i>
           </b-col>
           <b-col>
-            <div style="text-align: right; font-weight: bold;">{{this.msg.mac.toUpperCase()}}</div>
+            <div style="text-align: right; font-weight: bold;">{{this.msg.device.toUpperCase()}}</div>
           </b-col>
         </b-row>
       </div>
       <b-row>
         <div
-          :class="this.getTaskClass(this.msg.status[0])"
-        >[{{this.getTask(this.msg.status[0])}}] {{this.getMinutes(this.msg.status[0].timestamp)}}</div>
-        <div
-          class="row-description"
-        >{{this.msg.relation.user.name}} - {{this.msg.relation.user.nif}}</div>
+          :class="this.getTaskClass(this.msg.last_status[0])"
+        >[{{this.msg.last_status[0].type}}] {{this.getMinutes(this.msg.last_status[0].timestamp)}}</div>
+        <div class="row-description">
+          <div v-if="this.msg.relation != null">{{this.msg.relation.user.name}} - {{this.msg.relation.user.nif}}</div>
+          <div v-else style="color: red">Sin asignar</div>
+        </div>
       </b-row>
     </b-card>
 
+    <!-- modal -->
     <b-modal
-      :id="`modal-show-${this.msg.mac}`"
-      :title="`Device ${this.msg.mac.toUpperCase()}`"
+      :id="`modal-show-${this.msg.device}`"
+      :title="`Device ${this.msg.device.toUpperCase()}`"
       hide-footer
     >
+    <div v-if="this.msg.relation">
       <b-row>
         <b-col cols="2" style="text-align: right; max-height: 20px;">
           <i class="material-icons">face</i>
         </b-col>
         <b-col>
-          <div style="text-align: left; font-weight: bold;">{{this.msg.relation.user.name}}</div>
+          <div style="text-align: left; font-weight: bold;">{{this.msg.relation.user.name}} {{this.msg.relation.user.surname}}</div>
         </b-col>
       </b-row>
       <b-row>
@@ -56,7 +59,12 @@
           >{{this.parseDate(this.msg.relation.from)}}</div>
         </b-col>
       </b-row>
-
+    </div>
+    <div v-else>
+      <b-row>
+        <span style="color:red;"> Este dispositivo no tiene usuario asignado. </span>
+      </b-row>
+    </div>
       <hr />
 
       <b-row style="width: 100%">
@@ -91,16 +99,14 @@
         </b-col>
       </b-row>
       <b-row class="justify-content-center">
-        <div v-if="this.msg.pending.length == 0" >
+        <div v-if="this.msg.pending.length == 0">
           <b-col style="text-align:center; ">
-            <span style="font-style: italic;">
-              No pending actions
-            </span>
+            <span style="font-style: italic;">No pending actions</span>
           </b-col>
         </div>
         <div v-else>
           <b-col :key="i" v-for="(v,i) in this.msg.pending">
-            <span class="pending-action"> {{v.event}} order by {{v.by}} at {{parseDate(v.at)}} </span>
+            <span class="pending-action">{{v.event}} order by {{v.by}} at {{parseDate(v.at)}}</span>
           </b-col>
         </div>
       </b-row>
@@ -161,7 +167,7 @@ export default {
     },
     showData: function(select) {
       this.parking_selected = select;
-      this.$bvModal.show(`modal-show-${this.msg.mac}`);
+      this.$bvModal.show(`modal-show-${this.msg.device}`);
     },
     getColor(time) {
       var date = new Date(time);
@@ -185,7 +191,7 @@ export default {
       if (date > 30) toReturn = " border-yellow ";
       if (date > 1440) toReturn = " border-orange ";
       if (date > 5760) toReturn = " border-red ";
-      if (this.msg.status[0].state != "ALIVE")
+      if (this.msg.last_status[0].type != "ALIVE")
         toReturn = toReturn + " doing-action ";
       return toReturn;
     },
@@ -205,7 +211,7 @@ export default {
       });
     },
     getTask(task) {
-      if (task.state == "ALIVE") return task.state;
+      if (task.type == "ALIVE") return task.state;
       else return task.content;
     },
     getTaskClass(task) {
@@ -220,14 +226,20 @@ export default {
           `The task ${this.selected} is not valid.`
         );
       } else {
-        this.$store.dispatch("tasks/new", {
-          event: this.selected,
-          device: this.msg.mac
-        }).then( r => {
-          this.selected = null;
-          this.$parent.updateDevices()
-          this.makeToast("success", "Added", "New task assigned to the device.")
-        });
+        this.$store
+          .dispatch("tasks/new", {
+            event: this.selected,
+            device: this.msg.device
+          })
+          .then(r => {
+            this.selected = null;
+            this.$parent.updateDevices();
+            this.makeToast(
+              "success",
+              "Added",
+              "New task assigned to the device."
+            );
+          });
       }
     }
   },
@@ -238,8 +250,7 @@ export default {
 </script>
 
 <style scss>
-
-span.pending-action:hover{
+span.pending-action:hover {
   color: red;
   text-decoration: underline;
 }
