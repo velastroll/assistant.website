@@ -61,7 +61,7 @@
       </b-row>
     </div>
     <div v-else>
-      <b-row>
+      <b-row class="justify-content-center">
         <span style="color:red;"> Este dispositivo no tiene usuario asignado. </span>
       </b-row>
     </div>

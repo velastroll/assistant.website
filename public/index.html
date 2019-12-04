@@ -59,6 +59,20 @@ src="https://unpkg.com/esri-leaflet-geocoder@2.2.14/dist/esri-leaflet-geocoder.j
 integrity="sha512-uK5jVwR81KVTGe8KpJa1QIN4n60TsSV8+DPbL5wWlYQvb0/nYNgSOg9dZG6ViQhwx/gaMszuWllTemL+K+IXjg=="
 crossorigin=""
 ></script>
+
+<script>
+  var found = null;
+  // location to add
+  var locationtmp = null
+  handleClick = function(result) {
+    window.location.href = "#/provinces?&c=" + result.address["City"] + "&p=" + result.address["Postal"]  + "&co=" +  result.address["CountryCode"] + "&lat=" + result.latlng["lat"] + "&lng=" + result.latlng["lng"] 
+    locationtmp = result
+  };
+  addLocation = function(){
+    window.location.href = "#/provinces?&c=" + locationtmp.address["City"] + "&p=" + locationtmp.address["Postal"]  + "&co=" +  locationtmp.address["CountryCode"] + "&lat=" + locationtmp.latlng["lat"] + "&lng=" + locationtmp.latlng["lng"] 
+  };
+</script>
+
   <title>Assistant: Management</title>
 </head>
 

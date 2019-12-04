@@ -16,6 +16,8 @@ export default {
       // default to Valladolid
       center: [36.126344, -10.26877],
       mymap: null,
+      cluster: null,
+      geosearch: null,
       current: { arrow: null, bus: null },
       geosearch: null,
       alert_marks: [],
@@ -27,6 +29,7 @@ export default {
   watch: {
     // ----------------------------- CURRENT POSITION ----------------------------
     msg: function() {
+      console.log(this.msg)
       if (this.msg != null && !this.centered) {
         this.mymap.setView(
           [
@@ -46,6 +49,12 @@ export default {
     L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
       attribution: "Alvaro Velasco"
     }).addTo(this.mymap);
+    this.cluster = L.markerClusterGroup();
+    this.mymap.addLayer(this.cluster);
+    this.mymap.setView(this.center, 6);
+    this.geosearch = L.esri.Geocoding.geosearch({ position: "topleft" });
+    this.geosearch.addTo(this.mymap);
+
   },
   methods: {
     // receives a place object via the autocomplete component
