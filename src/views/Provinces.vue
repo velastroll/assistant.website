@@ -13,7 +13,7 @@
             <b-input class="input-search" placeholder="Search by name, nif, town, or device..." />
           </div>
           <div class="container-add-town-button">
-            <b-button class="add-town-button" v-b-modal.modal-add-town>Add town</b-button>
+            <b-button class="add-town-button" v-b-modal.modal-add-location>Add town</b-button>
           </div>
         </b-row>
         <!--  Header -->
@@ -29,7 +29,7 @@
           <div class="card-province" v-if="p.locations.length > 0">
             <b-row v-b-toggle="'collapse-' + p.code">
               <b-col class="smart-screen">{{p.code}}</b-col>
-              <b-col >{{p.name}}</b-col>
+              <b-col>{{p.name}}</b-col>
               <b-col class="smart-screen">{{p.locations.length}}</b-col>
               <b-col>{{getUsers(p.locations).length}}</b-col>
               <b-col>{{getDevices(p.locations).length}}</b-col>
@@ -48,7 +48,9 @@
                   </b-col>
                   <b-col>
                     {{getDevicesOfTown(l.people).length}}
-                    <i class="material-icons reduced-icon">settings_remote</i>
+                    <i
+                      class="material-icons reduced-icon"
+                    >settings_remote</i>
                   </b-col>
                 </b-row>
               </div>
@@ -57,8 +59,8 @@
         </div>
         <!-- Empty provinces -->
         <div :key="i" v-for="(p, i) in this.provinces">
-          <div v-if="p.locations.length == 0" >
-            <b-row class="row-table" >
+          <div v-if="p.locations.length == 0">
+            <b-row class="row-table">
               <b-col cols="1" style="text-align:right;">[{{p.code}}]</b-col>
               <b-col cols="2" style="text-align:left;">{{p.name}}</b-col>
               <b-col style="text-align: right;">
@@ -71,15 +73,14 @@
     </b-row>
 
     <!-- modal -->
-    <AddTown />
+    <AddTown :locations="[]" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-// import AddUser from "@/components/AddUser.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
-import AddTown from '@/components/AddTown'
+import AddTown from "@/components/AddTown";
 export default {
   name: "Provinces",
   components: {
@@ -114,11 +115,7 @@ export default {
         if (r.status == 200) {
           this.provinces = this.$store.getters["provinces/get"];
         } else {
-          this.$parent.makeToast(
-            "danger",
-            `Oups ${r.status}`,
-            r.description
-          );
+          this.$parent.makeToast("danger", `Oups ${r.status}`, r.description);
         }
       });
     },
@@ -156,15 +153,16 @@ export default {
       }
       return devices;
     },
-    getProvinceOf(postcode){
-      for (var p in this.provinces){
-        if (this.provinces[p].code == parseInt(postcode/1000)) return this.provinces[p].name;
+    getProvinceOf(postcode) {
+      for (var p in this.provinces) {
+        if (this.provinces[p].code == parseInt(postcode / 1000))
+          return this.provinces[p].name;
       }
-      return 'undefined'
+      return "undefined";
     },
-    pcInUse(postcode){
-      for (var p in this.provinces){
-        for (var l in this.provinces[p].locations){
+    pcInUse(postcode) {
+      for (var p in this.provinces) {
+        for (var l in this.provinces[p].locations) {
           if (this.provinces[p].locations[l].postcode == postcode) return true;
         }
       }
@@ -172,20 +170,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["provinces/get"]),
-    ...mapActions(["provinces/retrieve"]),
-    ...mapMutations([
-      "auth/updateAccessToken",
-      "auth/updateRefreshToken",
-      "auth/clearTokens",
-      "provinces/clear"
-    ])
+    found: function() {
+      return window.found;
+    }
   }
 };
 </script>
 
 <style scoped>
-
 .smart-screen {
   display: inline;
 }

@@ -24,7 +24,7 @@
           <b-col>DISPOSITIVO</b-col>
         </b-row>
         <div :key="i" v-for="(u, i) in this.users">
-          <b-row v-if="u != null" class="row-table" align-v="center">
+          <b-row v-if="u != null" class="row-table" align-v="center" @click="redirect(`/stats?u=${u.nif}`)">
             <b-col>{{u.name}}</b-col>
             <b-col class="smart-screen">{{u.nif}}</b-col>
             <b-col v-if="existLocation(u.postcode) != null">{{existLocation(u.postcode).name}}</b-col>
@@ -65,6 +65,9 @@ export default {
     }
   },
   methods: {
+    redirect(url){
+      this.$parent.redirect(url)
+    },
     updateUsers: function() {
       this.$store.dispatch("users/retrieve").then(r => {
         if (r.status == 200) {
@@ -175,6 +178,7 @@ div.container-input-search {
 
 .row-table {
   border-bottom: 1px solid #303c4727;
+  cursor: pointer;
 }
 .row-table:hover {
   background-color: #2c3e5011;

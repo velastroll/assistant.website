@@ -1,60 +1,70 @@
 <template>
-  <b-modal :id="`modal-add-town`" :title="`Add a new location`">
-    <!-- name -->
-    <b-row>
-      <b-col cols="2" class="row-icon">
-        <i class="material-icons">home_work</i>
-      </b-col>
-      <b-col>
-        <b-form-input
-          id="input-live-name"
-          v-model="name"
-          class="input-modal"
-          :state="nameState"
-          aria-describedby="input-live-help input-live-feedback"
-          placeholder="Location name"
-          trim
-        ></b-form-input>
+  <b-modal
+    :id="'modal-add-location'"
+    title="Add location"
+    ref="vuemodal"
+    @shown="modalShown"
+    @hide="locationMap = null"
+  >
+    <b-row class="justify-content-center">
+      <b-col md="auto" class="colMap">
+        <div id="map" ref="mymap"></div>
       </b-col>
     </b-row>
-    <!-- postalcode -->
-    <b-row>
-      <b-col cols="2" class="row-icon">
-        <i class="material-icons">how_to_vote</i>
-      </b-col>
-      <b-col>
-        <b-form-input
-          id="input-live-pc"
-          class="input-modal"
-          v-model="postcode"
-          :state="pcState"
-          aria-describedby="input-live-help input-live-feedback"
-          placeholder="Postal code"
-          :type="'number'"
-        ></b-form-input>
-      </b-col>
-    </b-row>
-
+    <!-- modal footer -->
     <template v-slot:modal-footer>
       <div class="w-100">
-        <p class="float-left" v-if="pcState">
-          Add to
-          <strong>{{getProvince()}}</strong>
-        </p>
-        <p class="float-left" style="color: red;" v-else-if="pcInUse()">Post code is already in use</p>
         <b-button
-          :disabled="!submitState"
-          variant="primary"
+          variant="success"
           size="sm"
           class="float-right"
-          @click="submit()"
-        >ADD TOWN</b-button>
+          :disabled="locationMap == null"
+          @click="addLocation()"
+        >ADD LOCATION</b-button>
       </div>
     </template>
   </b-modal>
 </template>
 
+<style scss>
+#map {
+  background-color: #00000000;
+  height: 300px;
+  width: 465px;
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+}
+.colMap {
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+  height: 300px;
+  width: 465px;
+}
+@media only screen and (max-width: 575px) {
+  #map {
+    width: 325px;
+  }
+  .colMap {
+    width: 325px;
+  }
+}
+.header-title-little {
+  font-size: 2rem;
+}
+.add-button {
+  background: rgba(255, 255, 255, 0);
+  border-radius: 1rem;
+  margin-top: 0.25rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-style: solid;
+  color: darkgreen;
+}
+</style>
+
 <script>
+/* eslint-disable */
+
 // @ is an alias to /src
 // import Struct from '@/components/Struct.vue'
 import { mapGetters, mapActions, mapMutations } from "vuex";
@@ -66,68 +76,108 @@ export default {
   data: function() {
     return {
       name: "",
-      postcode: null
+      postcode: null,
+      locationMap: null,
+      map: null,
+      geosearch: null,
+
     };
   },
-  mounted() {},
-
-  methods: {
-    submit() {
-      var payload = { name: this.name, postcode: this.postcode };
-      this.$store.dispatch("provinces/add", payload).then(res => {
-        if (res.status == 200) {
-          // hide modal
-          this.$bvModal.hide("modal-add-town")
-          // reset fields
-          this.name = ""
-          this.postcode = null
-          // retrieve new list
-          this.$parent.updateProvinces()
-          //ok, add the response, which is the person updated profile
-          this.$parent.makeToast(
-            "success",
-            `Success`,
-            "New town added to the system."
-          );
-        } else {
-          this.$parent.makeToast("danger", `Error ${res.status}`, res.data);
-          // delete tokens
-        }
-      });
-    },
-    getProvince() {
-      return this.$parent.getProvinceOf(this.postcode);
-    },
-    pcInUse() {
-      return this.$parent.pcInUse(this.postcode);
+  props: {
+    locations : Array
+  },
+  watch: {
+    $route(to, from) {
+      this.locationMap = to.query;
     }
   },
-  computed: {
-    submitState() {
-      return this.nameState && this.pcState;
+  methods: {
+    /**
+     * Must be on code if the map is shown in a modal.
+     */
+    modalShown() {
+      this.map = L.map("map");
+      setTimeout(() => {
+        this.map.invalidateSize();
+      }, 100);
+
+      // set view
+      if (this.locations.lenght > 0) {
+        this.map.setView(
+          [this.locations[0].latitude, this.locations[0].longitude],
+          18
+        );
+      } else {
+        this.map.setView([40.33241295173677, -4.294281005859376], 5);
+      }
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(this.map);
+      // geocode service
+      var geocodeService = L.esri.Geocoding.geocodeService();
+      var tmp_location = null;
+      var m = this.map;
+      this.map.on("click", function(e) {
+        var g = geocodeService
+          .reverse()
+          .latlng(e.latlng)
+          .run(function(error, result) {
+            if (error) return;
+            if (found != null) m.removeLayer(found);
+            found = L.marker(result.latlng);
+            handleClick(result);
+            found
+              .addTo(m)
+              .bindPopup(`
+            <div style="width: 100%; text-align: right; font-weight: bold;"> ${result.address.City} </div>
+            <div style="width: 100%; text-align: right"> ${result.address.Postal}, ${result.address.CountryCode} </div>
+            <div style="width: 100%; text-align: right"> ${result.address.Subregion} </div>
+            `)
+              .openPopup();
+          });
+      });
+      // geosearch
+      this.geosearch = L.esri.Geocoding.geosearch({ position: "topleft" });
+      this.geosearch.addTo(this.map);
+      var results = L.layerGroup();
+      results.addTo(this.map);
+      this.geosearch.on("results", function(data) {
+        results.clearLayers();
+      });
+      // show other locations
+      this.showLocations();
     },
-    nameState() {
-      return this.name.length > 3 ? true : false;
+    /**
+     * Show on the map the icon of the registred locations
+     */
+    showLocations(){
+      console.log("showing locations... [TODO]")
     },
-    pcState() {
-      return this.postcode >= 1000 && this.postcode < 52008 && !this.pcInUse()
-        ? true
-        : false;
+    /**
+     * Add a new location
+     */
+    addLocation(){
+      let payload = {
+        name: this.locationMap.c,
+        postcode: this.locationMap.p,
+        country: this.locationMap.co,
+        latitude: this.locationMap.lat,
+        longitude: this.locationMap.lng
+      }
+      this.$store
+        .dispatch("provinces/add", payload)
+        .then(r => {
+          if (r.status == 200){
+            this.$parent.makeToast("success", "New location added", r.data)
+            this.modalShown = null
+            this.$parent.updateProvinces()
+            this.$bvModal.hide('modal-add-location')
+          } else {
+            this.$parent.makeToast("danger", `Error ${r.status}`, r.data)
+          }
+      })
     }
   }
 };
 </script>
-
-
-<style scoped>
-.row-icon {
-  text-align: right;
-  max-height: 20px;
-}
-.input-modal {
-  margin-bottom: 10px;
-  height: 30px;
-  border-radius: 10px;
-  font-size: 1rem;
-}
-</style>

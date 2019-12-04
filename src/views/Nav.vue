@@ -1,9 +1,8 @@
 <template>
     <div 
     class="body-nav"
-    style=" width: 100%; height: 100%; padding: 0 0 0 0; margin: 0 0 0 0;">
-        <b-col align-v="center" style=" width: 100%">
-            <br class="margin-big-screen">
+    style=" width: 100%; min-height: 100%; padding: 0 0 0 0; margin: 0 0 0 0;">
+        <b-col align-v="center" style="width: 100%">
             <b-row style=" width: 100%; text-align: center; margin: 0 0 0 0;" class="justify-content-center" > 
                 <div 
                     class="icontainer"
@@ -24,6 +23,18 @@
                     @click='redirect("/provinces")'
                 > 
                     <i class="material-icons icon-nav" :style="isActive('/provinces')"> home_work </i>
+                </div>
+                <div 
+                    class="icontainer"
+                    @click='redirect("/maps")'
+                > 
+                    <i class="material-icons icon-nav" :style="isActive('/maps')"> map </i>
+                </div>
+                <div 
+                    class="icontainer"
+                    @click='redirect("/settings")'
+                > 
+                    <i class="material-icons icon-nav" :style="isActive('/settings')"> settings </i>
                 </div>
             </b-row>
         </b-col>
@@ -78,7 +89,8 @@ export default {
       this.$parent.redirect(url)
     },
     isActive(fragment){
-      if (this.$route.path == fragment) {
+      if (this.$route.path == fragment || 
+      (this.$route.path == '/stats' && fragment == '/users')) {
         return ' color: #ff1a8c; '
       }
     }

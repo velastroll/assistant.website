@@ -131,17 +131,6 @@ export default {
   height: calc(100vh - 3rem);
 }
 
-@media only screen and (min-width: 650px){
-  .nav-bar{
-    width: 3rem;
-    height: 100vh;
-  }
-  .content-view{
-    width: calc(100vw - 3rem);
-    height: 100vh;
-  }
-}
-
 .edit {
   color: lightblue;
   cursor: pointer;
