@@ -40,6 +40,7 @@ export default {
         );
         this.centered = true;
       }
+
       this.showDevices();
     }
   },
@@ -73,32 +74,44 @@ export default {
       }
 
       this.dots = [];
-      const icon_path = '/map_device.svg'
+      let icon_yellow = '/marker/marker_yellow.svg'
+      let icon_red = '/marker/marker_red.svg'
+      let icon_green = '/marker/marker_green.svg'
+      let icon_home = '/marker/home.svg'
+      var icon_device = icon_yellow
       var latlngs = [];
-      var markerHtml = `
-        width: 10px; height:10px; display: block; position: relative; fill: red;
-      `;
-
+      var markerHtml = `width: 40px; height:40px; display: block; position: relative; fill: red;`;
       // print positions
-      /*for (var d in this.msg) {
+      for (var d in this.msg) {
         // print the points of the path
         var dev = this.msg[d];
-
+        var lat = 40.340664
+        var lng = -10.699526
+        if (dev.relation){
+          lat = dev.relation.lat
+          lng = dev.relation.lon
+          icon_device = icon_green
+        }
+        console.log(dev)
         var dot = L.divIcon({
           className: "point",
           iconAnchor: [6, 10],
           labelAnchor: [-14, -14],
-          popupAnchor: [0, -14],
-          html: `<i style="${markerHtml}" src="/icon/${icon_path}"/>`
+          popupAnchor: [15, -15],
+          html: `<img style="${markerHtml}" src="${icon_device}"/>`
         });
-        var tmp = L.marker([pos.latitude, pos.longitude], {
+        var tmp = L.marker([lat, lng], {
           icon: dot
         });
-        var popup = ``;
+        var popup = `
+        <div style="font-weight: bold; width: 100%; text-align: center;"> ${dev.device} </div>
+        <div v-if="${dev.relation==null}" style="color: red"> Ningún usuario asignado </div>
+        <a href="#/stats/?u=${dev.device}"> Ver en detalle </a>
+        `;
         tmp.bindPopup(popup);
         this.mymap.addLayer(tmp);
         this.dots.push(tmp);
-      }*/
+      }
     },
     calculeSeconds: function(since) {
       var date = new Date(since);

@@ -16,20 +16,19 @@
                 class="date-btn"
                 @click="date_filter='D'"
                 :pressed="date_filter == 'D'"
-              >DAILY</b-button>
+              >DIARIO</b-button>
               <b-button
                 class="date-btn"
                 @click="date_filter='M'"
                 :pressed="date_filter == 'M'"
-              >MONTHLY</b-button>
+              >MENSUAL</b-button>
               <b-button
                 class="date-btn"
                 @click="date_filter='A'"
                 :pressed="date_filter == 'A'"
-              >ANUALLY</b-button>
+              >ANUAL</b-button>
             </b-button-group>
           </div>
-
           <!-- input -->
           <div class="container-input-date float-right">
             <!-- button -->
@@ -54,6 +53,7 @@
             </div>
           </div>
         </b-row>
+
         <!-- content -->
         <b-row>
           <!-- charts -->
@@ -86,66 +86,92 @@
             </b-row>
             <Intents device="XX:XX:XX:XX:XX:XX" />
           </div>
+
           <!-- task -->
           <div class="task-grid">
-            <!-- Intents -->
-            <b-row style="width: 100%">
-              <b-col
-                cols="2"
-                style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
-              >
-                <i class="material-icons">pie_chart</i>
-              </b-col>
-              <b-col>
-                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Intenciones</div>
-              </b-col>
-            </b-row>
-            <Intents device="XX:XX:XX:XX:XX:XX" />
-
-            <!-- hotword -->
-            <b-row style="width: 100%">
-              <b-col
-                cols="2"
-                style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
-              >
-                <i class="material-icons">show_chart</i>
-              </b-col>
-              <b-col>
-                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Accuracy</div>
-              </b-col>
-            </b-row>
-            <Intents device="XX:XX:XX:XX:XX:XX" />
-          </div>
-          
-          <!-- task -->
-          <div class="task-grid">
-            <!-- Intents -->
-            <b-row style="width: 100%">
-              <b-col
-                cols="2"
-                style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
-              >
-                <i class="material-icons">pie_chart</i>
-              </b-col>
-              <b-col>
-                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Intenciones</div>
-              </b-col>
-            </b-row>
-            <Intents device="XX:XX:XX:XX:XX:XX" />
-
-            <!-- hotword -->
-            <b-row style="width: 100%">
-              <b-col
-                cols="2"
-                style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
-              >
-                <i class="material-icons">show_chart</i>
-              </b-col>
-              <b-col>
-                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Accuracy</div>
-              </b-col>
-            </b-row>
-            <Intents device="XX:XX:XX:XX:XX:XX" />
+            <!-- Device -->
+            <div
+              style="background: white; border: solid; border-color: blue; border-radius: 1rem; padding: 1rem 1rem 1rem 1rem;"
+            >
+              <b-row>
+                <b-col v-if="device.relation!=null" style="width: 100%">
+                  <div>
+                    <img
+                      style="width: 2rem; height: 2rem; color: #2c3e50;"
+                      src="/marker/device.svg"
+                    />
+                    <b-button class="dvc assigned">
+                      <span>{{device.device}}</span>
+                    </b-button>
+                  </div>
+                  <div>
+                    <span>Desde el {{parseDate(device.relation.from)}}</span>
+                  </div>
+                </b-col>
+                <b-col v-else style="width: 100%">
+                  <div>
+                    <img
+                      style="width: 2rem; height: 2rem; color: #2c3e50;"
+                      src="/marker/device.svg"
+                    />
+                    <b-button class="dvc unnassigned">
+                      <span>sin asignar</span>
+                    </b-button>
+                  </div>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col style="width: 100%">
+                  <hr />
+                  <div style="width: 100%: padding: 0 1rem 0 1rem;" class="text-right">
+                    <div>
+                      <span>{{device.relation.user.name}} {{device.relation.user.surname}}, {{device.relation.user.nif}} [{{device.relation.user.postcode}}]</span>
+                    </div>
+                  </div>
+                </b-col>
+              </b-row>
+            </div>
+            <!-- PENDING TASK -->
+            <div
+              style="background: white; border: solid; border-color: blue; border-radius: 1rem; padding: 1rem 1rem 1rem 1rem;"
+            >
+              <b-row>
+                <b-col v-if="device.relation!=null" style="width: 100%">
+                  <div class="text-left">
+                    <i
+                      class="material-icons"
+                      style="width: 2rem; height: 2rem;"
+                    > query_builder </i>
+                    <span style="font-weight: bold; font-size: 1.25rem;"> TAREAS PENDIENTES </span>
+                  </div>
+                  <div v-if="device.pending.length == 0">
+                    <span> No hay tareas pendientes </span>
+                  </div>
+                  <div :key="i" v-for="(t, i) in device.pending">
+                    <span>t</span>
+                  </div>
+                </b-col>
+              </b-row>
+            </div>
+            <!-- AÑADIR TAREAS -->
+            <div
+              style="background: white; border: solid; border-color: blue; border-radius: 1rem; padding: 1rem 1rem 1rem 1rem;"
+            >
+              <b-row>
+                <b-col v-if="device.relation!=null" style="width: 100%">
+                  <div class="text-left">
+                    <i
+                      class="material-icons"
+                      style="width: 2rem; height: 2rem;"
+                    > add </i>
+                    <span style="font-weight: bold; font-size: 1.25rem;"> AÑADIR TAREA </span>
+                  </div>
+                  <div v-if="device.pending.length == 0">
+                    <span> SELECTOR_DE_TAREAS </span> <b-button disable class="dvc addevent"> AÑADIR </b-button>
+                  </div>
+                </b-col>
+              </b-row>
+            </div>
           </div>
         </b-row>
       </b-col>
@@ -166,30 +192,71 @@ export default {
 
   data: function() {
     return {
-      device: '',
+      device: null,
       date_filter: "D",
       daily_filter: "",
       month_filter: "null",
-      year_filter: ""
+      year_filter: "",
+      user: null,
+      users: []
     };
   },
   mounted() {
     if (sessionStorage.getItem("access_token") != null) {
       // retrieve data
+      this.nif = this.$route.query["u"];
+      if (this.nif == null) this.$parent.redirect("/users");
+      else {
+        this.users = this.$store.getters["users/get"];
+        this.devices = this.$store.getters["device/get"];
+        this.filterDevice();
+        // retrieve user data
+        /*
+        if (res.status == 200) {
+          console.log(res.data);
+        } else {
+          this.makeToast(
+            "danger",
+            "Oups!",
+            `[${res.status}] ${res.description}`
+          );
+        }*/
+      }
     } else {
       this.$parent.redirect("/login");
     }
   },
   methods: {
+    parseDate(date) {
+      return (
+        date.substring(8, 10) +
+        "/" +
+        date.substring(5, 7) +
+        "/" +
+        date.substring(0, 4) +
+        " a las " +
+        date.substring(11, 13) +
+        ":" +
+        date.substring(14, 16)
+      );
+    },
+    filterDevice() {
+      console.log(this.devices);
+      this.devices.forEach(it => {
+        if (it.relation != null) {
+          this.device = it;
+          //if (it.relation.nif == this.nif) this.user = it;
+        }
+      });
+    },
     makeToast(a, b, c) {
       this.$parent.makeToast(a, b, c);
     },
-    retrieveStats(){
+    retrieveStats() {
       this.$store.dispatch("tasks/get", {
         device: this.device,
-        type: this.date_filter,
-        
-      })
+        type: this.date_filter
+      });
     }
   },
   computed: {
@@ -206,6 +273,52 @@ export default {
 </script>
 
 <style scoped>
+.unnassigned {
+  color: brown;
+}
+
+.unnassigned:hover {
+  color: darkgreen;
+}
+
+.dvc {
+  background: #f2f2f200;
+  border: solid;
+  text-transform: uppercase;
+  border-radius: 1rem;
+  margin: 0 0 0 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.dvc:hover span {
+  display: none;
+}
+
+.assigned:hover:before {
+  content: "desasignar dispositivo";
+}
+.unnassigned:hover:before {
+  content: "elegir dispositivo";
+}
+
+.addevent {
+  color: darkgreen;
+}
+
+.addevent:hover {
+  color: white;
+  background: darkgreen;
+}
+
+.assigned {
+  color: #2c3e50;
+}
+
+.assigned:hover {
+  color: brown;
+}
+
 .chart-grid {
   width: 300px;
   height: 100%;
@@ -213,7 +326,7 @@ export default {
 }
 .task-grid {
   min-width: 300px;
-  width: 300px;
+  width: calc(100vw - 400px);
   background: orange;
 }
 .input-date {
