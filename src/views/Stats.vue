@@ -98,7 +98,7 @@
                   <td class="datacol">
                     <div v-if="device != null">
                       <div>
-                        <b-button class="dvc assigned">
+                        <b-button class="dvc assigned" @click="finishRelation(device.device)">
                           <span>{{device.device}}</span>
                         </b-button>
                       </div>
@@ -349,6 +349,20 @@ export default {
             this.updateAll()
             this.makeToast("success", "Success", r.data)
             this.$bvModal.hide('assign')
+          } else {
+            this.makeToast("danger", "Error", r.data)
+          }
+        }
+      )
+    },
+    finishRelation(deviceid){
+      this.$store
+        .dispatch("relation/delete", {device: deviceid})
+        .then( r => {
+          if (r.status == 200){
+            this.updateAll()
+            this.makeToast("success", "Success", r.data)
+            this.device = null
           } else {
             this.makeToast("danger", "Error", r.data)
           }
