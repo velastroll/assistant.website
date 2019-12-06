@@ -56,32 +56,48 @@
 
         <!-- content -->
         <b-row class="justify-content-center">
-          <!-- DEVICE + USER -->
+          <!-- CARDS -->
           <div class="task-grid">
             <!-- Device -->
             <div class="infocard" v-if="user!=null">
               <table style="width:100%;">
                 <tr>
-                  <td class="text-right">
-                    <i
-                      class="material-icons"
-                      style="text-align: right; max-height: 20px; padding-top: 0.25rem;"
-                    >info</i>
+                  <!-- tarea pendiente -->
+                  <td class="datacol">
+                    <b-row class="justify-content-center" style="width: 100%; text-align:center">
+                      <b-col
+                        cols="5"
+                        style="text-align: right; max-height: 20px; padding-top: 0.5rem;"
+                      >
+                        <img
+                          style="width: 2rem; height: 1rem; color: #2c3e50;"
+                          src="/marker/device.svg"
+                        />
+                      </b-col>
+                      <b-col
+                        style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
+                      >Dispositivo</b-col>
+                    </b-row>
                   </td>
-                  <td class="text-left">
-                    <span
-                      style="text-align: left; font-weight: bold; padding-top: 1rem; text-transform: uppercase;"
-                    >Información</span>
+                  <!-- añadir tarea -->
+                  <td class="datacol text-center">
+                    <b-row class="justify-content-center" style="width: 100%; text-align:center">
+                      <b-col
+                        cols="5"
+                        style="text-align: right; max-height: 20px; padding-top: 0.5rem;"
+                      >
+                        <i class="material-icons">face</i>
+                      </b-col>
+                      <b-col
+                        style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
+                      >Usuario</b-col>
+                    </b-row>
                   </td>
                 </tr>
                 <tr style="width: 100%;">
                   <td class="datacol">
                     <div v-if="device != null">
                       <div>
-                        <img
-                          style="width: 2rem; height: 2rem; color: #2c3e50;"
-                          src="/marker/device.svg"
-                        />
                         <b-button class="dvc assigned">
                           <span>{{device.device}}</span>
                         </b-button>
@@ -92,20 +108,23 @@
                     </div>
                     <div v-else>
                       <div>
-                        <img
-                          style="width: 2rem; height: 2rem; color: #2c3e50;"
-                          src="/marker/device.svg"
-                        />
-                        <b-button class="dvc unnassigned">
+                        <b-button class="dvc unnassigned" v-b-modal.assign>
                           <span>sin asignar</span>
                         </b-button>
                       </div>
                     </div>
                   </td>
                   <td class="datacol">
-                    <div style="width: 100%: padding: 0 1rem 0 1rem;" class="text-right">
-                      <div v-if="user != null">
-                        <span>{{user.name}} {{user.surname}}, {{user.nif}} [{{user.postcode}}]</span>
+                    <div
+                      v-if="user != null"
+                      style="width: 100%: padding: 0 1rem 0 1rem; width:100%;"
+                      class="text-center"
+                    >
+                      <div>
+                        <span>{{user.name}} {{user.surname}}, {{user.nif}}</span>
+                      </div>
+                      <div>
+                        <span>[{{user.postcode}}]</span>
                       </div>
                     </div>
                   </td>
@@ -119,7 +138,7 @@
             <div class="infocard" v-if="device != null">
               <table style="width: 100%">
                 <tr>
-                  <!-- tarea epndiente -->
+                  <!-- tarea pendiente -->
                   <td class="datacol">
                     <b-row>
                       <b-col
@@ -151,7 +170,7 @@
                   <td class="datacol text-center">
                     <b-col v-if="device!=null" style="width: 100%">
                       <div v-if="device.pending.length == 0">
-                        <span> No hay tareas pendientes</span>
+                        <span>No hay tareas pendientes</span>
                       </div>
                       <div :key="i" v-for="(t, i) in device.pending">
                         <span>
@@ -192,11 +211,9 @@
                     style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
                   >ultimas tareas realizadas</b-col>
                 </b-row>
-                <b-row v-if="device.last_events.length == 0">
-                  No se han realizado acciones
-                </b-row>
+                <b-row v-if="device.last_events.length == 0">No se han realizado acciones</b-row>
                 <b-row :key="i" v-for="(t, i) in device.last_events" class="tablerow">
-                  <span style="padding: 0 0.5rem 0 3rem;">{{t.name}} el </span>
+                  <span style="padding: 0 0.5rem 0 3rem;">{{t.name}} el</span>
                   <span>{{parseDate(t.timestamp)}}</span>
                 </b-row>
               </div>
@@ -212,14 +229,12 @@
                     style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
                   >ultimas acciones</b-col>
                 </b-row>
-                <b-row v-if="device.last_status.length == 0">
-                  No se han realizado acciones
-                </b-row>
+                <b-row v-if="device.last_status.length == 0">No se han realizado acciones</b-row>
                 <table>
-                <tr :key="i" v-for="(t, i) in device.last_status" class="tablerow">
-                  <td class="text-right" style="min-width: 75px; ">{{t.type}}</td>
-                  <td class="text-left" style="padding-left: 1rem">{{parseDate(t.timestamp)}}</td>
-                </tr>
+                  <tr :key="i" v-for="(t, i) in device.last_status" class="tablerow">
+                    <td class="text-right" style="min-width: 75px; ">{{t.type}}</td>
+                    <td class="text-left" style="padding-left: 1rem">{{parseDate(t.timestamp)}}</td>
+                  </tr>
                 </table>
               </div>
             </b-row>
@@ -258,6 +273,33 @@
         </b-row>
       </b-col>
     </b-row>
+
+    <!-- modal -->
+    <b-modal id="assign" title="Escoge un dispositivo">
+      <div style="font-style: italic;">
+        Mostrando dispositivos disponibles:
+      </div>
+      <div
+        :key="i"
+        v-for="(d, i) in this.unrelated"
+        style="width: 100%; text-align: center;"
+      >
+      <span class="bolder-link" @click="dev2assign = d.device">[{{d.device}}]</span> hizo ping hace {{timeTo(d.last_status[0].timestamp)}} segundos </div>
+      <template v-slot:modal-footer>
+        <div class="w-100">
+          <p class="float-left">Seleccionado: <a style="color: #4b93db">{{dev2assign}}</a></p>
+          <b-button
+            :disabled="dev2assign == 'Ninguno'"
+            variant="primary"
+            size="sm"
+            class="float-right"
+            @click="show=false; addRelation(dev2assign)"
+          >
+            Asignar
+          </b-button>
+        </div>
+      </template>
+    </b-modal>
   </div>
 </template>
 
@@ -274,14 +316,16 @@ export default {
 
   data: function() {
     return {
-      device: null,
       date_filter: "D",
       daily_filter: "",
       month_filter: "null",
       year_filter: "",
       user: null,
       users: [],
+      dev2assign: 'Ninguno',
+      device: null,
       devices: [],
+      unrelated: [],
       events: [],
       taskSelected: null,
       taskOptions: [{ value: null, text: "Please select an option" }]
@@ -297,6 +341,27 @@ export default {
     this.filterDevice();
   },
   methods: {
+    addRelation(deviceid){
+      this.$store
+        .dispatch("relation/new", {nif: this.nif, device: deviceid})
+        .then( r => {
+          if (r.status == 200){
+            this.updateAll()
+            this.makeToast("success", "Success", r.data)
+            this.$bvModal.hide('assign')
+          } else {
+            this.makeToast("danger", "Error", r.data)
+          }
+        }
+      )
+    },
+    timeTo(timestamp) {
+      var date = new Date(timestamp);
+      var a = date.getTime();
+      var now = new Date();
+      var n = now.getTime();
+      return parseInt((n - a) / 1000.0);  
+    },
     getNifAndDevice(device) {
       let dev = device.replace("%3", ":");
       this.devices.forEach(d => {
@@ -395,6 +460,7 @@ export default {
           this.devices = r.data;
           console.log("end devices");
           this.updateEvents();
+          this.splitUnrelatedDevices();
         } else {
           this.$parent.makeToast("danger", `Oups ${r.status}`, r.description);
         }
@@ -406,6 +472,12 @@ export default {
         if (it.relation != null) {
           if (it.relation.user.nif == this.nif) this.device = it;
         }
+      });
+    },
+    splitUnrelatedDevices() {
+      this.unrelated = [];
+      this.devices.forEach(d => {
+        if (d.relation == null) this.unrelated.push(d);
       });
     },
     addTaskBtnText() {
@@ -449,6 +521,14 @@ export default {
 </script>
 
 <style scoped>
+span.bolder-link{
+  font-weight: bold;
+  cursor: pointer;
+}
+span.bolder-link:hover{
+  color:#4b93db;
+}
+
 td.datacol {
   width: 50%;
 }
