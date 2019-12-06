@@ -56,10 +56,10 @@
 
         <!-- content -->
         <b-row class="justify-content-center">
-          <!-- task -->
-          <div class="task-grid" v-if="device != null">
+          <!-- DEVICE + USER -->
+          <div class="task-grid">
             <!-- Device -->
-            <div class="infocard">
+            <div class="infocard" v-if="user!=null">
               <table style="width:100%;">
                 <tr>
                   <td class="text-right">
@@ -74,9 +74,9 @@
                     >Información</span>
                   </td>
                 </tr>
-                <tr style="width: 100%: background: yellow;">
+                <tr style="width: 100%;">
                   <td class="datacol">
-                    <div v-if="device.relation!=null">
+                    <div v-if="device != null">
                       <div>
                         <img
                           style="width: 2rem; height: 2rem; color: #2c3e50;"
@@ -104,16 +104,19 @@
                   </td>
                   <td class="datacol">
                     <div style="width: 100%: padding: 0 1rem 0 1rem;" class="text-right">
-                      <div>
-                        <span>{{device.relation.user.name}} {{device.relation.user.surname}}, {{device.relation.user.nif}} [{{device.relation.user.postcode}}]</span>
+                      <div v-if="user != null">
+                        <span>{{user.name}} {{user.surname}}, {{user.nif}} [{{user.postcode}}]</span>
                       </div>
                     </div>
                   </td>
                 </tr>
               </table>
             </div>
-            <!-- PENDING TASK -->
-            <div class="infocard" v-if="device.relation != null">
+            <div v-else>
+              <span style="color: red;">No tiene ningún usuario asociado</span>
+            </div>
+            <!-- TAREAS PENDIENTES -->
+            <div class="infocard" v-if="device != null">
               <table style="width: 100%">
                 <tr>
                   <!-- tarea epndiente -->
@@ -146,9 +149,9 @@
                 <tr>
                   <!-- pendientes contenido -->
                   <td class="datacol text-center">
-                    <b-col v-if="device.relation!=null" style="width: 100%">
+                    <b-col v-if="device!=null" style="width: 100%">
                       <div v-if="device.pending.length == 0">
-                        <span>No hay tareas pendientes</span>
+                        <span> No hay tareas pendientes</span>
                       </div>
                       <div :key="i" v-for="(t, i) in device.pending">
                         <span>
@@ -175,8 +178,51 @@
                 </tr>
               </table>
             </div>
-            <!-- AÑADIR TAREAS -->
-            <div class="infocard" v-if="device.relation != null"></div>
+            <!-- ULTIMAS -->
+            <b-row style="width: 100%; margin-left: 0;" class="justify-content-center">
+              <!-- tareas -->
+              <div class="infocard" style="width: 350px;" v-if="device != null">
+                <b-row>
+                  <b-col
+                    style="text-align: right; max-height: 20px; padding-top: 0.5rem; max-width: 60px"
+                  >
+                    <i class="material-icons">done_all</i>
+                  </b-col>
+                  <b-col
+                    style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
+                  >ultimas tareas realizadas</b-col>
+                </b-row>
+                <b-row v-if="device.last_events.length == 0">
+                  No se han realizado acciones
+                </b-row>
+                <b-row :key="i" v-for="(t, i) in device.last_events" class="tablerow">
+                  <span style="padding: 0 0.5rem 0 3rem;">{{t.name}} el </span>
+                  <span>{{parseDate(t.timestamp)}}</span>
+                </b-row>
+              </div>
+              <!-- acciones -->
+              <div class="infocard" style="width: 350px;" v-if="device != null">
+                <b-row>
+                  <b-col
+                    style="text-align: right; max-height: 20px; padding-top: 0.5rem; max-width: 100px"
+                  >
+                    <i class="material-icons">done_all</i>
+                  </b-col>
+                  <b-col
+                    style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
+                  >ultimas acciones</b-col>
+                </b-row>
+                <b-row v-if="device.last_status.length == 0">
+                  No se han realizado acciones
+                </b-row>
+                <table>
+                <tr :key="i" v-for="(t, i) in device.last_status" class="tablerow">
+                  <td class="text-right" style="min-width: 75px; ">{{t.type}}</td>
+                  <td class="text-left" style="padding-left: 1rem">{{parseDate(t.timestamp)}}</td>
+                </tr>
+                </table>
+              </div>
+            </b-row>
           </div>
 
           <!-- charts -->
@@ -255,9 +301,9 @@ export default {
       let dev = device.replace("%3", ":");
       this.devices.forEach(d => {
         if (d.device == dev) {
+          this.device = d;
           if (d.relation != null) {
             this.nif = d.relation.user.nif;
-            this.device = d;
           }
         }
       });
@@ -306,19 +352,27 @@ export default {
               text: this.events[i].name
             });
           }
-          this.selectInfo()
+          this.selectInfo();
         }
       });
     },
-    selectInfo(){
+    selectInfo() {
       let deviceQ = this.$route.query["d"];
       this.nif = this.$route.query["u"];
       if (deviceQ != null) {
         // retrieve this.nif and this.device
         this.getNifAndDevice(deviceQ);
-      } else if (this.nif != null){
-          this.filterDevice()
+      } else if (this.nif != null) {
+        this.filterDevice();
       }
+
+      // retrieve user
+      this.users.forEach(u => {
+        console.log(u);
+        if (u.nif == this.nif) {
+          this.user = u;
+        }
+      });
 
       // retrieve data
       if (this.nif == null && deviceQ == null) this.$parent.redirect("/users");
@@ -397,7 +451,6 @@ export default {
 <style scoped>
 td.datacol {
   width: 50%;
-  background: pink;
 }
 
 .event-content {
@@ -474,7 +527,6 @@ div.infocard {
   min-width: 300px;
   justify-content: center;
   width: calc(100vw - 400px);
-  background: orange;
 }
 .input-date {
   float: right;
