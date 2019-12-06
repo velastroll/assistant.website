@@ -88,7 +88,7 @@
           </div>
 
           <!-- task -->
-          <div class="task-grid">
+          <div class="task-grid" v-if="device != null">
             <!-- Device -->
             <div
               style="background: white; border: solid; border-color: blue; border-radius: 1rem; padding: 1rem 1rem 1rem 1rem;"
@@ -138,14 +138,11 @@
               <b-row>
                 <b-col v-if="device.relation!=null" style="width: 100%">
                   <div class="text-left">
-                    <i
-                      class="material-icons"
-                      style="width: 2rem; height: 2rem;"
-                    > query_builder </i>
-                    <span style="font-weight: bold; font-size: 1.25rem;"> TAREAS PENDIENTES </span>
+                    <i class="material-icons" style="width: 2rem; height: 2rem;">query_builder</i>
+                    <span style="font-weight: bold; font-size: 1.25rem;">TAREAS PENDIENTES</span>
                   </div>
                   <div v-if="device.pending.length == 0">
-                    <span> No hay tareas pendientes </span>
+                    <span>No hay tareas pendientes</span>
                   </div>
                   <div :key="i" v-for="(t, i) in device.pending">
                     <span>t</span>
@@ -160,14 +157,12 @@
               <b-row>
                 <b-col v-if="device.relation!=null" style="width: 100%">
                   <div class="text-left">
-                    <i
-                      class="material-icons"
-                      style="width: 2rem; height: 2rem;"
-                    > add </i>
-                    <span style="font-weight: bold; font-size: 1.25rem;"> AÑADIR TAREA </span>
+                    <i class="material-icons" style="width: 2rem; height: 2rem;">add</i>
+                    <span style="font-weight: bold; font-size: 1.25rem;">AÑADIR TAREA</span>
                   </div>
                   <div v-if="device.pending.length == 0">
-                    <span> SELECTOR_DE_TAREAS </span> <b-button disable class="dvc addevent"> AÑADIR </b-button>
+                    <span>SELECTOR_DE_TAREAS</span>
+                    <b-button disable class="dvc addevent">AÑADIR</b-button>
                   </div>
                 </b-col>
               </b-row>
@@ -198,35 +193,50 @@ export default {
       month_filter: "null",
       year_filter: "",
       user: null,
-      users: []
+      users: [],
+      devices: []
     };
   },
   mounted() {
     if (sessionStorage.getItem("access_token") != null) {
-      // retrieve data
+      // download data
+      if (this.users.length == 0) this.updateUsers();
+      if (this.devices.length == 0) this.updateDevices();
       this.nif = this.$route.query["u"];
-      if (this.nif == null) this.$parent.redirect("/users");
+      this.deviceQ = this.$route.query["d"];
+
+      // retrieve data
+      if (this.nif == null && this.deviceQ == null)
+        this.$parent.redirect("/users");
       else {
         this.users = this.$store.getters["users/get"];
         this.devices = this.$store.getters["device/get"];
-        this.filterDevice();
-        // retrieve user data
-        /*
-        if (res.status == 200) {
-          console.log(res.data);
-        } else {
-          this.makeToast(
-            "danger",
-            "Oups!",
-            `[${res.status}] ${res.description}`
-          );
-        }*/
       }
     } else {
       this.$parent.redirect("/login");
     }
+    this.filterDevice();
   },
   methods: {
+    updateUsers() {
+      this.$store.dispatch("users/retrieve").then(r => {
+        if (r.status == 200) {
+          this.users = r.data;
+        } else {
+          this.$parent.makeToast("danger", `Oups ${r.status}`, r.description);
+        }
+      });
+    },
+    updateDevices() {
+      this.$store.dispatch("device/retrieve").then(r => {
+        if (r.status == 200) {
+          this.devices = r.data;
+          this.filterDevice();
+        } else {
+          this.$parent.makeToast("danger", `Oups ${r.status}`, r.description);
+        }
+      });
+    },
     parseDate(date) {
       return (
         date.substring(8, 10) +

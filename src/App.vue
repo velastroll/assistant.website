@@ -14,6 +14,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { mapGetters } from "vuex";
 
 import Nav from "@/views/Nav";
@@ -31,28 +32,21 @@ export default {
       provinces: []
     };
   },
-  created() {
-    window.addEventListener("resize", this.handleResize);
-    this.handleResize();
-  },
-  destroyed() {
-    window.removeEventListener("resize", this.handleResize);
-  },
   methods: {
     updateUsers: function() {
       this.$store.dispatch("users/retrieve").then(r => {
         if (r.status == 200) {
           this.users = this.$store.getters["users/get"];
         } else if (r.status == 500) {
-          this.$parent.makeToast("danger", `Error ${r.status}`, r.description);
+          this.makeToast("danger", `Error ${r.status}`, r.description);
           // delete tokens
           this.$store.commit("auth/clearTokens");
           this.$store.commit("users/clear");
-          this.$parent.redirect("/login");
+          this.redirect("/login");
         } else if (r.status == 404) {
           console.log("Server is down");
         } else {
-          this.$parent.makeToast(
+          this.makeToast(
             "danger",
             `Oups ${r.status}`,
             "Server is down."
@@ -60,7 +54,7 @@ export default {
           // delete tokens
           this.$store.commit("auth/clearTokens");
           this.$store.commit("users/clear");
-          this.$parent.redirect("/login");
+          this.redirect("/login");
         }
       });
     },
@@ -69,25 +63,19 @@ export default {
         if (r.status == 200) {
           this.provinces = this.$store.getters["provinces/get"];
         } else {
-          this.$parent.makeToast("danger", `Oups ${r.status}`, r.description);
+          this.makeToast("danger", `Oups ${r.status}`, r.description);
           // delete tokens
           this.$store.commit("auth/clearTokens");
           this.$store.commit("provinces/clear");
-          this.$parent.redirect("/login");
+          this.redirect("/login");
         }
       });
     },
-    handleResize() {
-      this.window.width = window.innerWidth;
-      this.window.height = window.innerHeight;
-    },
-    /* eslint-disable */
     redirect(url) {
       try {
         this.$router.push(url).catch(err => {});
       } catch (e) {}
     },
-    /* eslint-enable */
     isAuth() {
       if (sessionStorage.getItem("access_token") != null) return true;
       else return false;
@@ -95,16 +83,6 @@ export default {
     isLogged() {
       if (sessionStorage.getItem("access_token") != null) return true;
       else this.redirect("/login");
-    },
-    getCols(component) {
-      var w = window.innerWidth;
-      if (w > 650) {
-        if (component == "nav") return "1";
-        if (component == "content") return "";
-      } else {
-        if (component == "nav") return "12";
-        if (component == "content") return "12";
-      }
     },
     makeToast(variant = null, title, content) {
       this.$bvToast.toast(content, {
