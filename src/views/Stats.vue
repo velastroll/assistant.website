@@ -55,7 +55,130 @@
         </b-row>
 
         <!-- content -->
-        <b-row>
+        <b-row class="justify-content-center">
+          <!-- task -->
+          <div class="task-grid" v-if="device != null">
+            <!-- Device -->
+            <div class="infocard">
+              <table style="width:100%;">
+                <tr>
+                  <td class="text-right">
+                    <i
+                      class="material-icons"
+                      style="text-align: right; max-height: 20px; padding-top: 0.25rem;"
+                    >info</i>
+                  </td>
+                  <td class="text-left">
+                    <span
+                      style="text-align: left; font-weight: bold; padding-top: 1rem; text-transform: uppercase;"
+                    >Información</span>
+                  </td>
+                </tr>
+                <tr style="width: 100%: background: yellow;">
+                  <td class="datacol">
+                    <div v-if="device.relation!=null">
+                      <div>
+                        <img
+                          style="width: 2rem; height: 2rem; color: #2c3e50;"
+                          src="/marker/device.svg"
+                        />
+                        <b-button class="dvc assigned">
+                          <span>{{device.device}}</span>
+                        </b-button>
+                      </div>
+                      <div>
+                        <span>Desde el {{parseDate(device.relation.from)}}</span>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <div>
+                        <img
+                          style="width: 2rem; height: 2rem; color: #2c3e50;"
+                          src="/marker/device.svg"
+                        />
+                        <b-button class="dvc unnassigned">
+                          <span>sin asignar</span>
+                        </b-button>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="datacol">
+                    <div style="width: 100%: padding: 0 1rem 0 1rem;" class="text-right">
+                      <div>
+                        <span>{{device.relation.user.name}} {{device.relation.user.surname}}, {{device.relation.user.nif}} [{{device.relation.user.postcode}}]</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <!-- PENDING TASK -->
+            <div class="infocard" v-if="device.relation != null">
+              <table style="width: 100%">
+                <tr>
+                  <!-- tarea epndiente -->
+                  <td class="datacol">
+                    <b-row>
+                      <b-col
+                        style="text-align: right; max-height: 20px; padding-top: 0.5rem; max-width: 150px"
+                      >
+                        <i class="material-icons">query_builder</i>
+                      </b-col>
+                      <b-col
+                        style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
+                      >Tareas pendientes</b-col>
+                    </b-row>
+                  </td>
+                  <!-- añadir tarea -->
+                  <td class="datacol text-center">
+                    <b-row>
+                      <b-col
+                        style="text-align: right; max-height: 20px; padding-top: 0.5rem; max-width: 150px"
+                      >
+                        <i class="material-icons">flash_on</i>
+                      </b-col>
+                      <b-col
+                        style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
+                      >Añadir tarea</b-col>
+                    </b-row>
+                  </td>
+                </tr>
+                <tr>
+                  <!-- pendientes contenido -->
+                  <td class="datacol text-center">
+                    <b-col v-if="device.relation!=null" style="width: 100%">
+                      <div v-if="device.pending.length == 0">
+                        <span>No hay tareas pendientes</span>
+                      </div>
+                      <div :key="i" v-for="(t, i) in device.pending">
+                        <span>
+                          [{{t.event}}] ordenada por
+                          <strong>{{t.by}}</strong>
+                          el {{parseDate(t.at)}}
+                        </span>
+                      </div>
+                    </b-col>
+                  </td>
+                  <!-- añadir tarea contenido -->
+                  <td class="datacol">
+                    <b-form-select
+                      v-model="taskSelected"
+                      :options="taskOptions"
+                      class="event-content"
+                    ></b-form-select>
+                    <b-button
+                      class="dvc addevent"
+                      @click="sendTask()"
+                      :disabled="!taskSelected"
+                    >{{addTaskBtnText()}}</b-button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <!-- AÑADIR TAREAS -->
+            <div class="infocard" v-if="device.relation != null"></div>
+          </div>
+
           <!-- charts -->
           <div class="chart-grid">
             <!-- Intents -->
@@ -86,88 +209,6 @@
             </b-row>
             <Intents device="XX:XX:XX:XX:XX:XX" />
           </div>
-
-          <!-- task -->
-          <div class="task-grid" v-if="device != null">
-            <!-- Device -->
-            <div
-              style="background: white; border: solid; border-color: blue; border-radius: 1rem; padding: 1rem 1rem 1rem 1rem;"
-            >
-              <b-row>
-                <b-col v-if="device.relation!=null" style="width: 100%">
-                  <div>
-                    <img
-                      style="width: 2rem; height: 2rem; color: #2c3e50;"
-                      src="/marker/device.svg"
-                    />
-                    <b-button class="dvc assigned">
-                      <span>{{device.device}}</span>
-                    </b-button>
-                  </div>
-                  <div>
-                    <span>Desde el {{parseDate(device.relation.from)}}</span>
-                  </div>
-                </b-col>
-                <b-col v-else style="width: 100%">
-                  <div>
-                    <img
-                      style="width: 2rem; height: 2rem; color: #2c3e50;"
-                      src="/marker/device.svg"
-                    />
-                    <b-button class="dvc unnassigned">
-                      <span>sin asignar</span>
-                    </b-button>
-                  </div>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col style="width: 100%">
-                  <hr />
-                  <div style="width: 100%: padding: 0 1rem 0 1rem;" class="text-right">
-                    <div>
-                      <span>{{device.relation.user.name}} {{device.relation.user.surname}}, {{device.relation.user.nif}} [{{device.relation.user.postcode}}]</span>
-                    </div>
-                  </div>
-                </b-col>
-              </b-row>
-            </div>
-            <!-- PENDING TASK -->
-            <div
-              style="background: white; border: solid; border-color: blue; border-radius: 1rem; padding: 1rem 1rem 1rem 1rem;"
-            >
-              <b-row>
-                <b-col v-if="device.relation!=null" style="width: 100%">
-                  <div class="text-left">
-                    <i class="material-icons" style="width: 2rem; height: 2rem;">query_builder</i>
-                    <span style="font-weight: bold; font-size: 1.25rem;">TAREAS PENDIENTES</span>
-                  </div>
-                  <div v-if="device.pending.length == 0">
-                    <span>No hay tareas pendientes</span>
-                  </div>
-                  <div :key="i" v-for="(t, i) in device.pending">
-                    <span>t</span>
-                  </div>
-                </b-col>
-              </b-row>
-            </div>
-            <!-- AÑADIR TAREAS -->
-            <div
-              style="background: white; border: solid; border-color: blue; border-radius: 1rem; padding: 1rem 1rem 1rem 1rem;"
-            >
-              <b-row>
-                <b-col v-if="device.relation!=null" style="width: 100%">
-                  <div class="text-left">
-                    <i class="material-icons" style="width: 2rem; height: 2rem;">add</i>
-                    <span style="font-weight: bold; font-size: 1.25rem;">AÑADIR TAREA</span>
-                  </div>
-                  <div v-if="device.pending.length == 0">
-                    <span>SELECTOR_DE_TAREAS</span>
-                    <b-button disable class="dvc addevent">AÑADIR</b-button>
-                  </div>
-                </b-col>
-              </b-row>
-            </div>
-          </div>
         </b-row>
       </b-col>
     </b-row>
@@ -194,48 +235,128 @@ export default {
       year_filter: "",
       user: null,
       users: [],
-      devices: []
+      devices: [],
+      events: [],
+      taskSelected: null,
+      taskOptions: [{ value: null, text: "Please select an option" }]
     };
   },
   mounted() {
     if (sessionStorage.getItem("access_token") != null) {
       // download data
-      if (this.users.length == 0) this.updateUsers();
-      if (this.devices.length == 0) this.updateDevices();
-      this.nif = this.$route.query["u"];
-      this.deviceQ = this.$route.query["d"];
-
-      // retrieve data
-      if (this.nif == null && this.deviceQ == null)
-        this.$parent.redirect("/users");
-      else {
-        this.users = this.$store.getters["users/get"];
-        this.devices = this.$store.getters["device/get"];
-      }
+      this.updateAll();
     } else {
       this.$parent.redirect("/login");
     }
     this.filterDevice();
   },
   methods: {
+    getNifAndDevice(device) {
+      let dev = device.replace("%3", ":");
+      this.devices.forEach(d => {
+        if (d.device == dev) {
+          if (d.relation != null) {
+            this.nif = d.relation.user.nif;
+            this.device = d;
+          }
+        }
+      });
+    },
+    /* Create a new task for a specific device. */
+    sendTask() {
+      if (this.taskSelected == null) {
+        this.makeToast(
+          "danger",
+          "Wrong task",
+          `The task ${this.taskSelected} is not valid.`
+        );
+      } else {
+        this.$store
+          .dispatch("tasks/new", {
+            event: this.taskSelected,
+            device: this.device.device
+          })
+          .then(r => {
+            if (r.status == 200) {
+              this.taskSelected = null;
+              this.makeToast(
+                "success",
+                "Added",
+                "New task assigned to the device."
+              );
+            } else {
+              this.makeToast("danger", `Error [${r.status}]`, `${r.data}`);
+            }
+            this.updateDevices();
+          });
+      }
+    },
+    updateAll() {
+      this.updateUsers();
+    },
+    /** Retrieve event types */
+    updateEvents: function() {
+      this.$store.dispatch("tasks/getEvents").then(r => {
+        if (r.status == 200) {
+          this.events = this.$store.getters["tasks/getEvents"];
+          this.taskOptions = [{ value: null, text: "Please select an option" }];
+          for (var i in this.events) {
+            this.taskOptions.push({
+              value: this.events[i].name,
+              text: this.events[i].name
+            });
+          }
+          this.selectInfo()
+        }
+      });
+    },
+    selectInfo(){
+      let deviceQ = this.$route.query["d"];
+      this.nif = this.$route.query["u"];
+      if (deviceQ != null) {
+        // retrieve this.nif and this.device
+        this.getNifAndDevice(deviceQ);
+      } else if (this.nif != null){
+          this.filterDevice()
+      }
+
+      // retrieve data
+      if (this.nif == null && deviceQ == null) this.$parent.redirect("/users");
+    },
+    /** Retrieve users */
     updateUsers() {
       this.$store.dispatch("users/retrieve").then(r => {
         if (r.status == 200) {
           this.users = r.data;
+          this.updateDevices();
         } else {
           this.$parent.makeToast("danger", `Oups ${r.status}`, r.description);
         }
       });
     },
+    /** Retrieve devices */
     updateDevices() {
       this.$store.dispatch("device/retrieve").then(r => {
         if (r.status == 200) {
           this.devices = r.data;
-          this.filterDevice();
+          console.log("end devices");
+          this.updateEvents();
         } else {
           this.$parent.makeToast("danger", `Oups ${r.status}`, r.description);
         }
       });
+    },
+    /* Sets into [this.device] the device which has an active relation with [this.nif] */
+    filterDevice() {
+      this.devices.forEach(it => {
+        if (it.relation != null) {
+          if (it.relation.user.nif == this.nif) this.device = it;
+        }
+      });
+    },
+    addTaskBtnText() {
+      if (this.taskSelected) return "Añadir tarea";
+      else return "Elige primero";
     },
     parseDate(date) {
       return (
@@ -249,15 +370,6 @@ export default {
         ":" +
         date.substring(14, 16)
       );
-    },
-    filterDevice() {
-      console.log(this.devices);
-      this.devices.forEach(it => {
-        if (it.relation != null) {
-          this.device = it;
-          //if (it.relation.nif == this.nif) this.user = it;
-        }
-      });
     },
     makeToast(a, b, c) {
       this.$parent.makeToast(a, b, c);
@@ -283,6 +395,24 @@ export default {
 </script>
 
 <style scoped>
+td.datacol {
+  width: 50%;
+  background: pink;
+}
+
+.event-content {
+  width: 250px;
+}
+
+div.infocard {
+  background: white;
+  border: solid;
+  border-width: 0px 1px 1px 0px;
+  border-color: rgba(185, 185, 185, 0.096);
+  border-radius: 1rem;
+  padding: 1rem 1rem 1rem 1rem;
+  margin: 1rem 1rem 1rem 1rem;
+}
 .unnassigned {
   color: brown;
 }
@@ -296,6 +426,7 @@ export default {
   border: solid;
   text-transform: uppercase;
   border-radius: 1rem;
+  border-width: 1px 1px 1px 1px;
   margin: 0 0 0 0px;
   padding-top: 0px;
   padding-bottom: 0px;
@@ -316,8 +447,14 @@ export default {
   color: darkgreen;
 }
 
+.addevent:disabled {
+  border-color: gray;
+  color: gray;
+}
+
 .addevent:hover {
   color: white;
+  border-color: darkgreen;
   background: darkgreen;
 }
 
@@ -332,10 +469,10 @@ export default {
 .chart-grid {
   width: 300px;
   height: 100%;
-  border: solid;
 }
 .task-grid {
   min-width: 300px;
+  justify-content: center;
   width: calc(100vw - 400px);
   background: orange;
 }
