@@ -47,7 +47,9 @@ export default {
                         resolve(response);
                     })
                     .catch(e => {
-                        Promise.reject(e)
+                        resolve(
+                            {status : 500, data: e}
+                        )
                     });
             });
         }

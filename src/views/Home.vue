@@ -47,7 +47,6 @@ export default {
   methods: {
     updateEvents: function(){
       this.$store.dispatch("tasks/getEvents")
-      console.log("updating events..")
     },
     updateDevices: function() {
       this.$store.dispatch("device/retrieve").then(r => {

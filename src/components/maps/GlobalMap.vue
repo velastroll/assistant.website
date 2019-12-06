@@ -107,7 +107,7 @@ export default {
         <div style=" width: 100%; text-align: center;">
           <div style="font-weight: bold"> ${dev.device} </div>
           ${this.popupRelation(dev.relation)}
-          <a href="#/stats/?u=${dev.device}"> Ver en detalle </a>
+          <a href="#/stats/?d=${dev.device}"> Ver en detalle </a>
         </div>
         `;
         tmp.bindPopup(popup);
