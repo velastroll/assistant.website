@@ -40,6 +40,7 @@ export default {
         );
         this.centered = true;
       }
+
       this.showDevices();
     }
   },
@@ -73,38 +74,65 @@ export default {
       }
 
       this.dots = [];
-      const icon_path = '/map_device.svg'
+      let icon_yellow = '/marker/marker_yellow.svg'
+      let icon_red = '/marker/marker_red.svg'
+      let icon_green = '/marker/marker_green.svg'
+      let icon_home = '/marker/home.svg'
       var latlngs = [];
-      var markerHtml = `
-        width: 10px; height:10px; display: block; position: relative; fill: red;
-      `;
-
+      var markerHtml = `width: 40px; height:40px; display: block; position: relative; fill: red;`;
       // print positions
-      /*for (var d in this.msg) {
+      for (var d in this.msg) {
+        var icon_device = icon_yellow
         // print the points of the path
         var dev = this.msg[d];
-
+        var lat = 40.340664
+        var lng = -10.699526
+        if (dev.relation != null){
+          lat = dev.relation.position.lat
+          lng = dev.relation.position.lon
+          icon_device = icon_green
+        }
+        console.log(dev)
         var dot = L.divIcon({
           className: "point",
           iconAnchor: [6, 10],
           labelAnchor: [-14, -14],
-          popupAnchor: [0, -14],
-          html: `<i style="${markerHtml}" src="/icon/${icon_path}"/>`
+          popupAnchor: [15, -15],
+          html: `<img style="${markerHtml}" src="${icon_device}"/>`
         });
-        var tmp = L.marker([pos.latitude, pos.longitude], {
+        var tmp = L.marker([parseFloat(lat), parseFloat(lng)], {
           icon: dot
         });
-        var popup = ``;
+        var popup = `
+        <div style=" width: 100%; text-align: center;">
+          <div style="font-weight: bold"> ${dev.device} </div>
+          ${this.popupRelation(dev.relation)}
+          <a href="#/stats/?d=${dev.device}"> Ver en detalle </a>
+        </div>
+        `;
         tmp.bindPopup(popup);
         this.mymap.addLayer(tmp);
         this.dots.push(tmp);
-      }*/
+      }
+    },
+    popupRelation(r){
+      if (r == null){
+        return `<div style="color: red; text-align: center"> Ningún usuario asignado </div>`
+      }
+      else {
+        return `
+          <div style="text-align: right"> 
+            <div>${r.user.name}  ${r.user.surname}</div>
+            <div> ${r.user.nif}  </div>
+          </div>
+        `
+      }
     },
     calculeSeconds: function(since) {
       var date = new Date(since);
       var a = date.getTime();
       var now = new Date();
-      var n = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
+      var n = now.getTime();
       var date = parseInt((n - a) / 1000.0);
       if (date < 60) return " hace " + date + "segundos";
       else {
