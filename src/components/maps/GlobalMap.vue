@@ -85,7 +85,7 @@ export default {
       let icon_home = '/marker/home.svg'
       var latlngs = [];
       var markerHtml = `width: 40px; height:40px; display: block; position: relative; fill: red;`;
-      // print positions
+      // print devices
       for (var d in this.msg) {
         var icon_device = icon_yellow
         // print the points of the path
@@ -100,9 +100,9 @@ export default {
         console.log(dev)
         var dot = L.divIcon({
           className: "point",
-          iconAnchor: [6, 10],
+          iconAnchor: [20, 40],
           labelAnchor: [-14, -14],
-          popupAnchor: [15, -15],
+          popupAnchor: [0, -40],
           html: `<img style="${markerHtml}" src="${icon_device}"/>`
         });
         var tmp = L.marker([parseFloat(lat), parseFloat(lng)], {
