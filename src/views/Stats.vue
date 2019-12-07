@@ -447,7 +447,6 @@ export default {
 
       // retrieve user
       this.users.forEach(u => {
-        console.log(u);
         if (u.nif == this.nif) {
           this.user = u;
         }
@@ -472,7 +471,6 @@ export default {
       this.$store.dispatch("device/retrieve").then(r => {
         if (r.status == 200) {
           this.devices = r.data;
-          console.log("end devices");
           this.updateEvents();
           this.splitUnrelatedDevices();
         } else {

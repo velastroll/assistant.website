@@ -29,7 +29,6 @@ export default {
   watch: {
     // ----------------------------- CURRENT POSITION ----------------------------
     msg: function() {
-      console.log(this.msg)
       if (this.msg != null && !this.centered) {
         this.mymap.setView(
           [
@@ -97,7 +96,6 @@ export default {
           lng = dev.relation.position.lon
           icon_device = icon_green
         }
-        console.log(dev)
         var dot = L.divIcon({
           className: "point",
           iconAnchor: [20, 40],

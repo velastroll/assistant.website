@@ -52,9 +52,7 @@ export default {
       this.$store.dispatch("device/retrieve").then(r => {
         if (r.status == 200) {
           this.devices = this.$store.getters["device/get"];
-        } else {
-          console.log("Server is down");
-        }
+        } else this.$parent.redirect("/login");
       });
     }
   },

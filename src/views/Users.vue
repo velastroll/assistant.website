@@ -25,7 +25,7 @@
         </b-row>
         <div :key="i" v-for="(u, i) in this.users">
           <b-row v-if="u != null" class="row-table" align-v="center" @click="redirect(`/stats?u=${u.nif}`)">
-            <b-col>{{u.name}}</b-col>
+            <b-col>{{u.name}} {{u.surname}}</b-col>
             <b-col class="smart-screen">{{u.nif}}</b-col>
             <b-col v-if="existLocation(u.postcode) != null">{{existLocation(u.postcode).name}}</b-col>
             <b-col>{{getDevice(u.nif)}}</b-col>

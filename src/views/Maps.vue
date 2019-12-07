@@ -31,7 +31,7 @@ export default {
         if (r.status == 200) {
           this.devices = this.$store.getters["device/get"];
         } else {
-          console.log("Server is down");
+          this.$parent.redirect('/')
         }
       });
     },

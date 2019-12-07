@@ -43,8 +43,6 @@ export default {
           this.$store.commit("auth/clearTokens");
           this.$store.commit("users/clear");
           this.redirect("/login");
-        } else if (r.status == 404) {
-          console.log("Server is down");
         } else {
           this.makeToast(
             "danger",
