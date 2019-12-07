@@ -70,8 +70,13 @@ export default {
     showDevices() {
       // delete old marks
       for (var m in this.dots) {
-        if (this.dots[m] != null) this.mymap.removeLayer(this.dots[m]);
+        if (this.dots[m] != null) this.cluster.removeLayer(this.dots[m]);
       }
+
+      // delete cluster
+      this.mymap.removeLayer(this.cluster);
+      // new cluster
+      this.cluster = L.markerClusterGroup();
 
       this.dots = [];
       let icon_yellow = '/marker/marker_yellow.svg'
@@ -111,9 +116,10 @@ export default {
         </div>
         `;
         tmp.bindPopup(popup);
-        this.mymap.addLayer(tmp);
+        this.cluster.addLayer(tmp);
         this.dots.push(tmp);
       }
+      this.mymap.addLayer(this.cluster);
     },
     popupRelation(r){
       if (r == null){
