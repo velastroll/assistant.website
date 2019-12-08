@@ -58,44 +58,31 @@
         <b-row class="justify-content-center">
           <!-- CARDS -->
           <div class="task-grid">
-            <!-- Device -->
+            <!-- SLOT 1 -->
             <div class="infocard" v-if="user!=null">
-              <table style="width:100%;">
-                <tr>
-                  <!-- tarea pendiente -->
-                  <td class="datacol">
+              <b-row
+                style="width: 100%; padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0;"
+                class="justify-content-center"
+              >
+                <!-- dispositivo -->
+                <div
+                  class="col-lg-8 col-md-12 justify-content-center"
+                  style="padding-left: 0; padding-right: 0;"
+                >
+                  <div>
                     <b-row class="justify-content-center" style="width: 100%; text-align:center">
-                      <b-col
-                        cols="5"
-                        style="text-align: right; max-height: 20px; padding-top: 0.5rem;"
-                      >
+                      <a style="text-align: right; max-height: 20px; padding-top: 0.5rem;">
                         <img
                           style="width: 2rem; height: 1rem; color: #2c3e50;"
                           src="/marker/device.svg"
                         />
-                      </b-col>
-                      <b-col
+                      </a>
+                      <a
                         style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
-                      >Dispositivo</b-col>
+                      >Dispositivo</a>
                     </b-row>
-                  </td>
-                  <!-- añadir tarea -->
-                  <td class="datacol text-center">
-                    <b-row class="justify-content-center" style="width: 100%; text-align:center">
-                      <b-col
-                        cols="5"
-                        style="text-align: right; max-height: 20px; padding-top: 0.5rem;"
-                      >
-                        <i class="material-icons">face</i>
-                      </b-col>
-                      <b-col
-                        style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
-                      >Usuario</b-col>
-                    </b-row>
-                  </td>
-                </tr>
-                <tr style="width: 100%;">
-                  <td class="datacol">
+                  </div>
+                  <div>
                     <div v-if="device != null">
                       <div>
                         <b-button class="dvc assigned" @click="finishRelation(device.device)">
@@ -113,8 +100,19 @@
                         </b-button>
                       </div>
                     </div>
-                  </td>
-                  <td class="datacol">
+                  </div>
+                </div>
+                <!-- usuario -->
+                <div class="text-center col-md-12 col-lg-4">
+                  <b-row class="justify-content-center" style="width: 100%; text-align:center">
+                    <a style="text-align: right; max-height: 20px; padding-top: 0.5rem;">
+                      <i class="material-icons">face</i>
+                    </a>
+                    <a
+                      style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
+                    >Usuario</a>
+                  </b-row>
+                  <div>
                     <div
                       v-if="user != null"
                       style="width: 100%: padding: 0 1rem 0 1rem; width:100%;"
@@ -127,176 +125,213 @@
                         <span>[{{user.postcode}}]</span>
                       </div>
                     </div>
-                  </td>
-                </tr>
-              </table>
+                  </div>
+                </div>
+              </b-row>
             </div>
             <div v-else>
               <span style="color: red;">No tiene ningún usuario asociado</span>
             </div>
-            <!-- TAREAS PENDIENTES -->
+
+            <!-- SLOT 2 -->
             <div class="infocard" v-if="device != null">
-              <table style="width: 100%">
-                <tr>
-                  <!-- tarea pendiente -->
-                  <td class="datacol">
-                    <b-row>
-                      <b-col
-                        style="text-align: right; max-height: 20px; padding-top: 0.5rem; max-width: 150px"
-                      >
+              <b-row
+                style="width: 100%; padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0;"
+                class="justify-content-center"
+              >
+                <!-- tarea pendiente -->
+                <div
+                  class="col-lg-8 col-md-12 justify-content-center"
+                  style="padding-left: 0; padding-right: 0;"
+                >
+                  <div>
+                    <b-row class="justify-content-center" style="width: 100%; text-align:center">
+                      <a style="text-align: right; max-height: 20px; padding-top: 0.5rem;">
                         <i class="material-icons">query_builder</i>
-                      </b-col>
-                      <b-col
+                      </a>
+                      <a
                         style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
-                      >Tareas pendientes</b-col>
+                      >Tareas pendientes</a>
                     </b-row>
-                  </td>
-                  <!-- añadir tarea -->
-                  <td class="datacol text-center">
-                    <b-row>
-                      <b-col
-                        style="text-align: right; max-height: 20px; padding-top: 0.5rem; max-width: 150px"
-                      >
-                        <i class="material-icons">flash_on</i>
-                      </b-col>
-                      <b-col
-                        style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
-                      >Añadir tarea</b-col>
-                    </b-row>
-                  </td>
-                </tr>
-                <tr>
-                  <!-- pendientes contenido -->
-                  <td class="datacol text-center">
-                    <b-col v-if="device!=null" style="width: 100%">
+                  </div>
+                  <!-- contenido -->
+                  <div class="text-center justify-content-center" style=" padding: 0; margin: 0;">
+                    <b-col v-if="device!=null" style=" padding: 0; margin: 0; width: 100%;">
                       <div v-if="device.pending.length == 0">
                         <span>No hay tareas pendientes</span>
                       </div>
-                      <div :key="i" v-for="(t, i) in device.pending">
-                        <span>
-                          [{{t.event}}] ordenada por
-                          <strong>{{t.by}}</strong>
-                          el {{parseDate(t.at)}}
-                        </span>
-                      </div>
+                      <b-row v-else class="justify-content-center">
+                        <table style="padding: 0; margin: 0;" class="justify-content-center">
+                          <tr>
+                            <td class="text-center font-weight-bolder">QUÉ</td>
+                            <td class="text-center font-weight-bolder">QUIÉN</td>
+                            <td class="text-center font-weight-bolder">DESDE</td>
+                          </tr>
+                          <tr
+                            :key="i"
+                            v-for="(t, i) in device.pending"
+                            class="tablerow"
+                            style="padding: 0; margin: 0;"
+                          >
+                            <td
+                              class="text-left"
+                              style="padding: 0; margin: 0; color: #2c3e50;"
+                            >[{{t.event}}]</td>
+                            <td
+                              class="text-center"
+                              style="padding: 0 1rem 0 1rem; margin: 0; font-style: italic;"
+                            >{{t.by}}</td>
+                            <td class="text-right">{{parseDate(t.at)}}</td>
+                          </tr>
+                        </table>
+                      </b-row>
                     </b-col>
-                  </td>
-                  <!-- añadir tarea contenido -->
-                  <td class="datacol">
+                  </div>
+                </div>
+                <!-- añadir tarea -->
+                <div class="col-lg-4 col-md-12">
+                  <div class="text-center">
+                    <b-row class="justify-content-center">
+                      <a
+                        style="text-align: right; max-height: 20px; padding-top: 0.5rem; max-width: 150px"
+                      >
+                        <i class="material-icons">flash_on</i>
+                      </a>
+                      <a
+                        style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
+                      >Añadir tarea</a>
+                    </b-row>
+                  </div>
+
+                  <!-- contenido -->
+                  <div>
                     <b-form-select
                       v-model="taskSelected"
                       :options="taskOptions"
-                      class="event-content"
+                      style="width: 100%; padding: 0 0 0 1rem; border-radius: 1rem; margin: 0.5rem 0 0.5rem 0;"
                     ></b-form-select>
                     <b-button
                       class="dvc addevent"
                       @click="sendTask()"
                       :disabled="!taskSelected"
                     >{{addTaskBtnText()}}</b-button>
-                  </td>
-                </tr>
-              </table>
+                  </div>
+                </div>
+              </b-row>
             </div>
-            <!-- ULTIMAS -->
-            <b-row style="width: 100%; margin-left: 0;" class="justify-content-center">
+
+            <!-- ROW 3 -->
+            <b-row class="justify-content-center">
               <!-- tareas -->
-              <div class="infocard" style="width: 350px;" v-if="device != null">
-                <b-row>
-                  <b-col
-                    style="text-align: right; max-height: 20px; padding-top: 0.5rem; max-width: 60px"
+              <div class="infocard" v-if="device != null">
+                <div>
+                  <b-row
+                    class="justify-content-center"
+                    style="width: 100%; text-align:center; margin: 0;"
                   >
-                    <i class="material-icons">done_all</i>
-                  </b-col>
-                  <b-col
-                    style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
-                  >ultimas tareas realizadas</b-col>
-                </b-row>
+                    <a style="text-align: right; max-height: 20px; padding-top: 0.5rem;">
+                      <i class="material-icons">done_all</i>
+                    </a>
+                    <a
+                      style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
+                    >Últimas tareas realizadas</a>
+                  </b-row>
+                </div>
                 <b-row v-if="device.last_events.length == 0">No se han realizado acciones</b-row>
-                <b-row :key="i" v-for="(t, i) in device.last_events" class="tablerow">
-                  <span style="padding: 0 0.5rem 0 3rem;">{{t.name}} el</span>
-                  <span>{{parseDate(t.timestamp)}}</span>
+                <b-row
+                  :key="i"
+                  v-for="(t, i) in device.last_events"
+                  class="tablerow"
+                  style="margin: 0; padding: 0; justify-content: center;"
+                >
+                  <span style="margin-right: 0.5rem">[{{t.name}}]</span>
+                  <span>el {{parseDate(t.timestamp)}}</span>
                 </b-row>
               </div>
+
               <!-- acciones -->
-              <div class="infocard" style="width: 350px;" v-if="device != null">
-                <b-row>
-                  <b-col
-                    style="text-align: right; max-height: 20px; padding-top: 0.5rem; max-width: 100px"
+              <div class="infocard" v-if="device != null">
+                <div>
+                  <b-row
+                    class="justify-content-center"
+                    style="width: 100%; text-align:center; margin: 0;"
                   >
-                    <i class="material-icons">done_all</i>
-                  </b-col>
-                  <b-col
-                    style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
-                  >ultimas acciones</b-col>
-                </b-row>
+                    <a style="text-align: right; max-height: 20px; padding-top: 0.5rem;">
+                      <i class="material-icons">outlined_flag</i>
+                    </a>
+                    <a
+                      style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
+                    >Últimos estados</a>
+                  </b-row>
+                </div>
                 <b-row v-if="device.last_status.length == 0">No se han realizado acciones</b-row>
-                <table>
-                  <tr :key="i" v-for="(t, i) in device.last_status" class="tablerow">
-                    <td class="text-right" style="min-width: 75px; ">{{t.type}}</td>
-                    <td class="text-left" style="padding-left: 1rem">{{parseDate(t.timestamp)}}</td>
-                  </tr>
-                </table>
+                <b-row
+                  :key="i"
+                  v-for="(t, i) in device.last_events"
+                  class="tablerow"
+                  style="margin: 0; padding: 0; justify-content: center;"
+                >
+                  <span style="margin-right: 0.5rem">[{{t.name}}] </span>
+                  <span> el {{parseDate(t.timestamp)}}</span>
+                </b-row>
               </div>
             </b-row>
-          </div>
-
-          <!-- charts -->
-          <div class="chart-grid">
-            <!-- Intents -->
-            <b-row style="width: 100%">
-              <b-col
-                cols="2"
-                style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
-              >
-                <i class="material-icons">pie_chart</i>
-              </b-col>
-              <b-col>
-                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Intenciones</div>
-              </b-col>
-            </b-row>
-            <Intents device="XX:XX:XX:XX:XX:XX" />
-
-            <!-- hotword -->
-            <b-row style="width: 100%">
-              <b-col
-                cols="2"
-                style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
-              >
-                <i class="material-icons">show_chart</i>
-              </b-col>
-              <b-col>
-                <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Accuracy</div>
-              </b-col>
-            </b-row>
-            <Intents device="XX:XX:XX:XX:XX:XX" />
           </div>
         </b-row>
+
+        <!-- charts -->
+        <div class="chart-grid">
+          <!-- Intents -->
+          <b-row style="width: 100%">
+            <b-col
+              cols="2"
+              style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
+            >
+              <i class="material-icons">pie_chart</i>
+            </b-col>
+            <b-col>
+              <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Intenciones</div>
+            </b-col>
+          </b-row>
+          <Intents device="XX:XX:XX:XX:XX:XX" />
+
+          <!-- hotword -->
+          <b-row style="width: 100%">
+            <b-col
+              cols="2"
+              style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
+            >
+              <i class="material-icons">show_chart</i>
+            </b-col>
+            <b-col>
+              <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Accuracy</div>
+            </b-col>
+          </b-row>
+          <Intents device="XX:XX:XX:XX:XX:XX" />
+        </div>
       </b-col>
     </b-row>
 
     <!-- modal -->
     <b-modal id="assign" title="Escoge un dispositivo">
-      <div style="font-style: italic;">
-        Mostrando dispositivos disponibles:
+      <div style="font-style: italic;">Mostrando dispositivos disponibles:</div>
+      <div :key="i" v-for="(d, i) in this.unrelated" style="width: 100%; text-align: center;">
+        <span class="bolder-link" @click="dev2assign = d.device">[{{d.device}}]</span>
+        hizo ping hace {{timeTo(d.last_status[0].timestamp)}} segundos
       </div>
-      <div
-        :key="i"
-        v-for="(d, i) in this.unrelated"
-        style="width: 100%; text-align: center;"
-      >
-      <span class="bolder-link" @click="dev2assign = d.device">[{{d.device}}]</span> hizo ping hace {{timeTo(d.last_status[0].timestamp)}} segundos </div>
       <template v-slot:modal-footer>
         <div class="w-100">
-          <p class="float-left">Seleccionado: <a style="color: #4b93db">{{dev2assign}}</a></p>
+          <p class="float-left">
+            Seleccionado:
+            <a style="color: #4b93db">{{dev2assign}}</a>
+          </p>
           <b-button
             :disabled="dev2assign == 'Ninguno'"
             variant="primary"
             size="sm"
             class="float-right"
             @click="show=false; addRelation(dev2assign)"
-          >
-            Asignar
-          </b-button>
+          >Asignar</b-button>
         </div>
       </template>
     </b-modal>
@@ -322,13 +357,13 @@ export default {
       year_filter: "",
       user: null,
       users: [],
-      dev2assign: 'Ninguno',
+      dev2assign: "Ninguno",
       device: null,
       devices: [],
       unrelated: [],
       events: [],
       taskSelected: null,
-      taskOptions: [{ value: null, text: "Please select an option" }]
+      taskOptions: [{ value: null, text: "Nada" }]
     };
   },
   mounted() {
@@ -341,40 +376,36 @@ export default {
     this.filterDevice();
   },
   methods: {
-    addRelation(deviceid){
+    addRelation(deviceid) {
       this.$store
-        .dispatch("relation/new", {nif: this.nif, device: deviceid})
-        .then( r => {
-          if (r.status == 200){
-            this.updateAll()
-            this.makeToast("success", "Success", r.data)
-            this.$bvModal.hide('assign')
+        .dispatch("relation/new", { nif: this.nif, device: deviceid })
+        .then(r => {
+          if (r.status == 200) {
+            this.updateAll();
+            this.makeToast("success", "Success", r.data);
+            this.$bvModal.hide("assign");
           } else {
-            this.makeToast("danger", "Error", r.data)
+            this.makeToast("danger", "Error", r.data);
           }
-        }
-      )
+        });
     },
-    finishRelation(deviceid){
-      this.$store
-        .dispatch("relation/delete", {device: deviceid})
-        .then( r => {
-          if (r.status == 200){
-            this.updateAll()
-            this.makeToast("success", "Success", r.data)
-            this.device = null
-          } else {
-            this.makeToast("danger", "Error", r.data)
-          }
+    finishRelation(deviceid) {
+      this.$store.dispatch("relation/delete", { device: deviceid }).then(r => {
+        if (r.status == 200) {
+          this.updateAll();
+          this.makeToast("success", "Success", r.data);
+          this.device = null;
+        } else {
+          this.makeToast("danger", "Error", r.data);
         }
-      )
+      });
     },
     timeTo(timestamp) {
       var date = new Date(timestamp);
       var a = date.getTime();
       var now = new Date();
       var n = now.getTime();
-      return parseInt((n - a) / 1000.0);  
+      return parseInt((n - a) / 1000.0);
     },
     getNifAndDevice(device) {
       let dev = device.replace("%3", ":");
@@ -424,7 +455,7 @@ export default {
       this.$store.dispatch("tasks/getEvents").then(r => {
         if (r.status == 200) {
           this.events = this.$store.getters["tasks/getEvents"];
-          this.taskOptions = [{ value: null, text: "Please select an option" }];
+          this.taskOptions = [{ value: null, text: "Nada" }];
           for (var i in this.events) {
             this.taskOptions.push({
               value: this.events[i].name,
@@ -533,16 +564,17 @@ export default {
 </script>
 
 <style scoped>
-span.bolder-link{
+.tablerow:hover {
+  background: #2c3e5027;
+  cursor: pointer;
+}
+
+span.bolder-link {
   font-weight: bold;
   cursor: pointer;
 }
-span.bolder-link:hover{
-  color:#4b93db;
-}
-
-td.datacol {
-  width: 50%;
+span.bolder-link:hover {
+  color: #4b93db;
 }
 
 .event-content {
@@ -555,8 +587,10 @@ div.infocard {
   border-width: 0px 1px 1px 0px;
   border-color: rgba(185, 185, 185, 0.096);
   border-radius: 1rem;
-  padding: 1rem 1rem 1rem 1rem;
-  margin: 1rem 1rem 1rem 1rem;
+  min-width: 327px;
+  margin: 0.5rem;
+  padding-left: 0;
+  padding-right: 0;
 }
 .unnassigned {
   color: brown;
@@ -624,10 +658,6 @@ div.infocard {
   float: right;
   padding-right: 1rem;
 }
-.smart-screen {
-  display: inline;
-}
-
 div.container-type-date {
   width: 300px;
   float: left;
@@ -639,16 +669,13 @@ div.container-input-date {
   float: right;
 }
 
-@media only screen and (max-width: 650px) {
+@media only screen and (max-width: 780px) {
   .chart-grid {
     width: 100%;
   }
 
   .task-grid {
     width: 100%;
-  }
-  .smart-screen {
-    display: none;
   }
 
   div.container-type-date {
@@ -689,27 +716,6 @@ div.container-input-date {
 .date-btn:active {
   background-color: #2c3e50;
   color: #f2f2f2;
-}
-
-.input-search {
-  margin-top: 5px;
-  margin-bottom: 10px;
-  height: 30px;
-  border-radius: 10px;
-}
-
-.row-table {
-  border-bottom: 1px solid #303c4727;
-}
-.row-table:hover {
-  background-color: #2c3e5011;
-}
-
-.header-table {
-  font-weight: bolder;
-  background-color: #2c3e50;
-  color: #f2f2f2;
-  border-radius: 10px;
 }
 
 .body-home {
