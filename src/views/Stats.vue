@@ -267,11 +267,11 @@
                 <b-row v-if="device.last_status.length == 0">No se han realizado acciones</b-row>
                 <b-row
                   :key="i"
-                  v-for="(t, i) in device.last_events"
+                  v-for="(t, i) in device.last_status"
                   class="tablerow"
                   style="margin: 0; padding: 0; justify-content: center;"
                 >
-                  <span style="margin-right: 0.5rem">[{{t.name}}] </span>
+                  <span style="margin-right: 0.5rem">[{{t.type}}] </span>
                   <span> el {{parseDate(t.timestamp)}}</span>
                 </b-row>
               </div>

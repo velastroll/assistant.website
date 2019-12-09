@@ -125,8 +125,8 @@ export default {
   },
   data: function() {
     return {
-      parking: null,
-      parking_selected: null,
+      device: null,
+      device_selected: null,
       edit: false,
       edited: false,
       selected: null,
@@ -135,7 +135,7 @@ export default {
   },
   watch: {
     msg: function() {
-      this.parking = this.msg;
+      this.device = this.msg;
     }
   },
   created() {
@@ -166,7 +166,7 @@ export default {
       else return street;
     },
     showData: function(select) {
-      this.parking_selected = select;
+      this.device_selected = select;
       this.$bvModal.show(`modal-show-${this.msg.device}`);
     },
     getColor(time) {
@@ -179,6 +179,7 @@ export default {
       if (date > 30) color = "#cccc00";
       if (date > 1440) color = "orange";
       if (date > 5760) color = "brown";
+      if (this.msg.last_status[0].type == 'OFF') color = "grey";
       return color;
     },
     borderColor(time) {
@@ -191,7 +192,8 @@ export default {
       if (date > 30) toReturn = " border-yellow ";
       if (date > 1440) toReturn = " border-orange ";
       if (date > 5760) toReturn = " border-red ";
-      if (this.msg.last_status[0].type != "ALIVE")
+      if (this.msg.last_status[0].type == 'OFF') toReturn = " border-grey ";
+      else if (this.msg.last_status[0].type != "ALIVE")
         toReturn = toReturn + " doing-action ";
       return toReturn;
     },
@@ -293,6 +295,10 @@ span.pending-action:hover {
 }
 .border-yellow {
   border-color: #cccc00;
+}
+.border-grey {
+  border-color: grey;
+  background-color: lightgray
 }
 .row-description {
   width: 100%;
