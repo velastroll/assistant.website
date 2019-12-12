@@ -58,6 +58,20 @@ export default {
                         resolve({status:409, data: 'This postcode is already in use.'});
                     });
             });
+        },
+        get(context, payload){
+            return new Promise(resolve => {
+                Axios({
+                    method: "get",
+                    url: "worker/towns/" + payload.postalcode
+                })
+                    .then(response => {
+                        resolve({status:200, data: response.data});
+                    })
+                    .catch(e => {
+                        resolve({status:409, data: 'This postcode is already in use.'});
+                    });
+            });
         }
     }
 };

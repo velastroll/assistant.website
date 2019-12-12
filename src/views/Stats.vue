@@ -1,5 +1,7 @@
 <template>
   <div class="body-home" style=" width: 100%; min-height: 100%; margin: 0 0 0 0; padding: 0 0 0 0;">
+    <a v-if="device!=null" @click="redirect(`/settings?d=${device.device}`)" class="to-settings"> CONFIGURE DEVICE PARAMETERS </a>
+    <a v-else-if="user!=null" @click="redirect(`/settings?l=${user.postcode}`)" class="to-settings"> CONFIGURE LOCATION PARAMETERS</a>
     <b-row class="justify-content-center">
       <b-col
         cols="12"
@@ -73,7 +75,7 @@
                     <b-row class="justify-content-center" style="width: 100%; text-align:center">
                       <a style="text-align: right; max-height: 20px; padding-top: 0.5rem;">
                         <img
-                          style="width: 2rem; height: 1rem; color: #2c3e50;"
+                          style="width: 2rem; height: 1.5rem; color: #2c3e50;"
                           src="/marker/device.svg"
                         />
                       </a>
@@ -548,6 +550,9 @@ export default {
         device: this.device,
         type: this.date_filter
       });
+    },
+    redirect(url){
+      this.$parent.redirect(url)
     }
   },
   computed: {
@@ -564,6 +569,16 @@ export default {
 </script>
 
 <style scoped>
+a.to-settings{
+  color: blue;
+  cursor: pointer;
+}
+a.to-settings:hover{
+  color: black;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .tablerow:hover {
   background: #2c3e5027;
   cursor: pointer;

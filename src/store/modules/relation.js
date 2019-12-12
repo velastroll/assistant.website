@@ -44,6 +44,23 @@ export default {
                         resolve({status: 500, data: e})
                     });
             });
+        },
+        get(context, payload) {
+            return new Promise(resolve => {
+                Axios({
+                    method: "get",
+                    url: "worker/relation/" + payload.device,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+                    .then(response => {
+                        resolve(response);
+                    })
+                    .catch(e => {
+                        resolve({status: 500, data: e})
+                    });
+            });
         }
     }
 };
