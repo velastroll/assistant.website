@@ -78,9 +78,9 @@ export default {
       this.cluster = L.markerClusterGroup();
 
       this.dots = [];
-      let icon_yellow = '/marker/marker_yellow.svg'
-      let icon_red = '/marker/marker_red.svg'
-      let icon_green = '/marker/marker_green.svg'
+      let icon_yellow = '/marker/marker-device-yellow.svg'
+      let icon_red = '/marker/marker-device-red.svg'
+      let icon_green = '/marker/marker-device-green.svg'
       let icon_home = '/marker/home.svg'
       var latlngs = [];
       var markerHtml = `width: 40px; height:40px; display: block; position: relative; fill: red;`;
