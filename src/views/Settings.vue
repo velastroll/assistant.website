@@ -4,11 +4,11 @@
     <div class="heading-card">
       <div class="pointer" v-b-toggle.accordion-1>
         <a class="material-icons">vpn_lock</a>
-        <a class="heading-title">Global parking</a>
+        <a class="heading-title">Global</a>
       </div>
       <div>
         <b-collapse id="accordion-1" accordion="my-accordion" role="tabpanel">
-          <ChangeParam scope="GLOBAL" :conf="globalC"/>
+          <ChangeParam scope="GLOBAL" :conf="globalC" receiver="GLOBAL" />
         </b-collapse>
       </div>
     </div>
@@ -20,7 +20,7 @@
       </div>
       <div>
         <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
-          <ChangeParam scope="location"  :conf="localeC" :town="town" />
+          <ChangeParam scope="location" :conf="localeC" :town="town" :receiver="test" />
         </b-collapse>
       </div>
     </div>
@@ -32,7 +32,7 @@
       </div>
       <div>
         <b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
-          <ChangeParam scope="device" :conf="deviceC" :pend="pendingC" />
+          <ChangeParam scope="device" :conf="deviceC" :pending="pendingC" :receiver="d" />
         </b-collapse>
       </div>
     </div>
@@ -41,7 +41,7 @@
 
 <style>
 div.pointer {
-  cursor: pointer
+  cursor: pointer;
 }
 div.heading-card {
   min-width: 300px;
@@ -52,102 +52,116 @@ div.heading-card {
   border: solid rgba(0, 39, 110, 0.24);
   border-width: 0 0 0.1rem 0;
 }
-div.heading-card:hover{
-  background-color:rgb(250, 250, 250);
+div.heading-card:hover {
+  background-color: rgb(250, 250, 250);
 }
-a.heading-title{
-  font-size: 2rem; 
+a.heading-title {
+  font-size: 2rem;
   margin-left: 1rem;
 }
 </style>
 
 <script>
 import ChangeParam from "@/components/settings/ChangeParam";
+
 export default {
-  name: "Param",
+  name: "Settings",
   components: {
     ChangeParam
   },
   data: function() {
     return {
-      town: '',
+      town: "",
       d: null,
       l: null,
-      globalC : null,
-      localeC : null,
-      pendingC : null,
-      deviceC : null
+      globalC: null,
+      localeC: null,
+      pendingC: null,
+      deviceC: null,
+      test: null
     };
   },
   updated: function() {},
   beforeUpdate: function() {},
   created() {},
   mounted: function() {
-      console.log(this.$route.query)
-      this.d = this.$route.query["d"];
-      this.l = this.$route.query["l"] ;
-      if (this.d != null){
-        // check relation
-        this.$store.dispatch("relation/get", {device: this.d}).then(r => {
-            if (r.status == 200){
-                this.town = r.data.info
-            } else {
-                this.town = null
-            }
-            this.$store.dispatch("confs/get", {device : this.d}).then( res => 
-            {
-                if (res.status == 200) {
-                    this.globalC = res.data.global
-                    this.localeC = res.data.location
-                    this.pendingC = res.data.pendingConf
-                    this.deviceC = res.data.deviceConf
-                } else {
-                    this.$parent.makeToast("danger", "Error "+res.status, res.data)
-                }
-            })
-        })
-        console.log("1")
-      } else if (this.l != null){
-          this.$store.dispatch("confs/get", {device : this.l}).then( res => {
-              this.$store.dispatch("provinces/get", {postalcode: this.l}).then(r=>{
-                  if (r.status == 200){
-                      this.town = r.data.name
-                      console.log(r.data.name)
-                      console.log(this.town)
-                  }
-              })
-              if (res.status == 200) {
-                  this.globalC = res.data.global
-                  this.localeC = res.data.deviceConf
-            }else {
-                this.$parent.makeToast("danger", "Error "+res.status, res.data)
-            }
-        })
-        console.log("2")
-      } else {
-          this.$store.dispatch("confs/get", {device : 'GLOBAL'}).then( res => {
-              if (res.status == 200) {
-                  this.globalC = res.data.global
-            }else {
-                this.$parent.makeToast("danger", "Error "+res.status, res.data)
-            }
-        console.log("3")
-        })
-
-      }
-
+    this.refresh()
   },
   methods: {
-    makeToast(variant, title, content){
+    makeToast(variant, title, content) {
       this.$bvToast.toast(content, {
         title: title,
         variant: variant,
         solid: true
       });
     },
-    refresh(){
-      // try to retrieve device identifier, then retrieve d+l+g config
-      // else retrieve global configuration
+    refresh: function() {
+      this.d = this.$route.query["d"];
+      this.l = this.$route.query["l"];
+      if (this.d != null) {
+        // check relation
+        this.$store.dispatch("relation/get", { device: this.d }).then(r => {
+          if (r.status == 200) {
+            this.town = r.data.info;
+            // retrieve location of the device
+            this.test = r.data.user.postcode;
+          } else {
+            // device has no town
+            this.town = null;
+          }
+          this.$store.dispatch("confs/get", { device: this.d }).then(res => {
+            if (res.status == 200) {
+              this.globalC = res.data.global;
+              this.localeC = res.data.location;
+              this.pendingC = res.data.pendingConf;
+              this.recalculePending()
+              this.deviceC = res.data.deviceConf;
+            } else {
+              this.$parent.makeToast("danger", "Error " + res.status, res.data);
+            }
+          });
+        });
+      } else if (this.l != null) {
+        this.$store.dispatch("confs/get", { device: this.l }).then(res => {
+          this.$store
+            .dispatch("provinces/get", { postalcode: this.l })
+            .then(r => {
+              if (r.status == 200) {
+                this.town = r.data.name;
+                this.test = r.data.postcode;
+              }
+            });
+          if (res.status == 200) {
+            this.globalC = res.data.global;
+            this.localeC = res.data.deviceConf;
+          } else {
+            this.$parent.makeToast("danger", "Error " + res.status, res.data);
+          }
+        });
+      } else {
+        this.$store.dispatch("confs/get", { device: "GLOBAL" }).then(res => {
+          if (res.status == 200) {
+            this.test = res.data;
+            this.globalC = res.data.global;
+          } else {
+            this.$parent.makeToast("danger", "Error " + res.status, res.data);
+          }
+        });
+      }
+    },
+    recalculePending(){
+      var p = this.pendingC
+      if (p != null){
+        try{
+        if (p.timestamp < this.globalC.timestamp){
+          p = this.globalC
+        }        } catch(e){console.log(this.globalC)}
+        try{
+        if (p.timestamp < this.localeC.timestamp){
+          p = this.localeC
+        }        } catch(e){console.log(this.localeC)}
+      }
+      this.pendingC = p
     }
   }
 };

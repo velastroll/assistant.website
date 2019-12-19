@@ -49,10 +49,7 @@ export default {
             return new Promise(resolve => {
                 Axios({
                     method: "get",
-                    url: "worker/relation/" + payload.device,
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    url: "worker/relation/" + payload.device
                 })
                     .then(response => {
                         resolve(response);

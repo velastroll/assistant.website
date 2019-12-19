@@ -24,6 +24,24 @@ export default {
                         resolve({status: e.response.status, data: e.response.data})
                     });
             });
+        },
+        sendConfiguration(context, payload){
+            return new Promise(resolve => {
+                Axios({
+                    method: "post",
+                    url: "worker/conf/",
+                    data: {
+                        device : payload.receiver,
+                        body : payload.body
+                    }
+                })
+                    .then(response => {
+                        resolve(response);
+                    })
+                    .catch(e => {
+                        resolve({status: e.response.status, data: e.response.data})
+                    });
+            });
         }
     }
 }
