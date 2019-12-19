@@ -1,7 +1,5 @@
 <template>
   <div class="body-home" style=" width: 100%; min-height: 100%; margin: 0 0 0 0; padding: 0 0 0 0;">
-    <a v-if="device!=null" @click="redirect(`/settings?d=${device.device}`)" class="to-settings"> CONFIGURE DEVICE PARAMETERS </a>
-    <a v-else-if="user!=null" @click="redirect(`/settings?l=${user.postcode}`)" class="to-settings"> CONFIGURE LOCATION PARAMETERS</a>
     <b-row class="justify-content-center">
       <b-col
         cols="12"
@@ -103,6 +101,16 @@
                       </div>
                     </div>
                   </div>
+                  <a
+                    v-if="device!=null"
+                    @click="redirect(`/settings?d=${device.device}`)"
+                    class="to-settings"
+                  >Configure device parameters</a>
+                  <a
+                    v-else-if="user!=null"
+                    @click="redirect(`/settings?l=${user.postcode}`)"
+                    class="to-settings"
+                  >Configure location parameters</a>
                 </div>
                 <!-- usuario -->
                 <div class="text-center col-md-12 col-lg-4">
@@ -273,8 +281,8 @@
                   class="tablerow"
                   style="margin: 0; padding: 0; justify-content: center;"
                 >
-                  <span style="margin-right: 0.5rem">[{{t.type}}] </span>
-                  <span> el {{parseDate(t.timestamp)}}</span>
+                  <span style="margin-right: 0.5rem">[{{t.type}}]</span>
+                  <span>el {{parseDate(t.timestamp)}}</span>
                 </b-row>
               </div>
             </b-row>
@@ -551,8 +559,8 @@ export default {
         type: this.date_filter
       });
     },
-    redirect(url){
-      this.$parent.redirect(url)
+    redirect(url) {
+      this.$parent.redirect(url);
     }
   },
   computed: {
@@ -569,12 +577,13 @@ export default {
 </script>
 
 <style scoped>
-a.to-settings{
+a.to-settings {
   color: blue;
   cursor: pointer;
+  text-decoration: underline;
 }
-a.to-settings:hover{
-  color: black;
+a.to-settings:hover {
+  color: rgb(207, 0, 162);
   cursor: pointer;
   text-decoration: underline;
 }

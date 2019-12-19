@@ -37,7 +37,7 @@
             <!-- Town -->
             <b-collapse :id="'collapse-' + p.code" :accordion="'acc'">
               <hr />
-              <div class="card-town" :key="'t'+j" v-for="(l, j) in p.locations">
+              <div class="card-town" :key="'t'+j" v-for="(l, j) in p.locations" @click="redirect(`/settings?l=${l.postcode}`)">
                 <b-row>
                   <b-col>{{l.postcode}}</b-col>
                   <b-col class="smart-screen">{{l.name}}</b-col>
@@ -167,6 +167,9 @@ export default {
         }
       }
       return false;
+    },
+    redirect(url){
+      this.$parent.redirect(url)
     }
   },
   computed: {
