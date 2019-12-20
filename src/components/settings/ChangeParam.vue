@@ -62,7 +62,15 @@
     <!-- save configuration -->
     <div class="center">
       <b-button v-if="edit" class="save-btn" @click="createsConfig()">SAVE</b-button>
-      <b-button v-else @click="edit = !edit" class="edit-btn">EDIT</b-button>
+      <div v-else style="width: 100%">
+      <b-button @click="edit = !edit" class="edit-btn">EDIT</b-button>
+      <b-button @click="sentConfEvent()" class="conf-btn">
+        sent <strong> conf </strong> event for 
+        <a v-if="receiver=='GLOBAL'"> all devices</a>
+        <a v-else-if="receiver > 1"> this location devices</a>
+        <a v-else> this device </a>
+      </b-button>
+      </div>
     </div>
   </div>
 </template>
@@ -110,6 +118,7 @@ export default {
                 "Success",
                 "New configuration added."
               );
+              this.edit = false;
               this.$parent.$parent.refresh();
             } else {
               this.makeToast("danger", `Error ${res.status}`, res.data);
@@ -122,6 +131,27 @@ export default {
           "Time to ping should be higher or equal than 15 sec."
         );
       }
+    },
+    sentConfEvent(){
+      this.$store.dispatch("tasks/new", {
+        event: 'CONF',
+        device: this.receiver
+      }).then(r => {
+        if(r.status == 200){ 
+          this.makeToast(
+            "success",
+              "Added",
+              `New task assigned to [${this.receiver}]`
+            );
+        } else {
+                    this.makeToast(
+            "danged",
+              `oups ${r.status}`,
+              `${r.data}`
+            );
+        }
+
+          });
     }
   }
 };
@@ -130,25 +160,54 @@ export default {
 <style scoped>
 .save-btn {
   border-radius: 1rem;
-  border: solid darkgreen;
+  border: solid darkgreen 1px;
   color: darkgreen;
   background: white;
   font-weight: bold;
   font-size: 1rem;
   padding: 0.5rem 1rem 0.5rem 1rem;
+  width: 100%;
 }
 .save-btn:hover {
   color: white;
   background: darkgreen;
-  border-color: darkgreen;
+  border: solid darkgreen 1px;
 }
 .edit-btn {
   border-radius: 1rem;
-  border: solid grey;
+  border: solid #2c3e50 1px;
+  color: #2c3e50;
+  background: white;
   font-weight: bold;
   font-size: 1rem;
   padding: 0.5rem 1rem 0.5rem 1rem;
+  width: 100%;
 }
+
+.edit-btn:hover {
+  color: orange;
+  border: solid orange 1px;
+}
+
+.conf-btn{
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+  border-radius: 1rem;
+  border: solid #2c3e50 1px;
+  color: #2c3e50;
+  background: white;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  width: 100%;
+}
+
+.conf-btn:hover {
+  color: darkgreen;
+  border: solid darkgreen 1px;
+}
+
+
 div.content-card {
   margin: 1rem 0 0 0;
   border: solid rgba(0, 39, 110, 0.24);

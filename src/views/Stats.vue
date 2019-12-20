@@ -101,16 +101,6 @@
                       </div>
                     </div>
                   </div>
-                  <a
-                    v-if="device!=null"
-                    @click="redirect(`/settings?d=${device.device}`)"
-                    class="to-settings"
-                  >Configure device parameters</a>
-                  <a
-                    v-else-if="user!=null"
-                    @click="redirect(`/settings?l=${user.postcode}`)"
-                    class="to-settings"
-                  >Configure location parameters</a>
                 </div>
                 <!-- usuario -->
                 <div class="text-center col-md-12 col-lg-4">
@@ -163,6 +153,16 @@
                         style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
                       >Tareas pendientes</a>
                     </b-row>
+                                      <a
+                    v-if="device!=null"
+                    @click="redirect(`/settings?d=${device.device}`)"
+                    class="to-settings"
+                  >Configure device parameters</a>
+                  <a
+                    v-else-if="user!=null"
+                    @click="redirect(`/settings?l=${user.postcode}`)"
+                    class="to-settings"
+                  >Configure location parameters</a>
                   </div>
                   <!-- contenido -->
                   <div class="text-center justify-content-center" style=" padding: 0; margin: 0;">

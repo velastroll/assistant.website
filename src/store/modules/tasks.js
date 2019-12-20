@@ -43,7 +43,6 @@ export default {
                     data: payload
                 })
                     .then(response => {
-                        context.commit("updateEvents", response.data);
                         resolve(response);
                     })
                     .catch(e => {

@@ -20,7 +20,9 @@
           :class="this.getTaskClass(this.msg.last_status[0])"
         >[{{this.msg.last_status[0].type}}] {{this.getMinutes(this.msg.last_status[0].timestamp)}}</div>
         <div class="row-description">
-          <div v-if="this.msg.relation != null">{{this.msg.relation.user.name}} - {{this.msg.relation.user.nif}}</div>
+          <div
+            v-if="this.msg.relation != null"
+          >{{this.msg.relation.user.name}} - {{this.msg.relation.user.nif}}</div>
           <div v-else style="color: red">Sin asignar</div>
         </div>
       </b-row>
@@ -32,49 +34,60 @@
       :title="`Device ${this.msg.device.toUpperCase()}`"
       hide-footer
     >
-    <div v-if="this.msg.relation">
-      <b-row>
-        <b-col cols="2" style="text-align: right; max-height: 20px;">
-          <i class="material-icons">face</i>
-        </b-col>
-        <b-col>
-          <div style="text-align: left; font-weight: bold;">{{this.msg.relation.user.name}} {{this.msg.relation.user.surname}}</div>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="2" style="text-align: right; max-height: 20px;">
-          <i class="material-icons">fingerprint</i>
-        </b-col>
-        <b-col>
-          <div style="text-align: left; font-weight: bold;">{{this.msg.relation.user.nif}}</div>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="2" style="text-align: right; max-height: 20px;">
-          <i class="material-icons">date_range</i>
-        </b-col>
-        <b-col>
-          <div
-            style="text-align: left; font-weight: bold;"
-          >{{this.parseDate(this.msg.relation.from)}}</div>
-        </b-col>
-      </b-row>
-    </div>
-    <div v-else>
-      <b-row class="justify-content-center">
-        <span style="color:red;"> Este dispositivo no tiene usuario asignado. </span>
-      </b-row>
-    </div>
+      <div v-if="this.msg.relation">
+        <b-row>
+          <b-col cols="2" style="text-align: right; max-height: 20px;">
+            <i class="material-icons">face</i>
+          </b-col>
+          <b-col>
+            <div
+              style="text-align: left; font-weight: bold;"
+            >{{this.msg.relation.user.name}} {{this.msg.relation.user.surname}}</div>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="2" style="text-align: right; max-height: 20px;">
+            <i class="material-icons">fingerprint</i>
+          </b-col>
+          <b-col>
+            <div style="text-align: left; font-weight: bold;">{{this.msg.relation.user.nif}}</div>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="2" style="text-align: right; max-height: 20px;">
+            <i class="material-icons">date_range</i>
+          </b-col>
+          <b-col>
+            <div
+              style="text-align: left; font-weight: bold;"
+            >{{this.parseDate(this.msg.relation.from)}}</div>
+          </b-col>
+        </b-row>
+      </div>
+      <div v-else>
+        <b-row class="justify-content-center">
+          <span style="color:red;">Este dispositivo no tiene usuario asignado.</span>
+        </b-row>
+      </div>
       <hr />
-
+            <b-row style="width: 100%">
+        <b-col cols="2" class="col-icon">
+          <i class="material-icons">settings</i>
+        </b-col>
+        <b-col>
+          <div class="to-settings" @click="redirect(`/settings?d=${msg.device}`)">Configure device parameters</div>
+        </b-col>
+      </b-row>
+      <hr />
       <b-row style="width: 100%">
-        <b-col cols="2" style="text-align: right; max-height: 20px; padding-top: 0.5rem;">
+        <b-col cols="2" class="col-icon">
           <i class="material-icons">flash_on</i>
         </b-col>
         <b-col>
-          <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">QUICK ACTION</div>
+          <div class="col-heading">QUICK ACTION</div>
         </b-col>
       </b-row>
+
       <b-row class="justify-content-center">
         <b-col>
           <b-form-select v-model="selected" :options="options" class="event-content float-right"></b-form-select>
@@ -91,11 +104,11 @@
       </b-row>
       <hr />
       <b-row>
-        <b-col cols="2" style="text-align: right; max-height: 20px; padding-top: 0.5rem;">
+        <b-col cols="2" class="col-icon">
           <i class="material-icons">cached</i>
         </b-col>
         <b-col>
-          <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Pending actions</div>
+          <div class="col-heading">Pending actions</div>
         </b-col>
       </b-row>
       <b-row class="justify-content-center">
@@ -115,6 +128,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { mapActions } from "vuex";
 export default {
   name: "Slot",
@@ -148,6 +162,11 @@ export default {
     }
   },
   methods: {
+    redirect(url) {
+      try {
+        this.$router.push(url).catch(err => {});
+      } catch (e) {}
+    },
     getMinutes(from) {
       var date = new Date(from);
       var a = date.getTime();
@@ -179,7 +198,7 @@ export default {
       if (date > 30) color = "#cccc00";
       if (date > 1440) color = "orange";
       if (date > 5760) color = "brown";
-      if (this.msg.last_status[0].type == 'OFF') color = "grey";
+      if (this.msg.last_status[0].type == "OFF") color = "grey";
       return color;
     },
     borderColor(time) {
@@ -192,7 +211,7 @@ export default {
       if (date > 30) toReturn = " border-yellow ";
       if (date > 1440) toReturn = " border-orange ";
       if (date > 5760) toReturn = " border-red ";
-      if (this.msg.last_status[0].type == 'OFF') toReturn = " border-grey ";
+      if (this.msg.last_status[0].type == "OFF") toReturn = " border-grey ";
       else if (this.msg.last_status[0].type != "ALIVE")
         toReturn = toReturn + " doing-action ";
       return toReturn;
@@ -298,7 +317,7 @@ span.pending-action:hover {
 }
 .border-grey {
   border-color: grey;
-  background-color: lightgray
+  background-color: lightgray;
 }
 .row-description {
   width: 100%;
@@ -330,5 +349,21 @@ span.pending-action:hover {
 .quick-action-btn:hover {
   color: white;
   background: brown;
+}
+
+div.to-settings{
+  text-align: left; font-weight: normal; padding-top: 0.5rem; color: blue; cursor: pointer;
+}
+
+div.to-settings:hover{
+  text-decoration: underline;
+}
+
+.col-icon{
+  text-align: right; max-height: 20px; padding-top: 0.5rem;
+}
+
+.col-heading{
+  text-align: left; font-weight: bold; padding-top: 0.5rem;
 }
 </style>
