@@ -21,7 +21,14 @@ export default {
       }
   },
   props: {
-      device: String
+      device: String,
+      number: Object
+  },
+  watch: {
+    number: function() {
+      console.log("NoI object: ");
+      console.log(this.number);
+    }
   },
   methods: {
   }
