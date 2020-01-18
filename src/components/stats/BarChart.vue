@@ -1,8 +1,8 @@
 <script>
-import { Doughnut } from "vue-chartjs";
+import { Bar } from "vue-chartjs";
 
 export default {
-  extends: Doughnut,
+  extends: Bar,
   props: {
     dataChart: Object
   },
@@ -27,6 +27,8 @@ export default {
   },
   methods: {
     loadChart(){
+      console.log(this.dataChart)
+
       this.gradient = this.$refs.canvas
       .getContext("2d")
       .createLinearGradient(0, 0, 0, 450);
@@ -104,7 +106,7 @@ export default {
         labels: this.dataChart.labels,
         datasets: [
           {
-            label: 'manolo',
+            label: 'Intentos por horas',
             borderColor: "#00e102",
             pointBackgroundColor: "white",
             borderWidth: 1,

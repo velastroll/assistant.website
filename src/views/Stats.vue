@@ -34,7 +34,7 @@
             <!-- button -->
             <div>
               <div class="update-btn">
-                <b-button class="date-btn">
+                <b-button class="date-btn" @click="filterByDate()">
                   <i class="material-icons" style="padding-top: 0.125rem;">sync</i>
                 </b-button>
               </div>
@@ -303,7 +303,7 @@
               <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Intenciones</div>
             </b-col>
           </b-row>
-          <Intents device="XX:XX:XX:XX:XX:XX" />
+          <Intents device="XX:XX:XX:XX:XX:XX" :number="numberOfIntents" :hours="hoursOfIntents"/>
 
           <!-- hotword -->
           <b-row style="width: 100%">
@@ -373,12 +373,20 @@ export default {
       unrelated: [],
       events: [],
       taskSelected: null,
-      taskOptions: [{ value: null, text: "Nada" }]
+      taskOptions: [{ value: null, text: "Nada" }],
+      numberOfIntents : Object,
+      hoursOfIntents : Object
     };
   },
   mounted() {
     if (sessionStorage.getItem("access_token") != null) {
       // download data
+      let date = new Date()
+      var month = date.getMonth()
+      if (month++ < 10) month = "0" + month
+      this.month_filter = month
+      this.year_filter = date.getFullYear()
+      this.daily_filter = this.year_filter + "-" + this.month_filter + "-" + date.getDate()
       this.updateAll();
     } else {
       this.$parent.redirect("/login");
@@ -518,6 +526,42 @@ export default {
           this.$parent.makeToast("danger", `Oups ${r.status}`, r.description);
         }
       });
+    },
+    filterByDate() {
+      console.log(this.device.device)
+      var payload = {
+        device : this.device.device
+      }
+      if (this.date_filter == "A") {
+        // filter by year
+        let from = parseInt(this.year_filter) + "-01-01T00:00:00.000Z"
+        let to = parseInt(this.year_filter) + "-12-31T23:59:59.999Z"
+        payload.interval = {from : from, to : to}
+        console.log(payload.interval)
+      } else if (this.date_filter == "M"){
+        // filter by month
+        var month = parseInt(this.month_filter)
+        if (month < 10) month = "0" + month
+        let from = parseInt(this.year_filter) + "-" + month + "-01T00:00:00.000Z"
+        let to = parseInt(this.year_filter) + "-"  + month + "-31T23:59:59.999Z"
+        payload.interval = {from : from, to : to}
+        console.log(payload.interval)
+      } else if (this.date_filter == "D") {
+        // filter by month
+        let from = this.daily_filter + "T00:00:00.000Z"
+        let to =  this.daily_filter + "T23:59:59.999Z"
+        payload.interval = {from : from, to : to}
+        console.log(payload.interval)
+      } else {
+        this.makeToast("danger", "Oups", "No se ha podido filtrar por razones técnicas.")
+        return
+      }
+      this.$store.dispatch("intents/get", payload)
+      .then( res => {
+          this.numberOfIntents = this.$store.getters["intents/intentNumber"]
+          this.hoursOfIntents = this.$store.getters["intents/intentHour"]
+          console.log(this.numberOfIntents)
+        })
     },
     /* Sets into [this.device] the device which has an active relation with [this.nif] */
     filterDevice() {
