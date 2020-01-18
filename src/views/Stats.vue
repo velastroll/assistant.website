@@ -303,7 +303,7 @@
               <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Intenciones</div>
             </b-col>
           </b-row>
-          <Intents device="XX:XX:XX:XX:XX:XX" :number="numberOfIntents"/>
+          <Intents device="XX:XX:XX:XX:XX:XX" :number="numberOfIntents" :hours="hoursOfIntents"/>
 
           <!-- hotword -->
           <b-row style="width: 100%">
@@ -374,7 +374,8 @@ export default {
       events: [],
       taskSelected: null,
       taskOptions: [{ value: null, text: "Nada" }],
-      numberOfIntents : Object
+      numberOfIntents : Object,
+      hoursOfIntents : Object
     };
   },
   mounted() {
@@ -533,22 +534,22 @@ export default {
       }
       if (this.date_filter == "A") {
         // filter by year
-        let from = parseInt(this.year_filter) + "-01-01T00:00:00.000"
-        let to = parseInt(this.year_filter) + "-12-31T23:59:59.999"
+        let from = parseInt(this.year_filter) + "-01-01T00:00:00.000Z"
+        let to = parseInt(this.year_filter) + "-12-31T23:59:59.999Z"
         payload.interval = {from : from, to : to}
         console.log(payload.interval)
       } else if (this.date_filter == "M"){
         // filter by month
         var month = parseInt(this.month_filter)
         if (month < 10) month = "0" + month
-        let from = parseInt(this.year_filter) + "-" + month + "-01T00:00:00.000"
-        let to = parseInt(this.year_filter) + "-"  + month + "-31T23:59:59.999"
+        let from = parseInt(this.year_filter) + "-" + month + "-01T00:00:00.000Z"
+        let to = parseInt(this.year_filter) + "-"  + month + "-31T23:59:59.999Z"
         payload.interval = {from : from, to : to}
         console.log(payload.interval)
       } else if (this.date_filter == "D") {
         // filter by month
-        let from = this.daily_filter + "T00:00:00.000"
-        let to =  this.daily_filter + "T23:59:59.999"
+        let from = this.daily_filter + "T00:00:00.000Z"
+        let to =  this.daily_filter + "T23:59:59.999Z"
         payload.interval = {from : from, to : to}
         console.log(payload.interval)
       } else {
@@ -558,6 +559,7 @@ export default {
       this.$store.dispatch("intents/get", payload)
       .then( res => {
           this.numberOfIntents = this.$store.getters["intents/intentNumber"]
+          this.hoursOfIntents = this.$store.getters["intents/intentHour"]
           console.log(this.numberOfIntents)
         })
     },

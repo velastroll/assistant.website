@@ -48,27 +48,33 @@ export default {
         get(context, payload) {
             return new Promise(resolve => {
                 Axios({
-                    method: "get",
+                    method: "post",
                     url: "worker/devices/" + payload.device + "/intents",
+                    data: payload.interval,
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
                 })
                     .then(response => {
+                        context.commit("clear");
                         context.commit("update", response.data);
+                        console.log("Retrieve from server:")
                         console.log(response.data)
                         resolve({status : 200, data : response.data});
                     })
                     .catch(e => {
                         let mock = [{
-                            datetime : "2020-01-17T10:00:00.000Z",
+                            datetime : "2020-01-17T10:00:00.000000Z",
                             data : {
                                 intentName : "Contacto"
                             }
                         }, {
-                            datetime : "2020-01-17T10:50:00.000Z",
+                            datetime : "2020-01-17T10:50:00.000000Z",
                             data : {
                                 intentName : "Sintacto"
                             }
                         }, {
-                            datetime : "2020-01-17T11:40:00.000Z",
+                            datetime : "2020-01-17T11:40:00.000000Z",
                             data : {
                                 intentName : "Contacto"
                             }
