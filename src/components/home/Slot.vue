@@ -16,14 +16,25 @@
         </b-row>
       </div>
       <b-row>
+        <!-- Last status -->
         <div
           :class="this.getTaskClass(this.msg.last_status[0])"
         >[{{this.msg.last_status[0].type}}] {{this.getMinutes(this.msg.last_status[0].timestamp)}}</div>
+        <!-- User -->
         <div class="row-description">
           <div
             v-if="this.msg.relation != null"
           >{{this.msg.relation.user.name}} - {{this.msg.relation.user.nif}}</div>
           <div v-else style="color: red">Sin asignar</div>
+        </div>
+        <!-- Last intent -->
+        <div class="row-description"
+            style="text-transform: uppercase;font-size:0.75rem; font-style: italic;"
+        >
+          <div
+            v-if="this.msg.last_intent != null"
+          >[{{this.msg.last_intent.intent}}] {{this.getMinutes(this.msg.last_intent.timestamp)}} </div>
+          <div v-else style="color: red">Hasn't got usage yet</div>
         </div>
       </b-row>
     </b-card>
