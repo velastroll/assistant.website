@@ -38,11 +38,27 @@ Axios.interceptors.response.use((response) => {
 }, function (error) {
   const originalRequest = error.config;
   
-  // returns error if it happens on login
+  /**
+   * Server is down
+   */
+  if (error.response == null) {
+    sessionStorage.removeItem("access_token")
+    sessionStorage.removeItem("refresh_token")
+    router.push('/login');
+    return Promise.reject(error);
+  }
+
+
+  /**
+   * Cannot log in
+   */
   if (originalRequest.url.includes("/login") && error.response.status === 401) {
     return Promise.reject(error);
   }
 
+  /**
+   * Cannot refresh token
+   */
   if (error.response.status === 401 && originalRequest.url == (base + "auth/refreshtoken")) {
     sessionStorage.removeItem("access_token")
     sessionStorage.removeItem("refresh_token")
@@ -50,8 +66,10 @@ Axios.interceptors.response.use((response) => {
     return Promise.reject(error);
   }
 
+  /**
+   * Expired token, tries to refresh it.
+   */
   if (error.response.status === 401 && !originalRequest._retry) {
-
       originalRequest._retry = true;
       const refreshToken = sessionStorage.getItem("refresh_token");
       return Axios.post('/auth/refreshtoken',
