@@ -58,8 +58,6 @@ export default {
                     .then(response => {
                         context.commit("clear");
                         context.commit("update", response.data);
-                        console.log("Retrieve from server:")
-                        console.log(response.data)
                         resolve({status : 200, data : response.data});
                     })
                     .catch(e => {

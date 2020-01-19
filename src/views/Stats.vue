@@ -153,16 +153,16 @@
                         style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
                       >Tareas pendientes</a>
                     </b-row>
-                                      <a
-                    v-if="device!=null"
-                    @click="redirect(`/settings?d=${device.device}`)"
-                    class="to-settings"
-                  >Configure device parameters</a>
-                  <a
-                    v-else-if="user!=null"
-                    @click="redirect(`/settings?l=${user.postcode}`)"
-                    class="to-settings"
-                  >Configure location parameters</a>
+                    <a
+                      v-if="device!=null"
+                      @click="redirect(`/settings?d=${device.device}`)"
+                      class="to-settings"
+                    >Configure device parameters</a>
+                    <a
+                      v-else-if="user!=null"
+                      @click="redirect(`/settings?l=${user.postcode}`)"
+                      class="to-settings"
+                    >Configure location parameters</a>
                   </div>
                   <!-- contenido -->
                   <div class="text-center justify-content-center" style=" padding: 0; margin: 0;">
@@ -290,8 +290,8 @@
         </b-row>
 
         <!-- charts -->
-        <div class="chart-grid">
-          <!-- Intents -->
+        <div v-if="device" class="chart-grid justify-content-center">
+          <!-- Titulo -->
           <b-row style="width: 100%">
             <b-col
               cols="2"
@@ -300,24 +300,13 @@
               <i class="material-icons">pie_chart</i>
             </b-col>
             <b-col>
-              <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Intenciones</div>
+              <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Consultas</div>
             </b-col>
           </b-row>
-          <Intents device="XX:XX:XX:XX:XX:XX" :number="numberOfIntents" :hours="hoursOfIntents"/>
-
-          <!-- hotword -->
-          <b-row style="width: 100%">
-            <b-col
-              cols="2"
-              style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
-            >
-              <i class="material-icons">show_chart</i>
-            </b-col>
-            <b-col>
-              <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Accuracy</div>
-            </b-col>
+          <!-- graficos -->
+          <b-row style="width: 100%; justify-content: center;">
+            <Intents device="XX:XX:XX:XX:XX:XX" :number="numberOfIntents" :hours="hoursOfIntents" />
           </b-row>
-          <Intents device="XX:XX:XX:XX:XX:XX" />
         </div>
       </b-col>
     </b-row>
@@ -361,7 +350,7 @@ export default {
 
   data: function() {
     return {
-      date_filter: "D",
+      date_filter: "A",
       daily_filter: "",
       month_filter: "null",
       year_filter: "",
@@ -374,19 +363,20 @@ export default {
       events: [],
       taskSelected: null,
       taskOptions: [{ value: null, text: "Nada" }],
-      numberOfIntents : Object,
-      hoursOfIntents : Object
+      numberOfIntents: Object,
+      hoursOfIntents: Object
     };
   },
   mounted() {
     if (sessionStorage.getItem("access_token") != null) {
       // download data
-      let date = new Date()
-      var month = date.getMonth()
-      if (month++ < 10) month = "0" + month
-      this.month_filter = month
-      this.year_filter = date.getFullYear()
-      this.daily_filter = this.year_filter + "-" + this.month_filter + "-" + date.getDate()
+      let date = new Date();
+      var month = date.getMonth();
+      if (month++ < 10) month = "0" + month;
+      this.month_filter = month;
+      this.year_filter = date.getFullYear();
+      this.daily_filter =
+        this.year_filter + "-" + this.month_filter + "-" + date.getDate();
       this.updateAll();
     } else {
       this.$parent.redirect("/login");
@@ -430,6 +420,7 @@ export default {
       this.devices.forEach(d => {
         if (d.device == dev) {
           this.device = d;
+          this.filterByDate()
           if (d.relation != null) {
             this.nif = d.relation.user.nif;
           }
@@ -528,46 +519,49 @@ export default {
       });
     },
     filterByDate() {
-      console.log(this.device.device)
+      if (this.device == null) return
       var payload = {
-        device : this.device.device
-      }
+        device: this.device.device
+      };
       if (this.date_filter == "A") {
         // filter by year
-        let from = parseInt(this.year_filter) + "-01-01T00:00:00.000Z"
-        let to = parseInt(this.year_filter) + "-12-31T23:59:59.999Z"
-        payload.interval = {from : from, to : to}
-        console.log(payload.interval)
-      } else if (this.date_filter == "M"){
+        let from = parseInt(this.year_filter) + "-01-01T00:00:00.000Z";
+        let to = parseInt(this.year_filter) + "-12-31T23:59:59.999Z";
+        payload.interval = { from: from, to: to };
+      } else if (this.date_filter == "M") {
         // filter by month
-        var month = parseInt(this.month_filter)
-        if (month < 10) month = "0" + month
-        let from = parseInt(this.year_filter) + "-" + month + "-01T00:00:00.000Z"
-        let to = parseInt(this.year_filter) + "-"  + month + "-31T23:59:59.999Z"
-        payload.interval = {from : from, to : to}
-        console.log(payload.interval)
+        var month = parseInt(this.month_filter);
+        if (month < 10) month = "0" + month;
+        let from =
+          parseInt(this.year_filter) + "-" + month + "-01T00:00:00.000Z";
+        let to = parseInt(this.year_filter) + "-" + month + "-31T23:59:59.999Z";
+        payload.interval = { from: from, to: to };
       } else if (this.date_filter == "D") {
         // filter by month
-        let from = this.daily_filter + "T00:00:00.000Z"
-        let to =  this.daily_filter + "T23:59:59.999Z"
-        payload.interval = {from : from, to : to}
-        console.log(payload.interval)
+        let from = this.daily_filter + "T00:00:00.000Z";
+        let to = this.daily_filter + "T23:59:59.999Z";
+        payload.interval = { from: from, to: to };
       } else {
-        this.makeToast("danger", "Oups", "No se ha podido filtrar por razones técnicas.")
-        return
+        this.makeToast(
+          "danger",
+          "Oups",
+          "No se ha podido filtrar por razones técnicas."
+        );
+        return;
       }
-      this.$store.dispatch("intents/get", payload)
-      .then( res => {
-          this.numberOfIntents = this.$store.getters["intents/intentNumber"]
-          this.hoursOfIntents = this.$store.getters["intents/intentHour"]
-          console.log(this.numberOfIntents)
-        })
+      this.$store.dispatch("intents/get", payload).then(res => {
+        this.numberOfIntents = this.$store.getters["intents/intentNumber"];
+        this.hoursOfIntents = this.$store.getters["intents/intentHour"];
+      });
     },
     /* Sets into [this.device] the device which has an active relation with [this.nif] */
     filterDevice() {
       this.devices.forEach(it => {
         if (it.relation != null) {
-          if (it.relation.user.nif == this.nif) this.device = it;
+          if (it.relation.user.nif == this.nif) {
+            this.device = it;
+            this.filterByDate()
+          }
         }
       });
     },
@@ -714,8 +708,10 @@ div.infocard {
 }
 
 .chart-grid {
-  width: 300px;
-  height: 100%;
+  background: white;
+  border-radius: 1rem;
+  width: 100%;
+  margin: 0rem 0rem 1rem 0rem;
 }
 .task-grid {
   min-width: 300px;
@@ -788,5 +784,7 @@ div.container-input-date {
 
 .body-home {
   background-color: #f2f2f2;
+  margin: 0; 
+  padding: 0;
 }
 </style>
