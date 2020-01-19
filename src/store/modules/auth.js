@@ -22,14 +22,13 @@ export default {
             resolve(response);
           })
           .catch(e => {
-            Promise.reject(e)
+            resolve(e.response)
           });
       });
     },
     refreshTokens(context) {
       return new Promise(resolve => {
         Axios.post("auth/refreshtoken", {
-          // form
           refresh_token: sessionStorage.getItem("refresh_token")
         })
           .then(response => {

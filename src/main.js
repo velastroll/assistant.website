@@ -37,6 +37,11 @@ Axios.interceptors.response.use((response) => {
   return response
 }, function (error) {
   const originalRequest = error.config;
+  
+  // returns error if it happens on login
+  if (originalRequest.url.includes("/login") && error.response.status === 401) {
+    return Promise.reject(error);
+  }
 
   if (error.response.status === 401 && originalRequest.url == (base + "auth/refreshtoken")) {
     sessionStorage.removeItem("access_token")

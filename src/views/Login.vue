@@ -65,6 +65,13 @@ export default {
                 `Server is down`
               );
             }
+          })
+          .catch(r => {
+              this.$parent.makeToast(
+                "danger",
+                `Server is down`,
+                `Please, contact with an admin.`
+              );
           });
       }
     }
