@@ -41,8 +41,6 @@ export default {
   },
   watch: {
     number: function() {
-      console.log("NoI object: ");
-      console.log(this.number);
       let keys = Object.keys(this.number);
       this.intentData = {
         title: "Intents",
@@ -50,7 +48,6 @@ export default {
         data: []
       };
       keys.forEach(element => {
-        console.log(element);
         this.intentData.labels.push(element);
         this.intentData.data.push(this.number[element]);
       });
@@ -113,7 +110,6 @@ export default {
         ]
       };
       keys.forEach(element => {
-        console.log(element);
         this.intentH.data[element] = this.hours[element];
       });
     }

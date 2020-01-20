@@ -20,16 +20,22 @@
     </b-row>
 
     <b-modal id="filter-intents" hide-footer hide-header size="sm">
-      <b-row class="justify-content-center" style="margin-bottom: 1rem; font-weight: bolder;">
-        FILTRAR DISPOSITIVOS
-      </b-row>
-      <hr>
+      <b-row
+        class="justify-content-center"
+        style="margin-bottom: 1rem; font-weight: bolder;"
+      >FILTRAR DISPOSITIVOS</b-row>
+      <hr />
       <b-row class="justify-content-center">
         <b-col cols="1" style="margin-bottom: 1rem;">
           <i class="material-icons icon-style">how_to_reg</i>
         </b-col>
         <b-col cols="9" style="vertical-align: middle;">
-          <b-form-select v-model="filter_users" :options="options_users" size="sm" style="margin-top: 0px;"></b-form-select>
+          <b-form-select
+            v-model="filter_users"
+            :options="options_users"
+            size="sm"
+            style="margin-top: 0px;"
+          ></b-form-select>
         </b-col>
       </b-row>
       <b-row class="justify-content-center">
@@ -48,11 +54,9 @@
           <b-form-select v-model="filter_asc" :options="asc_desc" size="sm"></b-form-select>
         </b-col>
       </b-row>
-      <hr>
+      <hr />
       <b-row class="justify-content-center">
-        <b-button @click="showDevices()">
-          Aplicar cambios
-        </b-button>
+        <b-button @click="showDevices()">Aplicar cambios</b-button>
       </b-row>
     </b-modal>
   </div>
@@ -75,12 +79,22 @@ export default {
       timer: "",
       devices: this.$store.getters["devices/get"],
       devices2show: Object,
-      asc_desc: [{value:'asc', text: 'Ascendente'}, {value:'desc', text: 'Descendente'}],
-      options_task : [{value:'event', text: 'Ordenar por eventos'}, {value:'intent', text: 'Ordenar por interacciones'}],
-      options_users : [{value:'all', text: 'Mostrar todos'}, {value:'assigned', text: 'Solo asignados'}, {value:'not-assigned', text: 'Solo sin asignar'}],
-      filter_users : "all", // all, assigned, not-assigned
-      filter_task : "event", // event, intent
-      filter_asc : "asc" // asc, desc
+      asc_desc: [
+        { value: "asc", text: "Recientes primero" },
+        { value: "desc", text: "Antiguos primero" }
+      ],
+      options_task: [
+        { value: "event", text: "Ordenar por eventos" },
+        { value: "intent", text: "Ordenar por interacciones" }
+      ],
+      options_users: [
+        { value: "all", text: "Mostrar todos" },
+        { value: "assigned", text: "Solo asignados" },
+        { value: "not-assigned", text: "Solo sin asignar" }
+      ],
+      filter_users: "all", // all, assigned, not-assigned
+      filter_task: "event", // event, intent
+      filter_asc: "asc" // asc, desc
     };
   },
   mounted() {
@@ -103,28 +117,62 @@ export default {
       this.$store.dispatch("device/retrieve").then(r => {
         if (r.status == 200) {
           this.devices = this.$store.getters["device/get"];
-          this.showDevices()
+          this.showDevices();
         } else this.$parent.redirect("/login");
       });
     },
-    showDevices: function(){
-      console.log("TODO: Showing devices")
-      console.log(this.filter_users)
-      console.log(this.filter_task)
-      console.log(this.filter_asc)
+    showDevices: function() {
       // change values of this.device2show
-      this.devices2show = []
+      this.devices2show = [];
       this.devices.forEach(d => {
         if (this.filter_users == "all") {
-          this.devices2show.push(d)
+          this.devices2show.push(d);
         } else if (this.filter_users == "assigned" && d.relation != null) {
-          this.devices2show.push(d)
+          this.devices2show.push(d);
         } else if (this.filter_users == "not-assigned" && d.relation == null) {
-          this.devices2show.push(d)
+          this.devices2show.push(d);
         }
       });
-      this.$bvModal.hide("filter-intents")
-    }
+      if (this.filter_task == "event") this.sortDevicesByEvent()
+      else if (this.filter_task == "intent") this.sortDevicesByIntent()
+      this.$bvModal.hide("filter-intents");
+    },
+    sortDevicesByIntent: function() {
+      console.log(this.devices2show[1]);
+      var asc
+      if (this.filter_asc == "asc") {
+        asc = -1;
+      } else {
+        asc = 1;
+      }
+      this.devices2show.sort(function(a, b) {
+        if (a.last_intent != null) {
+          return 1 * asc;
+        } else if (b.last_intent != null) {
+          return -1 * asc;
+        } else {
+          return a.last_intent.timestamp > b.last_intent.timestamp;
+        }
+      });
+    },
+    sortDevicesByEvent: function() {
+      console.log(this.devices2show[1]);
+      var asc
+      if (this.filter_asc == "asc") {
+        asc = -1;
+      } else {
+        asc = 1;
+      }
+      this.devices2show.sort(function(a, b) {
+        if (a.last_events != null) {
+          return 1 * asc;
+        } else if (b.last_intents != null) {
+          return -1 * asc;
+        } else {
+          return a.last_events[0].timestamp > b.last_events[0].timestamp;
+        }
+      });
+    },
   },
   computed: {
     ...mapGetters(["device/get"]),
@@ -143,8 +191,8 @@ export default {
 .body-home {
   background-color: #f2f2f2;
 }
-.icon-style{
-  font-size: 1rem; 
+.icon-style {
+  font-size: 1rem;
   vertical-align: middle;
 }
 
