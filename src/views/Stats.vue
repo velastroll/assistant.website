@@ -54,6 +54,26 @@
           </div>
         </b-row>
 
+        <!-- charts -->
+        <div v-if="device" class="chart-grid justify-content-center">
+          <!-- Titulo -->
+          <b-row style="width: 100%">
+            <b-col
+              cols="2"
+              style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
+            >
+              <i class="material-icons">pie_chart</i>
+            </b-col>
+            <b-col>
+              <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">CONSULTAS</div>
+            </b-col>
+          </b-row>
+          <hr />
+          <!-- graficos -->
+          <b-row style="width: 100%; justify-content: center;">
+            <Intents device="XX:XX:XX:XX:XX:XX" :number="numberOfIntents" :hours="hoursOfIntents" />
+          </b-row>
+        </div>
         <!-- content -->
         <b-row class="justify-content-center">
           <!-- CARDS -->
@@ -82,6 +102,7 @@
                       >Dispositivo</a>
                     </b-row>
                   </div>
+                  <hr />
                   <div>
                     <div v-if="device != null">
                       <div>
@@ -104,14 +125,18 @@
                 </div>
                 <!-- usuario -->
                 <div class="text-center col-md-12 col-lg-4">
-                  <b-row class="justify-content-center" style="width: 100%; text-align:center">
-                    <a style="text-align: right; max-height: 20px; padding-top: 0.5rem;">
+                  <b-row style="width: 100%">
+                    <b-col
+                      cols="2"
+                      style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
+                    >
                       <i class="material-icons">face</i>
-                    </a>
-                    <a
-                      style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
-                    >Usuario</a>
+                    </b-col>
+                    <b-col>
+                      <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Usuario</div>
+                    </b-col>
                   </b-row>
+                  <hr />
                   <div>
                     <div
                       v-if="user != null"
@@ -153,17 +178,8 @@
                         style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
                       >Tareas pendientes</a>
                     </b-row>
-                    <a
-                      v-if="device!=null"
-                      @click="redirect(`/settings?d=${device.device}`)"
-                      class="to-settings"
-                    >Configure device parameters</a>
-                    <a
-                      v-else-if="user!=null"
-                      @click="redirect(`/settings?l=${user.postcode}`)"
-                      class="to-settings"
-                    >Configure location parameters</a>
                   </div>
+                  <hr />
                   <!-- contenido -->
                   <div class="text-center justify-content-center" style=" padding: 0; margin: 0;">
                     <b-col v-if="device!=null" style=" padding: 0; margin: 0; width: 100%;">
@@ -172,11 +188,11 @@
                       </div>
                       <b-row v-else class="justify-content-center">
                         <table style="padding: 0; margin: 0;" class="justify-content-center">
-                          <tr>
+                          <!--tr>
                             <td class="text-center font-weight-bolder">QUÉ</td>
                             <td class="text-center font-weight-bolder">QUIÉN</td>
                             <td class="text-center font-weight-bolder">DESDE</td>
-                          </tr>
+                          </tr-->
                           <tr
                             :key="i"
                             v-for="(t, i) in device.pending"
@@ -197,6 +213,16 @@
                       </b-row>
                     </b-col>
                   </div>
+                  <a
+                    v-if="device!=null"
+                    @click="redirect(`/settings?d=${device.device}`)"
+                    class="to-settings"
+                  >Configure device parameters</a>
+                  <a
+                    v-else-if="user!=null"
+                    @click="redirect(`/settings?l=${user.postcode}`)"
+                    class="to-settings"
+                  >Configure location parameters</a>
                 </div>
                 <!-- añadir tarea -->
                 <div class="col-lg-4 col-md-12">
@@ -212,7 +238,7 @@
                       >Añadir tarea</a>
                     </b-row>
                   </div>
-
+                  <hr />
                   <!-- contenido -->
                   <div>
                     <b-form-select
@@ -224,6 +250,7 @@
                       class="dvc addevent"
                       @click="sendTask()"
                       :disabled="!taskSelected"
+                      style="margin-bottom: 0.5rem;"
                     >{{addTaskBtnText()}}</b-button>
                   </div>
                 </div>
@@ -235,18 +262,21 @@
               <!-- tareas -->
               <div class="infocard" v-if="device != null">
                 <div>
-                  <b-row
-                    class="justify-content-center"
-                    style="width: 100%; text-align:center; margin: 0;"
-                  >
-                    <a style="text-align: right; max-height: 20px; padding-top: 0.5rem;">
+                  <b-row style="width: 100%">
+                    <b-col
+                      cols="2"
+                      style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
+                    >
                       <i class="material-icons">done_all</i>
-                    </a>
-                    <a
-                      style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
-                    >Últimas tareas realizadas</a>
+                    </b-col>
+                    <b-col>
+                      <div
+                        style="text-align: left; font-weight: bold; padding-top: 0.5rem;"
+                      >Últimas tareas realizadas</div>
+                    </b-col>
                   </b-row>
                 </div>
+                <hr />
                 <b-row v-if="device.last_events.length == 0">No se han realizado acciones</b-row>
                 <b-row
                   :key="i"
@@ -262,18 +292,21 @@
               <!-- acciones -->
               <div class="infocard" v-if="device != null">
                 <div>
-                  <b-row
-                    class="justify-content-center"
-                    style="width: 100%; text-align:center; margin: 0;"
-                  >
-                    <a style="text-align: right; max-height: 20px; padding-top: 0.5rem;">
+                  <b-row style="width: 100%">
+                    <b-col
+                      cols="2"
+                      style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
+                    >
                       <i class="material-icons">outlined_flag</i>
-                    </a>
-                    <a
-                      style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
-                    >Últimos estados</a>
+                    </b-col>
+                    <b-col>
+                      <div
+                        style="text-align: left; font-weight: bold; padding-top: 0.5rem;"
+                      >Últimos estados</div>
+                    </b-col>
                   </b-row>
                 </div>
+                <hr />
                 <b-row v-if="device.last_status.length == 0">No se han realizado acciones</b-row>
                 <b-row
                   :key="i"
@@ -288,26 +321,6 @@
             </b-row>
           </div>
         </b-row>
-
-        <!-- charts -->
-        <div v-if="device" class="chart-grid justify-content-center">
-          <!-- Titulo -->
-          <b-row style="width: 100%">
-            <b-col
-              cols="2"
-              style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
-            >
-              <i class="material-icons">pie_chart</i>
-            </b-col>
-            <b-col>
-              <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Consultas</div>
-            </b-col>
-          </b-row>
-          <!-- graficos -->
-          <b-row style="width: 100%; justify-content: center;">
-            <Intents device="XX:XX:XX:XX:XX:XX" :number="numberOfIntents" :hours="hoursOfIntents" />
-          </b-row>
-        </div>
       </b-col>
     </b-row>
 
@@ -420,7 +433,7 @@ export default {
       this.devices.forEach(d => {
         if (d.device == dev) {
           this.device = d;
-          this.filterByDate()
+          this.filterByDate();
           if (d.relation != null) {
             this.nif = d.relation.user.nif;
           }
@@ -519,7 +532,7 @@ export default {
       });
     },
     filterByDate() {
-      if (this.device == null) return
+      if (this.device == null) return;
       var payload = {
         device: this.device.device
       };
@@ -560,7 +573,7 @@ export default {
         if (it.relation != null) {
           if (it.relation.user.nif == this.nif) {
             this.device = it;
-            this.filterByDate()
+            this.filterByDate();
           }
         }
       });
@@ -615,6 +628,11 @@ export default {
 </script>
 
 <style scoped>
+hr {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 a.to-settings {
   color: blue;
   cursor: pointer;
@@ -784,7 +802,7 @@ div.container-input-date {
 
 .body-home {
   background-color: #f2f2f2;
-  margin: 0; 
+  margin: 0;
   padding: 0;
 }
 </style>

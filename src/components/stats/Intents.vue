@@ -1,11 +1,16 @@
 <template>
   <div class="body-charts">
-    <b-row style="justify-content: center;">
+    <b-row style="justify-content: center;" v-if="intentData.labels.length != 0">
       <b-col cols="6" style="min-width: 300px; max-width: 400px;">
         <DoughnutChart :dataChart="intentData" />
       </b-col>
       <b-col cols="6" style="min-width: 300px; max-width: 400px;">
         <BarChart :dataChart="intentH" />
+      </b-col>
+    </b-row>
+    <b-row v-else>
+      <b-col style="margin-bottom: 1rem;">
+        Nada que mostrar en este periodo de tiempo.
       </b-col>
     </b-row>
   </div>
@@ -24,13 +29,13 @@ export default {
     return {
       intentData: {
         title: "Intents",
-        labels: ["Fake1", "Fake2", "Fake3"],
-        data: [13, 5, 2]
+        labels: ["Empty"],
+        data: [0]
       },
       intentH: {
         title: "Intents",
-        labels: ["Fake1", "Fake2", "Fake3"],
-        data: [13, 5, 2]
+        labels: ["Empty"],
+        data: [0]
       }
     };
   },
