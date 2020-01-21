@@ -16,14 +16,26 @@
         </b-row>
       </div>
       <b-row>
+        <!-- Last status -->
         <div
           :class="this.getTaskClass(this.msg.last_status[0])"
         >[{{this.msg.last_status[0].type}}] {{this.getMinutes(this.msg.last_status[0].timestamp)}}</div>
+        <!-- User -->
         <div class="row-description">
           <div
             v-if="this.msg.relation != null"
           >{{this.msg.relation.user.name}} - {{this.msg.relation.user.nif}}</div>
           <div v-else style="color: red">Sin asignar</div>
+        </div>
+        <!-- Last intent -->
+        <div
+          class="row-description"
+          style="text-transform: uppercase;font-size:0.65rem; font-style: italic;"
+        >
+          <div
+            v-if="this.msg.last_intent != null"
+          >Asked for [{{this.msg.last_intent.intent}}] {{this.getMinutes(this.msg.last_intent.timestamp)}}</div>
+          <div v-else style="color: red">Hasn't got usage yet</div>
         </div>
       </b-row>
     </b-card>
@@ -70,12 +82,27 @@
         </b-row>
       </div>
       <hr />
-            <b-row style="width: 100%">
+      <b-row style="width: 100%">
         <b-col cols="2" class="col-icon">
           <i class="material-icons">settings</i>
         </b-col>
         <b-col>
-          <div class="to-settings" @click="redirect(`/settings?d=${msg.device}`)">Configure device parameters</div>
+          <div
+            class="to-settings"
+            @click="redirect(`/settings?d=${msg.device}`)"
+          >Configure device parameters</div>
+        </b-col>
+      </b-row>
+      <hr />
+      <b-row style="width: 100%">
+        <b-col cols="2" class="col-icon">
+          <i class="material-icons">settings</i>
+        </b-col>
+        <b-col>
+          <div
+            class="to-settings"
+            @click="redirect(`/stats?d=${msg.device}`)"
+          >Show stats</div>
         </b-col>
       </b-row>
       <hr />
@@ -351,19 +378,27 @@ span.pending-action:hover {
   background: brown;
 }
 
-div.to-settings{
-  text-align: left; font-weight: normal; padding-top: 0.5rem; color: blue; cursor: pointer;
+div.to-settings {
+  text-align: left;
+  font-weight: normal;
+  padding-top: 0.5rem;
+  color: blue;
+  cursor: pointer;
 }
 
-div.to-settings:hover{
+div.to-settings:hover {
   text-decoration: underline;
 }
 
-.col-icon{
-  text-align: right; max-height: 20px; padding-top: 0.5rem;
+.col-icon {
+  text-align: right;
+  max-height: 20px;
+  padding-top: 0.5rem;
 }
 
-.col-heading{
-  text-align: left; font-weight: bold; padding-top: 0.5rem;
+.col-heading {
+  text-align: left;
+  font-weight: bold;
+  padding-top: 0.5rem;
 }
 </style>

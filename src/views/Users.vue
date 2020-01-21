@@ -100,9 +100,11 @@ export default {
       return null;
     },
     getDevice(dni) {
+
       for (var p in this.provinces) {
         for (var l in this.provinces[p].locations) {
           for (var s in this.provinces[p].locations[l].people) {
+            console.log(this.provinces[p].locations[l].people[s])
             if (this.provinces[p].locations[l].people[s].nif == dni) {
               if (this.provinces[p].locations[l].people[s].relation != null) {
                 return this.provinces[p].locations[l].people[s].relation.device;

@@ -84,7 +84,7 @@ export default {
           labels: this.dataChart.labels,
           datasets: [
             {
-              label: "Consultas por hora",
+              label: "Horas de la consulta",
               borderColor: "#00e102",
               pointBackgroundColor: "white",
               borderWidth: 1,
