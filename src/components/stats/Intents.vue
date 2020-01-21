@@ -12,10 +12,11 @@
       <b-col style="margin-bottom: 1rem;">Nada que mostrar en este periodo de tiempo.</b-col>
     </b-row>
     <b-row v-else>
-      <span class="filter-row" v-b-toggle.intents-info>Mostrar más información</span>
+      <span v-if="!mostrando" class="filter-row" v-b-toggle.intents-info @click="mostrando= !mostrando">Mostrar más información</span>
+      <span v-if="mostrando" class="filter-row" v-b-toggle.intents-info @click="mostrando= !mostrando">Ocultar información</span>
     </b-row>
     <b-collapse id="intents-info" class="mt-2" style="padding-bottom: 0.5rem">
-      <div class="flex-container">
+      <div class="flex-container" v-if="all.length > 0">
         <table>
           <tr>
             <th>Fecha</th>
@@ -73,7 +74,8 @@ export default {
         data: [0]
       },
       all: [],
-      current: { slots: [] }
+      current: { slots: [] },
+      mostrando : false
     };
   },
   props: {
@@ -158,6 +160,7 @@ export default {
     },
     intents: function() {
       this.all = this.intents;
+      this.current = { slots: [] }
     }
   },
   methods: {
