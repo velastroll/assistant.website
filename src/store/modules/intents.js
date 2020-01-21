@@ -7,7 +7,7 @@ export default {
     },
     getters: {
         // this.$store.getters["getData"]
-        getEvents: state => {
+        getIntents: state => {
             return state.intents;
         },
         /**

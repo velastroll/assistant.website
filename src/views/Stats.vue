@@ -66,7 +66,7 @@
           <hr />
           <!-- graficos -->
           <b-row style="width: 100%; justify-content: center;">
-            <Intents device="XX:XX:XX:XX:XX:XX" :number="numberOfIntents" :hours="hoursOfIntents" />
+            <Intents device="XX:XX:XX:XX:XX:XX" :number="numberOfIntents" :hours="hoursOfIntents" :intents="intents" />
           </b-row>
         </div>
 
@@ -322,7 +322,8 @@ export default {
       taskSelected: null,
       taskOptions: [{ value: null, text: "Nada" }],
       numberOfIntents: Object,
-      hoursOfIntents: Object
+      hoursOfIntents: Object,
+      intents: []
     };
   },
   mounted() {
@@ -510,6 +511,7 @@ export default {
       this.$store.dispatch("intents/get", payload).then(res => {
         this.numberOfIntents = this.$store.getters["intents/intentNumber"];
         this.hoursOfIntents = this.$store.getters["intents/intentHour"];
+        this.intents = this.$store.getters["intents/getIntents"];
       });
     },
     /* Sets into [this.device] the device which has an active relation with [this.nif] */
