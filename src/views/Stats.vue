@@ -57,16 +57,11 @@
         <!-- charts -->
         <div v-if="device" class="chart-grid justify-content-center">
           <!-- Titulo -->
-          <b-row style="width: 100%">
-            <b-col
-              cols="2"
-              style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
-            >
+          <b-row class="justify-content-center">
+            <a class="icon-header-card">
               <i class="material-icons">pie_chart</i>
-            </b-col>
-            <b-col>
-              <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">CONSULTAS</div>
-            </b-col>
+            </a>
+            <a class="text-header-card">Consultas</a>
           </b-row>
           <hr />
           <!-- graficos -->
@@ -74,253 +69,203 @@
             <Intents device="XX:XX:XX:XX:XX:XX" :number="numberOfIntents" :hours="hoursOfIntents" />
           </b-row>
         </div>
-        <!-- content -->
-        <b-row class="justify-content-center">
-          <!-- CARDS -->
-          <div class="task-grid">
-            <!-- SLOT 1 -->
-            <div class="infocard" v-if="user!=null">
-              <b-row
-                style="width: 100%; padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0;"
-                class="justify-content-center"
-              >
-                <!-- dispositivo -->
-                <div
-                  class="col-lg-8 col-md-12 justify-content-center"
-                  style="padding-left: 0; padding-right: 0;"
-                >
-                  <div>
-                    <b-row class="justify-content-center" style="width: 100%; text-align:center">
-                      <a style="text-align: right; max-height: 20px; padding-top: 0.5rem;">
-                        <img
-                          style="width: 2rem; height: 1.5rem; color: #2c3e50;"
-                          src="/marker/device.svg"
-                        />
-                      </a>
-                      <a
-                        style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
-                      >Dispositivo</a>
-                    </b-row>
-                  </div>
-                  <hr />
-                  <div>
-                    <div v-if="device != null">
-                      <div>
-                        <b-button class="dvc assigned" @click="finishRelation(device.device)">
-                          <span>{{device.device}}</span>
-                        </b-button>
-                      </div>
-                      <div>
-                        <span>Desde el {{parseDate(device.relation.from)}}</span>
-                      </div>
-                    </div>
-                    <div v-else>
-                      <div>
-                        <b-button class="dvc unnassigned" v-b-modal.assign>
-                          <span>sin asignar</span>
-                        </b-button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- usuario -->
-                <div class="text-center col-md-12 col-lg-4">
-                  <b-row style="width: 100%">
-                    <b-col
-                      cols="2"
-                      style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
-                    >
-                      <i class="material-icons">face</i>
-                    </b-col>
-                    <b-col>
-                      <div style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Usuario</div>
-                    </b-col>
-                  </b-row>
-                  <hr />
-                  <div>
-                    <div
-                      v-if="user != null"
-                      style="width: 100%: padding: 0 1rem 0 1rem; width:100%;"
-                      class="text-center"
-                    >
-                      <div>
-                        <span>{{user.name}} {{user.surname}}, {{user.nif}}</span>
-                      </div>
-                      <div>
-                        <span>[{{user.postcode}}]</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </b-row>
-            </div>
-            <div v-else>
-              <span style="color: red;">No tiene ningún usuario asociado</span>
-            </div>
 
-            <!-- SLOT 2 -->
-            <div class="infocard" v-if="device != null">
-              <b-row
-                style="width: 100%; padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0;"
-                class="justify-content-center"
-              >
-                <!-- tarea pendiente -->
-                <div
-                  class="col-lg-8 col-md-12 justify-content-center"
-                  style="padding-left: 0; padding-right: 0;"
-                >
-                  <div>
-                    <b-row class="justify-content-center" style="width: 100%; text-align:center">
-                      <a style="text-align: right; max-height: 20px; padding-top: 0.5rem;">
-                        <i class="material-icons">query_builder</i>
-                      </a>
-                      <a
-                        style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
-                      >Tareas pendientes</a>
-                    </b-row>
-                  </div>
-                  <hr />
-                  <!-- contenido -->
-                  <div class="text-center justify-content-center" style=" padding: 0; margin: 0;">
-                    <b-col v-if="device!=null" style=" padding: 0; margin: 0; width: 100%;">
-                      <div v-if="device.pending.length == 0">
-                        <span>No hay tareas pendientes</span>
-                      </div>
-                      <b-row v-else class="justify-content-center">
-                        <table style="padding: 0; margin: 0;" class="justify-content-center">
-                          <!--tr>
-                            <td class="text-center font-weight-bolder">QUÉ</td>
-                            <td class="text-center font-weight-bolder">QUIÉN</td>
-                            <td class="text-center font-weight-bolder">DESDE</td>
-                          </tr-->
-                          <tr
-                            :key="i"
-                            v-for="(t, i) in device.pending"
-                            class="tablerow"
-                            style="padding: 0; margin: 0;"
-                          >
-                            <td
-                              class="text-left"
-                              style="padding: 0; margin: 0; color: #2c3e50;"
-                            >[{{t.event}}]</td>
-                            <td
-                              class="text-center"
-                              style="padding: 0 1rem 0 1rem; margin: 0; font-style: italic;"
-                            >{{t.by}}</td>
-                            <td class="text-right">{{parseDate(t.at)}}</td>
-                          </tr>
-                        </table>
-                      </b-row>
-                    </b-col>
-                  </div>
-                  <a
-                    v-if="device!=null"
-                    @click="redirect(`/settings?d=${device.device}`)"
-                    class="to-settings"
-                  >Configure device parameters</a>
-                  <a
-                    v-else-if="user!=null"
-                    @click="redirect(`/settings?l=${user.postcode}`)"
-                    class="to-settings"
-                  >Configure location parameters</a>
-                </div>
-                <!-- añadir tarea -->
-                <div class="col-lg-4 col-md-12">
-                  <div class="text-center">
-                    <b-row class="justify-content-center">
-                      <a
-                        style="text-align: right; max-height: 20px; padding-top: 0.5rem; max-width: 150px"
-                      >
-                        <i class="material-icons">flash_on</i>
-                      </a>
-                      <a
-                        style="text-align: left; font-weight: bold; padding-top: 0.5rem; text-transform: uppercase;"
-                      >Añadir tarea</a>
-                    </b-row>
-                  </div>
-                  <hr />
-                  <!-- contenido -->
-                  <div>
-                    <b-form-select
-                      v-model="taskSelected"
-                      :options="taskOptions"
-                      style="width: 100%; padding: 0 0 0 1rem; border-radius: 1rem; margin: 0.5rem 0 0.5rem 0;"
-                    ></b-form-select>
-                    <b-button
-                      class="dvc addevent"
-                      @click="sendTask()"
-                      :disabled="!taskSelected"
-                      style="margin-bottom: 0.5rem;"
-                    >{{addTaskBtnText()}}</b-button>
-                  </div>
-                </div>
-              </b-row>
-            </div>
-
-            <!-- ROW 3 -->
-            <b-row class="justify-content-center">
-              <!-- tareas -->
-              <div class="infocard" v-if="device != null">
-                <div>
-                  <b-row style="width: 100%">
-                    <b-col
-                      cols="2"
-                      style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
-                    >
-                      <i class="material-icons">done_all</i>
-                    </b-col>
-                    <b-col>
-                      <div
-                        style="text-align: left; font-weight: bold; padding-top: 0.5rem;"
-                      >Últimas tareas realizadas</div>
-                    </b-col>
-                  </b-row>
-                </div>
-                <hr />
-                <b-row v-if="device.last_events.length == 0">No se han realizado acciones</b-row>
-                <b-row
-                  :key="i"
-                  v-for="(t, i) in device.last_events"
-                  class="tablerow"
-                  style="margin: 0; padding: 0; justify-content: center;"
-                >
-                  <span style="margin-right: 0.5rem">[{{t.name}}]</span>
-                  <span>el {{parseDate(t.timestamp)}}</span>
+        <div v-if="user==null">
+          <span style="color: red;">No tiene ningún usuario asociado</span>
+        </div>
+        <!-- =========== C A R D S ========== -->
+        <div class="flex-container">
+          <!-- DISPOSITIVO -->
+          <div class="infocard col-lg-5 col-md-5 justify-content-center" v-if="user!=null">
+            <!-- dispositivo -->
+            <div style="padding-left: 0; padding-right: 0;">
+              <div>
+                <b-row class="justify-content-center" style="width: 100%; text-align:center;">
+                  <a class="text-header-card">
+                    <img
+                      style="width: 2rem; height: 1.5rem; color: #2c3e50;"
+                      src="/marker/device.svg"
+                    />
+                  </a>
+                  <a style="text-align: left; font-weight: bold; padding-top: 0.5rem;">Dispositivo</a>
                 </b-row>
               </div>
-
-              <!-- acciones -->
-              <div class="infocard" v-if="device != null">
-                <div>
-                  <b-row style="width: 100%">
-                    <b-col
-                      cols="2"
-                      style="text-align: right; max-height: 20px; padding-top: 0.5rem; padding-left: 3rem;"
-                    >
-                      <i class="material-icons">outlined_flag</i>
-                    </b-col>
-                    <b-col>
-                      <div
-                        style="text-align: left; font-weight: bold; padding-top: 0.5rem;"
-                      >Últimos estados</div>
-                    </b-col>
-                  </b-row>
+              <hr />
+              <div>
+                <div v-if="device != null">
+                  <div>
+                    <b-button class="dvc assigned" @click="finishRelation(device.device)">
+                      <span>{{device.device}}</span>
+                    </b-button>
+                  </div>
+                  <div>
+                    <span>Desde el {{parseDate(device.relation.from)}}</span>
+                  </div>
                 </div>
-                <hr />
-                <b-row v-if="device.last_status.length == 0">No se han realizado acciones</b-row>
-                <b-row
-                  :key="i"
-                  v-for="(t, i) in device.last_status"
-                  class="tablerow"
-                  style="margin: 0; padding: 0; justify-content: center;"
-                >
-                  <span style="margin-right: 0.5rem">[{{t.type}}]</span>
-                  <span>el {{parseDate(t.timestamp)}}</span>
-                </b-row>
+                <div v-else>
+                  <div>
+                    <b-button class="dvc unnassigned" v-b-modal.assign>
+                      <span>sin asignar</span>
+                    </b-button>
+                  </div>
+                </div>
               </div>
+            </div>
+          </div>
+
+          <!-- USUARIO -->
+          <div class="infocard col-lg-5 col-md-5 justify-content-center" v-if="user!=null">
+            <div style="padding-left: 0; padding-right: 0;">
+              <b-row class="justify-content-center">
+                <a class="icon-header-card">
+                  <i class="material-icons">face</i>
+                </a>
+                <a class="text-header-card">Usuario</a>
+              </b-row>
+              <hr />
+              <div>
+                <div
+                  v-if="user != null"
+                  style="width: 100%: padding: 0 1rem 0 1rem; width:100%;"
+                  class="text-center"
+                >
+                  <div>
+                    <span>{{user.name}} {{user.surname}}, {{user.nif}}</span>
+                  </div>
+                  <div>
+                    <span>[{{user.postcode}}]</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AÑADIR TAREA -->
+          <div class="infocard col-lg-5 col-md-5 justify-content-center" v-if="device!=null">
+            <!-- dispositivo -->
+            <div style="padding-left: 0; padding-right: 0;">
+              <b-row class="justify-content-center">
+                <a class="icon-header-card">
+                  <i class="material-icons">flash_on</i>
+                </a>
+                <a class="text-header-card">Añadir tarea</a>
+              </b-row>
+            </div>
+            <hr />
+            <!-- contenido -->
+            <div>
+              <b-form-select
+                v-model="taskSelected"
+                :options="taskOptions"
+                style="width: 90%; padding: 0 0 0 1rem; border-radius: 1rem; margin: 0.5rem;"
+              ></b-form-select>
+              <b-button
+                class="dvc addevent"
+                @click="sendTask()"
+                :disabled="!taskSelected"
+                style="margin-bottom: 0.5rem;"
+              >{{addTaskBtnText()}}</b-button>
+            </div>
+          </div>
+
+          <!-- TAREAS PENDIENTES -->
+          <div class="infocard col-lg-5 col-md-5 justify-content-center" v-if="device!=null">
+            <!-- dispositivo -->
+            <div style="padding-left: 0; padding-right: 0;">
+              <b-row class="justify-content-center" style="width: 100%; text-align:center">
+                <a class="text-header-card">
+                  <i class="material-icons">query_builder</i>
+                </a>
+                <a class="text-header-card">Tareas pendientes</a>
+              </b-row>
+            </div>
+            <hr />
+            <!-- contenido -->
+            <div class="text-center justify-content-center" style=" padding: 0; margin: 0;">
+              <b-col v-if="device!=null" style=" padding: 0; margin: 0; width: 100%;">
+                <div v-if="device.pending.length == 0">
+                  <span>No hay tareas pendientes</span>
+                </div>
+                <b-row v-else class="justify-content-center">
+                  <table style="padding: 0; margin: 0;" class="justify-content-center">
+                    <tr
+                      :key="i"
+                      v-for="(t, i) in device.pending"
+                      class="tablerow"
+                      style="padding: 0; margin: 0;"
+                    >
+                      <td
+                        class="text-left"
+                        style="padding: 0; margin: 0; color: #2c3e50;"
+                      >[{{t.event}}]</td>
+                      <td
+                        class="text-center"
+                        style="padding: 0 1rem 0 1rem; margin: 0; font-style: italic;"
+                      >{{t.by}}</td>
+                      <td class="text-right">{{parseDate(t.at)}}</td>
+                    </tr>
+                  </table>
+                </b-row>
+              </b-col>
+            </div>
+            <a
+              v-if="device!=null"
+              @click="redirect(`/settings?d=${device.device}`)"
+              class="to-settings"
+            >Configure device parameters</a>
+            <a
+              v-else-if="user!=null"
+              @click="redirect(`/settings?l=${user.postcode}`)"
+              class="to-settings"
+            >Configure location parameters</a>
+          </div>
+          <!-- ULTIMAS TAREAS REALIZADAS -->
+          <div class="infocard col-lg-5 col-md-5 justify-content-center" v-if="device!=null">
+            <div style="padding-left: 0; padding-right: 0;">
+              <b-row class="justify-content-center">
+                <a class="icon-header-card">
+                  <i class="material-icons">done_all</i>
+                </a>
+                <a class="text-header-card">Últimas tareas realizadas</a>
+              </b-row>
+            </div>
+            <hr />
+            <b-row v-if="device.last_events.length == 0">No se han realizado acciones</b-row>
+            <b-row
+              :key="i"
+              v-for="(t, i) in device.last_events"
+              class="tablerow"
+              style="margin: 0; padding: 0; justify-content: center;"
+            >
+              <span style="margin-right: 0.5rem">[{{t.name}}]</span>
+              <span>el {{parseDate(t.timestamp)}}</span>
             </b-row>
           </div>
-        </b-row>
+
+          <!-- ULTIMOS ESTADOS -->
+          <div class="infocard col-lg-5 col-md-5 justify-content-center" v-if="device!=null">
+            <!-- dispositivo -->
+            <div style="padding-left: 0; padding-right: 0;">
+              <b-row class="justify-content-center">
+                <a class="icon-header-card">
+                  <i class="material-icons">outlined_flag</i>
+                </a>
+                <a class="text-header-card">Últimos estados</a>
+              </b-row>
+            </div>
+            <hr />
+            <b-row v-if="device.last_status.length == 0">No se han realizado acciones</b-row>
+            <b-row
+              :key="i"
+              v-for="(t, i) in device.last_status"
+              class="tablerow"
+              style="margin: 0; padding: 0; justify-content: center;"
+            >
+              <span style="margin-right: 0.5rem">[{{t.type}}]</span>
+              <span>el {{parseDate(t.timestamp)}}</span>
+            </b-row>
+          </div>
+        </div>
       </b-col>
     </b-row>
 
@@ -628,8 +573,27 @@ export default {
 </script>
 
 <style scoped>
+.flex-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+a.icon-header-card {
+  text-align: left;
+  font-weight: bold;
+  padding-top: 0.5rem;
+  text-transform: uppercase;
+}
+
+a.text-header-card {
+  text-align: left;
+  font-weight: bold;
+  padding-top: 0.5rem;
+  text-transform: uppercase;
+}
+
 hr {
-  margin-top: 0.5rem;
+  margin-top: 0rem;
   margin-bottom: 0.5rem;
 }
 
@@ -671,6 +635,7 @@ div.infocard {
   margin: 0.5rem;
   padding-left: 0;
   padding-right: 0;
+  padding-bottom: 0.5rem;
 }
 .unnassigned {
   color: brown;
@@ -734,7 +699,7 @@ div.infocard {
 .task-grid {
   min-width: 300px;
   justify-content: center;
-  width: calc(100vw - 400px);
+  width: 90%;
 }
 .input-date {
   float: right;
