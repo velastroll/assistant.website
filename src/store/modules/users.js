@@ -46,26 +46,7 @@ export default {
             return new Promise(resolve => {
                 Axios({
                     method: "post",
-                    url: "worker/person",
-                    data: payload,
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                })
-                    .then(response => {
-                        resolve({status:200});
-                    })
-                    .catch(e => {
-                        resolve({status:500});
-                    });
-            });
-        },
-
-        get(context, payload){
-            return new Promise(resolve => {
-                Axios({
-                    method: "get",
-                    url: "worker/person",
+                    url: "worker/people",
                     data: payload,
                     headers: {
                         "Content-Type": "application/json"

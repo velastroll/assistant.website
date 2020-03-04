@@ -71,13 +71,13 @@ Axios.interceptors.response.use((response) => {
    */
   if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const refreshToken = sessionStorage.getItem("refresh_token");
+      let refreshToken = sessionStorage.getItem("refresh_token");
       return Axios.post('/auth/refreshtoken',
           {
               "refresh_token": refreshToken
           })
           .then(res => {
-              if (res.status === 201) {
+              if (res.status === 200) {
                   sessionStorage.setItem("access_token", res.data.access_token);
                   sessionStorage.setItem("refresh_token", res.data.refresh_token);
                   Axios.defaults.headers.common['Authorization'] = sessionStorage.getItem("access_token");

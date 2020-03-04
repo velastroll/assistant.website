@@ -145,14 +145,6 @@ export default {
       this.geosearch.on("results", function(data) {
         results.clearLayers();
       });
-      // show other locations
-      this.showLocations();
-    },
-    /**
-     * Show on the map the icon of the registred locations
-     */
-    showLocations(){
-      console.log("showing locations... [TODO]")
     },
     /**
      * Add a new location

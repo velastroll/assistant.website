@@ -39,7 +39,7 @@ export default {
             return new Promise(resolve => {
                 Axios({
                     method: "post",
-                    url: "worker/task",
+                    url: "worker/tasks",
                     data: payload
                 })
                     .then(response => {

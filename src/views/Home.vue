@@ -138,7 +138,6 @@ export default {
       this.$bvModal.hide("filter-intents");
     },
     sortDevicesByIntent: function() {
-      console.log(this.devices2show[1]);
       var asc
       if (this.filter_asc == "asc") {
         asc = -1;
@@ -156,7 +155,6 @@ export default {
       });
     },
     sortDevicesByEvent: function() {
-      console.log(this.devices2show[1]);
       var asc
       if (this.filter_asc == "asc") {
         asc = -1;

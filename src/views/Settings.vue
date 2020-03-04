@@ -27,7 +27,7 @@
     <!-- device -->
     <div class="heading-card" v-if="d">
       <div class="pointer" v-b-toggle.accordion-3>
-        <a class="material-icons">directions_bike</a>
+        <a class="material-icons">settings_remote</a>
         <a class="heading-title">Device {{d}}</a>
       </div>
       <div>
@@ -85,7 +85,7 @@ export default {
   beforeUpdate: function() {},
   created() {},
   mounted: function() {
-    this.refresh()
+    this.refresh();
   },
   methods: {
     makeToast(variant, title, content) {
@@ -114,7 +114,7 @@ export default {
               this.globalC = res.data.global;
               this.localeC = res.data.location;
               this.pendingC = res.data.pendingConf;
-              this.recalculePending()
+              this.recalculePending();
               this.deviceC = res.data.deviceConf;
             } else {
               this.$parent.makeToast("danger", "Error " + res.status, res.data);
@@ -149,19 +149,25 @@ export default {
         });
       }
     },
-    recalculePending(){
-      var p = this.pendingC
-      if (p != null){
-        try{
-        if (p.timestamp < this.globalC.timestamp){
-          p = this.globalC
-        }        } catch(e){console.log(this.globalC)}
-        try{
-        if (p.timestamp < this.localeC.timestamp){
-          p = this.localeC
-        }        } catch(e){console.log(this.localeC)}
+    recalculePending() {
+      var p = this.pendingC;
+      if (p != null) {
+        try {
+          if (p.timestamp < this.globalC.timestamp) {
+            p = this.globalC;
+          }
+        } catch (e) {
+          console.log(this.globalC);
+        }
+        try {
+          if (p.timestamp < this.localeC.timestamp) {
+            p = this.localeC;
+          }
+        } catch (e) {
+          console.log(this.localeC);
+        }
       }
-      this.pendingC = p
+      this.pendingC = p;
     }
   }
 };

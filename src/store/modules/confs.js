@@ -12,7 +12,7 @@ export default {
             return new Promise(resolve => {
                 Axios({
                     method: "get",
-                    url: "worker/conf/" + payload.device,
+                    url: "worker/confs/" + payload.device,
                     headers: {
                         "Content-Type": "application/json"
                     }
@@ -29,7 +29,7 @@ export default {
             return new Promise(resolve => {
                 Axios({
                     method: "post",
-                    url: "worker/conf/",
+                    url: "worker/confs/",
                     data: {
                         device : payload.receiver,
                         body : payload.body

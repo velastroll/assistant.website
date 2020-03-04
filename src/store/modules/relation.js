@@ -7,7 +7,7 @@ export default {
             return new Promise(resolve => {
                 Axios({
                     method: "post",
-                    url: "worker/relation",
+                    url: "worker/relations",
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -28,7 +28,7 @@ export default {
             return new Promise(resolve => {
                 Axios({
                     method: "delete",
-                    url: "worker/relation/" + payload.device,
+                    url: "worker/relations/" + payload.device,
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -49,7 +49,7 @@ export default {
             return new Promise(resolve => {
                 Axios({
                     method: "get",
-                    url: "worker/relation/" + payload.device
+                    url: "worker/relations/" + payload.device
                 })
                     .then(response => {
                         resolve(response);
