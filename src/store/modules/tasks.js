@@ -24,7 +24,7 @@ export default {
             return new Promise(resolve => {
                 Axios({
                     method: "get",
-                    url: "worker/event",
+                    url: "worker/events",
                 })
                     .then(response => {
                         context.commit("updateEvents", response.data);
