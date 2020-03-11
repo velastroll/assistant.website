@@ -1,5 +1,5 @@
 <template>
-  <div class="main-panel">
+  <div class="body-home">
     <!-- global -->
     <div class="heading-card">
       <div class="pointer" v-b-toggle.accordion-1>
@@ -28,7 +28,7 @@
     <div class="heading-card" v-if="d">
       <div class="pointer" v-b-toggle.accordion-3>
         <a class="material-icons">settings_remote</a>
-        <a class="heading-title">Device {{d}}</a>
+        <a class="heading-title">Dispositivo {{d}}</a>
       </div>
       <div>
         <b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
@@ -40,6 +40,17 @@
 </template>
 
 <style>
+.body-home {
+  background-color: #f2f2f2;
+  min-width: 100%;
+  min-height: 100%;
+  margin-top: -1rem;
+}
+.main-panel{
+  min-width: 100vw;
+  min-height: 100vh;
+  background: whitesmoke;
+}
 div.pointer {
   cursor: pointer;
 }

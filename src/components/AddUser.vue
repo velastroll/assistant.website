@@ -1,5 +1,5 @@
 <template>
-  <b-modal :id="`modal-add-user`" :title="`Add new user`">
+  <b-modal :id="`modal-add-user`" :title="`Nuevo usuario`">
     <!-- name -->
     <b-row>
       <b-col cols="2" class="row-icon">
@@ -54,8 +54,8 @@
     <div
       v-if="goodPostcode() && existLocation() == null"
       style="color: red"
-    >This postal code does not exist. Add first the town.</div>
-    <div v-else-if="pcState" style="color: green; text-align: right;">Add user to {{existLocation().name}}</div>
+    >Código postal no registrado, añada primero la localidad.</div>
+    <div v-else-if="pcState" style="color: green; text-align: right;">Se añadirá a {{existLocation().name}}</div>
 
     <template v-slot:modal-footer>
       <div class="w-100">
@@ -65,7 +65,7 @@
           size="sm"
           class="float-right"
           @click="submit()"
-        >ADD USER</b-button>
+        >AÑADIR USUARIO</b-button>
       </div>
     </template>
   </b-modal>
@@ -107,8 +107,8 @@ export default {
           //ok, add the response, which is the person updated profile
           this.$parent.makeToast(
             "success",
-            `Success`,
-            "New person added to the system."
+            `Correcto`,
+            "Nueva persona añadida al sistema."
           );
         } else {
           this.$parent.makeToast(

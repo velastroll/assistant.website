@@ -10,19 +10,20 @@
         <!-- options -->
         <b-row>
           <div class="container-input-search">
-            <b-input class="input-search" placeholder="Search by name, nif, town, or device..." />
+            <!-- b-input class="input-search" placeholder="Search by name, nif, town, or device..." /-->
           </div>
           <div class="container-add-town-button">
-            <b-button class="add-town-button" v-b-modal.modal-add-location>Add town</b-button>
+            <b-button class="add-town-button" v-b-modal.modal-add-location>Añadir localidad</b-button>
           </div>
         </b-row>
         <!--  Header -->
         <b-row class="header-table">
           <b-col class="smart-screen">ID</b-col>
-          <b-col>Province</b-col>
-          <b-col class="smart-screen">Towns</b-col>
-          <b-col>People</b-col>
-          <b-col>Devices</b-col>
+          <b-col>Provincia</b-col>
+          <b-col class="smart-screen">Localidad</b-col>
+          <b-col>Personas</b-col>
+          <b-col>Dispositivos
+          </b-col>
         </b-row>
         <!-- provinces -->
         <div :key="'p' + i" v-for="(p, i) in this.provinces">
@@ -64,7 +65,7 @@
               <b-col cols="1" style="text-align:right;">[{{p.code}}]</b-col>
               <b-col cols="2" style="text-align:left;">{{p.name}}</b-col>
               <b-col style="text-align: right;">
-                <span>No registred data</span>
+                <span>No hay datos registrados</span>
               </b-col>
             </b-row>
           </div>

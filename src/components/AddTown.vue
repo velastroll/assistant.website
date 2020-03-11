@@ -1,7 +1,7 @@
 <template>
   <b-modal
     :id="'modal-add-location'"
-    title="Add location"
+    title="Añadir localidad"
     ref="vuemodal"
     @shown="modalShown"
     @hide="locationMap = null"
@@ -20,7 +20,7 @@
           class="float-right"
           :disabled="locationMap == null"
           @click="addLocation()"
-        >ADD LOCATION</b-button>
+        >AÑADIR LOCALIDAD</b-button>
       </div>
     </template>
   </b-modal>

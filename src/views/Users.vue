@@ -13,7 +13,7 @@
             <b-input class="input-search" placeholder="Search by name, nif, town, or device..." />
           </div>
           <div class="container-add-user-button">
-            <b-button class="add-user-button" v-b-modal.modal-add-user>Add user</b-button>
+            <b-button class="add-user-button" v-b-modal.modal-add-user>Añadir usuario</b-button>
           </div>
         </b-row>
         <!-- table -->

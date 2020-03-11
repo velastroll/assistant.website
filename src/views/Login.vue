@@ -8,12 +8,12 @@
             <!-- Title -->
             <span class="login-title">🧠</span>
             <hr />
-            <div class="login-input-title">USER</div>
+            <div class="login-input-title">USUARIO</div>
             <form @submit.prevent="login()">
               <b-input v-model="usr" required></b-input>
-              <div class="login-input-title">PASSWORD</div>
+              <div class="login-input-title">CONTRASEÑA</div>
               <b-input v-model="psswd" :type="'password'" required></b-input>
-              <b-button type="submit" variant="success" class="login-button">log in</b-button>
+              <b-button type="submit" variant="success" class="login-button">ENTRAR</b-button>
             </form>
           </b-card>
         </b-row>
@@ -46,9 +46,9 @@ export default {
     },
     login: function() {
       if (this.usr.length < 3) {
-        this.makeToast("primary", "Oups!", `Please, insert a valid user.`);
+        this.makeToast("primary", "Oups!", `Por favor, inserte un usuario válido.`);
       } else if (this.psswd.length < 3) {
-        this.makeToast("primary", "Oups!", `Please, insert a valid password.`);
+        this.makeToast("primary", "Oups!", `Por favor, inserte una contraseña válida.`);
       } else {
         this.$store
           .dispatch("auth/login", { username: this.usr, password: this.psswd })
@@ -57,20 +57,20 @@ export default {
               // push to home view
               this.$router.push("/");
             } else if (r.status == 401) {
-              this.$parent.makeToast("danger", `Oups!`, `Invalid credentials`);
+              this.$parent.makeToast("danger", `Oups!`, `Contraseña incorrecta`);
             } else {
               this.$parent.makeToast(
                 "danger",
                 `[${r.status}]`,
-                `Server is down`
+                `Servidor caído`
               );
             }
           })
           .catch(r => {
               this.$parent.makeToast(
                 "danger",
-                `Server is down`,
-                `Please, contact with an admin.`
+                `Servidor caído`,
+                `Por favor, contacte con el administrador.`
               );
           });
       }

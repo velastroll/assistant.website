@@ -34,8 +34,8 @@
         >
           <div
             v-if="this.msg.last_intent != null"
-          >Asked for [{{this.msg.last_intent.intent}}] {{this.getMinutes(this.msg.last_intent.timestamp)}}</div>
-          <div v-else style="color: red">Hasn't got usage yet</div>
+          >Consultó [{{this.msg.last_intent.intent}}] {{this.getMinutes(this.msg.last_intent.timestamp)}}</div>
+          <div v-else style="color: red">Sin uso todavía</div>
         </div>
       </b-row>
     </b-card>
@@ -43,7 +43,7 @@
     <!-- modal -->
     <b-modal
       :id="`modal-show-${this.msg.device}`"
-      :title="`Device ${this.msg.device.toUpperCase()}`"
+      :title="`Dispositivo ${this.msg.device.toUpperCase()}`"
       hide-footer
     >
       <div v-if="this.msg.relation">
@@ -90,19 +90,19 @@
           <div
             class="to-settings"
             @click="redirect(`/settings?d=${msg.device}`)"
-          >Configure device parameters</div>
+          >Configura parámetros del dispositivo</div>
         </b-col>
       </b-row>
       <hr />
       <b-row style="width: 100%">
         <b-col cols="2" class="col-icon">
-          <i class="material-icons">settings</i>
+          <i class="material-icons">bar_chart</i>
         </b-col>
         <b-col>
           <div
             class="to-settings"
             @click="redirect(`/stats?d=${msg.device}`)"
-          >Show stats</div>
+          >Ver estadísticas de uso</div>
         </b-col>
       </b-row>
       <hr />
@@ -111,7 +111,7 @@
           <i class="material-icons">flash_on</i>
         </b-col>
         <b-col>
-          <div class="col-heading">QUICK ACTION</div>
+          <div class="col-heading">Acciones rápidas</div>
         </b-col>
       </b-row>
 
@@ -123,10 +123,10 @@
       <b-row v-if="selected" style="width: 100%;" class="justify-content-center">
         <b-col md="auto">
           <b-button
-            placeholder="Yes, do it!"
+            placeholder="Añadir tarea"
             class="quick-action-btn float-right"
             @click="sendTask()"
-          >Yes, do it!</b-button>
+          >Añadir tarea</b-button>
         </b-col>
       </b-row>
       <hr />
@@ -135,18 +135,18 @@
           <i class="material-icons">cached</i>
         </b-col>
         <b-col>
-          <div class="col-heading">Pending actions</div>
+          <div class="col-heading">Tareas pendientes</div>
         </b-col>
       </b-row>
       <b-row class="justify-content-center">
         <div v-if="this.msg.pending.length == 0">
           <b-col style="text-align:center; ">
-            <span style="font-style: italic;">No pending actions</span>
+            <span style="font-style: italic;">Sin tareas pendientes</span>
           </b-col>
         </div>
         <div v-else>
           <b-col :key="i" v-for="(v,i) in this.msg.pending">
-            <span class="pending-action">{{v.event}} order by {{v.by}} at {{parseDate(v.at)}}</span>
+            <span class="pending-action">{{v.event}} por {{v.by}} a las {{parseDate(v.at)}}</span>
           </b-col>
         </div>
       </b-row>
@@ -171,7 +171,7 @@ export default {
       edit: false,
       edited: false,
       selected: null,
-      options: [{ value: null, text: "Please select an option" }]
+      options: [{ value: null, text: "Elige una opción" }]
     };
   },
   watch: {
@@ -200,11 +200,11 @@ export default {
       var now = new Date();
       var n = now.getTime();
       date = parseInt((n - a) / 1000.0);
-      if (date < 60) return " " + date + "sec. ago";
+      if (date < 60) return " hace " + date + "sec.";
       else {
         date = parseInt(date / 60);
-        if (date < 60) return " " + date + "min. ago";
-        else return " " + parseInt(date / 60) + " hours ago";
+        if (date < 60) return " hace " + date + "min.";
+        else return " hace " + parseInt(date / 60) + " horas";
       }
     },
     getStreet: function(street) {
@@ -270,8 +270,8 @@ export default {
       if (this.selected == null) {
         this.makeToast(
           "danger",
-          "Wrong task",
-          `The task ${this.selected} is not valid.`
+          "Mala tarea",
+          `La tarea ${this.selected} no es válida.`
         );
       } else {
         this.$store
@@ -284,8 +284,8 @@ export default {
             this.$parent.updateDevices();
             this.makeToast(
               "success",
-              "Added",
-              "New task assigned to the device."
+              "Añadida",
+              "Nueva tarea asignada al dispositivo."
             );
           });
       }

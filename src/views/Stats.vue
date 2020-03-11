@@ -212,12 +212,12 @@
               v-if="device!=null"
               @click="redirect(`/settings?d=${device.device}`)"
               class="to-settings"
-            >Configure device parameters</a>
+            >Configurar parámetros del dispositivo</a>
             <a
               v-else-if="user!=null"
               @click="redirect(`/settings?l=${user.postcode}`)"
               class="to-settings"
-            >Configure location parameters</a>
+            >Configurar parámetros de la localidad</a>
           </div>
           <!-- ULTIMAS TAREAS REALIZADAS -->
           <div class="infocard col-lg-5 col-md-5 justify-content-center" v-if="device!=null">
@@ -391,8 +391,8 @@ export default {
       if (this.taskSelected == null) {
         this.makeToast(
           "danger",
-          "Wrong task",
-          `The task ${this.taskSelected} is not valid.`
+          "Oups",
+          `La tarea ${this.taskSelected} no es válida.`
         );
       } else {
         this.$store
@@ -405,8 +405,8 @@ export default {
               this.taskSelected = null;
               this.makeToast(
                 "success",
-                "Added",
-                "New task assigned to the device."
+                "Añadida",
+                "Nueva tarea añadida al dispositivo."
               );
             } else {
               this.makeToast("danger", `Error [${r.status}]`, `${r.data}`);
