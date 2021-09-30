@@ -1,5 +1,29 @@
 # 🧠 ASSISTANT FRONTEND
 
+FrontEnd part of my end-of-degree project.
+
+It's described on assistant.latex
+
+## 🔨 How to run
+
+1. Clone this repo.
+
+2. Install dependencies
+
+```zsh
+npm install
+```
+
+3. Run the website.
+
+``` zsh
+npm run serve
+```
+
+5. Enjoy.
+
+## 🚀 How to deploy
+
 1. Clone this repo.
 
 2. Install dependencies
